@@ -327,20 +327,20 @@ aggregates, never raw user text as training data; both are deferred to Phase 3. 
 
 **Files:** `discovery/DISCOVERY_REPORT.md`, `discovery/sources_evidence.yaml`
 
-- [ ] **Step 1: Build the summary table**
+- [x] **Step 1: Build the summary table**
 
 In `DISCOVERY_REPORT.md`, one row per source: status (✅/⚠️/⛔), phase, reachable, auth, 2026
 relevance, key gotcha, retention rec. Lead with a "what's actually usable for Milestone 1"
 shortlist.
 
-- [ ] **Step 2: Emit candidate registry rows**
+- [x] **Step 2: Emit candidate registry rows**
 
 Write `discovery/sources_evidence.yaml` with one entry per usable source using the master
 plan's source-registry field shape (source_id, access_method, license_or_terms_url,
 requires_secret, retention days, primary_keys, required_fields) — but only fields backed by
 what D1–D10 actually observed.
 
-- [ ] **Step 3: Recommendations to Claude**
+- [x] **Step 3: Recommendations to Claude**
 
 End the report with: which sources to drop, which to promote, any surprises, and any decisions
 needed from Claude before ingestion (P2) is planned. Commit and log to co-op.md.
