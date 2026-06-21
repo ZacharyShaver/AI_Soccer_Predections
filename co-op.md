@@ -101,7 +101,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
-| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | M0–M1 ✅ (M1: metrics — Brier/logloss/RPS/exact-hit/calibration + deterministic bootstrap_ci; 9 hand-computed tests). Next: M2 (walk-forward backtest runner). |
+| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | M0–M2 ✅ (M2: walk-forward backtest runner + model Protocol; leakage proven — train strictly before cutoff, ledger-locked, scored). Next: M3 (climatology baseline). |
 
 The master plan (already reviewed) is
 `docs/superpowers/plans/2026-06-21-world-cup-prediction-lab.md`. The bite-sized plans above
@@ -110,6 +110,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (M2 approved — leakage proven)
+M2 **approved**. The single test is thorough: 3 walk-forward windows with strictly increasing
+training sets that each end BEFORE the cutoff (window 1 trains 01-01/01-03 → predicts m3 on 01-05,
+etc.), per-window match_ids correct, all train_dates < cutoff and prediction_dates in
+[cutoff, window_end), ledger rows written with correct training_cutoff/as_of, hand-computed mean log
+loss, and per-match metric arrays for bootstrap_ci. Model Protocol (fit/predict_match) defined so M3
+climatology + M4 Elo plug in. Tests write to tmp_path (live ledger untouched). Committed.
+Dispatching **M3** (climatology baseline — the metric floor Elo must beat).
 
 ### 2026-06-22 — Claude (M1 approved)
 M1 **approved** — 9 metrics tests pass with hand-computed expected values (not self-consistency):
@@ -389,6 +398,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - M2 Walk-forward backtest runner
+- What I did: Added a tests-first synthetic walk-forward leakage test using an in-test `StubModel` that records fit-date inputs and emits fixed probabilities. Implemented `wc_predictor.evaluation.backtest` with the minimal `BacktestModel` Protocol, `run_backtest`, `BacktestWindowReport`, and `BacktestReport`. The runner fits a fresh model per window on `train_start <= date < training_cutoff`, predicts `training_cutoff <= date < window_end`, writes M0 `MatchPrediction` rows to a configurable ledger `runs_dir`, and scores per-match log loss, Brier, and RPS with M1 metrics. Checked the M2 boxes in the P3 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/evaluation/test_backtest.py` and `worldcup_prediction_lab/src/wc_predictor/evaluation/backtest.py`. RED step first failed on the missing module, then on `NotImplementedError` after the API skeleton. Required command `uv run --with pytest --with pandas --with numpy pytest worldcup_prediction_lab/tests/evaluation/test_backtest.py -v` passed with 1 test: `test_walk_forward_backtest_trains_before_cutoff_writes_ledger_and_scores`. Synthetic windows used cutoffs `2026-01-05`, `2026-01-07`, `2026-01-09`; model fit-date assertions prove each window excluded same-day/future prediction matches. Ledger rows were written under a pytest `tmp_path`, not live `runs/predictions/`, with 3 predictions scored.
+- Result: done
+- Open questions: None.
 
 ### 2026-06-21 - Codex - M1 Evaluation metrics
 - What I did: Added tests-first coverage with hand-computed known vectors for home/draw/away Brier score, log loss, ranked probability score, exact/top-k scoreline hit checks, scoreline log loss, probability-sum validation, expected-goals MAE, calibration bins, and deterministic bootstrap confidence intervals. Implemented pure deterministic metric helpers in `worldcup_prediction_lab/src/wc_predictor/evaluation/metrics.py`. Checked the M1 boxes in the P3 plan. I did not run git.

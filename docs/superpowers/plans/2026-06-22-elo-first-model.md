@@ -114,18 +114,18 @@ bootstrap confidence intervals + n (for the acceptance gate's statistical-honest
 
 **Files:** `src/wc_predictor/evaluation/backtest.py`, `tests/evaluation/test_backtest.py`.
 
-- [ ] **Step 1: Leakage test first**
+- [x] **Step 1: Leakage test first**
 
 Synthetic matches: assert the training window strictly ends before the prediction window starts; a
 match on date `D` never sees data dated `>= D`.
 
-- [ ] **Step 2: Implement runner**
+- [x] **Step 2: Implement runner**
 
 `run_backtest(train_start, first_prediction_date, final_prediction_date, prediction_window_days,
 model_id) -> BacktestReport`. Walk-forward: train through T → predict next window → lock predictions
 to the ledger → score after results → advance T. Records `training_cutoff`/`as_of` per window.
 
-- [ ] **Step 3: Run tests; Claude commits.**
+- [x] **Step 3: Run tests; Claude commits.**
 
 ---
 
