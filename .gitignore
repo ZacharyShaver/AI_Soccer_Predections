@@ -12,6 +12,7 @@ __pycache__/
 .mypy_cache/
 
 worldcup_prediction_lab/src/*.egg-info/
+worldcup_prediction_lab/.uv-cache/
 worldcup_prediction_lab/data/raw/*
 !worldcup_prediction_lab/data/raw/.gitkeep
 worldcup_prediction_lab/data/bronze/*
@@ -23,3 +24,8 @@ worldcup_prediction_lab/data/gold/*
 worldcup_prediction_lab/runs/predictions/**
 !worldcup_prediction_lab/runs/predictions/
 !worldcup_prediction_lab/runs/predictions/.gitkeep
+worldcup_prediction_lab/runs/backtests/**
+!worldcup_prediction_lab/runs/backtests/
+!worldcup_prediction_lab/runs/backtests/.gitkeep
+worldcup_prediction_lab/runs/*.lock
+worldcup_prediction_lab/runs/.tmp*

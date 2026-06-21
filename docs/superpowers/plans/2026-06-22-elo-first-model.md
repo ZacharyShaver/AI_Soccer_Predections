@@ -198,21 +198,21 @@ probabilities; `tail_probability` remains separate for scores beyond `max_goals`
 `reports/model_cards/baseline_climatology.md`, `reports/model_cards/elo_poisson_v1.md`,
 optional `src/wc_predictor/evaluation/compare.py`, `tests/...`.
 
-- [ ] **Step 1: Run the walk-forward backtest**
+- [x] **Step 1: Run the walk-forward backtest**
 
 Run both `baseline_climatology` and Elo over a multi-year walk-forward window of the silver `matches`
 history (train_start early enough for warmup; predictions across many years to get a real sample).
 Use a **pre-tournament cutoff** (exclude 2026 WC matches from training where the window demands it).
 Lock predictions to the ledger; score with M1 metrics.
 
-- [ ] **Step 2: Apply the acceptance gate (statistical honesty)**
+- [x] **Step 2: Apply the acceptance gate (statistical honesty)**
 
 Report RPS, log loss, Brier for both models WITH bootstrap CIs and match counts. State plainly
 whether Elo beats climatology beyond noise. Write `elo_vs_climatology.md` and a model card per model
 (metrics, config, training window, caveats). If Elo does NOT clearly beat climatology, record it as a
 finding and STOP for Claude — do not hand-tune to force a pass.
 
-- [ ] **Step 3: Determinism check**
+- [x] **Step 3: Determinism check**
 
 Re-run a small backtest slice; assert identical `prediction_hash`es. Claude commits.
 
