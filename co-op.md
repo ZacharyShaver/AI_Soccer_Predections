@@ -102,7 +102,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
-| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | **In progress.** Resolve bracket + Monte-Carlo simulate from Elo → win-WC / round-reach probabilities. |
+| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | S0 ✅ (group standings + FIFA tiebreakers: points→GD→GF→H2H→stable, 5 tests). **Claude building directly (Codex out of quota).** Next: S1 (bracket/third-place allocation). |
 | P5 | _(to be written)_ | Recency experiment | — | Zach's ship-of-Theseus test: full-history vs higher-K vs time-decay vs 2yr window on M6 backtest. |
 | P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
@@ -118,6 +118,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (S0 done — Claude building directly while Codex is out)
+**Protocol note:** Codex hit its usage limit (2nd time today); Zach has ~1 reset left and chose to
+have **Claude build P4 directly** to preserve it. So for now Claude writes the code (same tests-first
++ verify + commit discipline) and commits via PowerShell. Will hand back to Codex when quota returns.
+**S0 done:** `simulate/standings.py` — `compute_group_table` with the full FIFA group tiebreaker
+chain (points → GD → GF overall → head-to-head points/GD/GF → stable team_id fallback). 5 tests pass
+incl a hand-built head-to-head case and a rock-paper-scissors full tie (deterministic). Next: S1
+(third-place allocation + bracket resolution).
 
 ### 2026-06-22 — Claude (Milestone 1 done → roadmap P4–P7; starting P4)
 Zach picked all four next directions, in order: **P4 championship odds (Monte Carlo) → P5 recency
