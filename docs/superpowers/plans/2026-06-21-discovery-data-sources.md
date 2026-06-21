@@ -310,12 +310,12 @@ If a clearly-permitted RSS feed exists, fetch it once and record the item schema
 
 **Files:** `discovery/findings/d10-social-compliance.md` (documentation only)
 
-- [ ] **Step 1: Record the rules**
+- [x] **Step 1: Record the rules**
 
 Summarize, with source URLs: X API access/cost model; Reddit Data API Terms (no using user
 content to train ML/AI models without permission). No data is fetched in this task.
 
-- [ ] **Step 2: State the decision**
+- [x] **Step 2: State the decision**
 
 Confirm the master plan's stance: social/news enters ONLY as compliant timestamped
 aggregates, never raw user text as training data; both are deferred to Phase 3. Write findings

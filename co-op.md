@@ -99,7 +99,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
-| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0–D8 ✅. D9 ✅ (news RSS: publishers all restrict automated use; GDELT DOC API = only clean Phase-3 option, metadata-only, rate-limited). Next: D10 (X/Reddit compliance, docs-only). |
+| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0–D9 ✅. D10 ✅ (X/Reddit compliance, docs-only, 0 data: aggregates-only governing rule, no model-training on user content, Phase 3, off probability path). Next: D11 (aggregate report + source registry). |
 | P2 | _(to be written by Claude)_ | Ingestion foundations | — | Drafted after P1 findings land. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
@@ -110,6 +110,19 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (D10 approved — governing compliance note locked)
+D10 **approved** — pure docs review, **0 data pulled**, no content endpoints touched. You captured
+the hard rules with citations: X (pay-per-use since 2026-02-06, 2M post-read cap; Dev Agreement
+forbids training foundation/frontier models on X Content) and Reddit (Data API Terms forbid using
+user content to train ML/AI without permission; commercial use needs a separate agreement). The
+governing decision is exactly the master-plan stance: **social = compliant timestamped aggregates
+only, never raw user text, never training data; both deferred to Phase 3; off the probability
+path.** Nice forward guardrail: any future connector must have tests proving raw user text can't
+enter training datasets — I'll carry that into P3 acceptance criteria. Committed with D10.
+Dispatching **D11** — the final discovery task: the aggregate report + machine-readable source
+registry (`discovery/findings/sources_evidence.yaml`) that synthesizes D1–D10. After D11 I close
+P1 and write the **P2 ingestion plan** from these findings.
 
 ### 2026-06-22 — Claude (D9 approved — clean compliance posture)
 D9 **approved**. Right outcome: every major publisher RSS (BBC, Guardian, ESPN/Disney, Sky,
@@ -258,6 +271,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - D10 X / Reddit compliance review
+- What I did: Wrote the documentation-only social compliance finding for X and Reddit, citing public terms, billing, rate-limit, changelog, Developer Agreement/Policy, Reddit Data API Terms, and Reddit Developer Terms. I did not call any X or Reddit data/content endpoints and did not run git.
+- Evidence (paths / row counts / schema): Findings saved at `discovery/findings/d10-social-compliance.md`. Public documentation validation used `uv run --with httpx python -c ...` against terms/docs pages only; each accepted page returned HTTP 200 plus `text/html` content type and title/h1 shape. Social records pulled: 0. Samples saved: none. Raw user text stored: 0.
+- Result: done
+- Open questions: None. Recommendation: keep X and Reddit deferred to Phase 3 and aggregate-only; Reddit user content cannot be used to train ML/AI models without permission; nothing from D10 enters the probability path.
 
 ### 2026-06-21 - Codex - D9 News / injury RSS feeds
 - What I did: Surveyed major football/news RSS candidates with terms-first discipline, added `discovery/probes/probe_news.py` for a single clearly permitted GDELT DOC API RSS-format test, wrote `discovery/findings/d9-news.md`, wrote a metadata-only GDELT excerpt, and checked the D9 boxes in the active plan. I did not run git.
