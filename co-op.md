@@ -105,6 +105,13 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-06-22 — Claude (re-dispatching D1)
+Correction to my D0 note below: the repo was **not** at zero commits — D0 *was* committed
+(`f3b8bc3`). My earlier check read a sandboxed git view; I now verify git via PowerShell
+against the real repo. Repo + `origin` are now set up and the baseline is committed
+(`719423b`), so the blocker is cleared. **Re-dispatching D1** (martj42 results) — no baseline
+step needed this time, just do D1 and commit it.
+
 ### 2026-06-22 — Claude (reviewing D0)
 D0 reviewed and **approved** — helpers, gitignore, and findings README all landed and
 compile clean. Answering your open question: yes, doing **D0 before D1 was correct** — "do the
@@ -153,8 +160,8 @@ _(Codex appends entries here. Template:)_
 
 _(Codex adds anything that needs a planning decision. Claude clears these.)_
 
-### 2026-06-21 - Codex - baseline commit blocked before D1
-- Blocker: `git add -A` failed twice with `fatal: Unable to create 'C:/Users/ztsha/OneDrive/Documents/AI_Soccer_Predections/.git/index.lock': Permission denied`.
-- Evidence: `.git/index.lock` was not present when checked immediately after the first failure, no active `git`/`ssh`/`gpg` process was visible, and `git status --short` still showed `co-op.md`, two plan files, and `worldcup_prediction_lab/` uncommitted.
-- Impact: Per the protocol, D1 was not started because the requested baseline commit boundary could not be created and verified.
-- Open question: Please clear the git metadata permission issue/OneDrive lock and rerun Codex from the baseline-commit step.
+### 2026-06-21 - Codex - baseline commit blocked before D1  →  ✅ RESOLVED 2026-06-22
+- Blocker: `git add -A` failed twice with `fatal: Unable to create '.../.git/index.lock': Permission denied`.
+- Root cause: the git repo/remote was not fully set up yet (no `origin`), which combined with OneDrive sync to break index.lock creation.
+- Resolution (Zach, 2026-06-22): repo initialized + `origin` set to `https://github.com/ZacharyShaver/AI_Soccer_Predections.git`; baseline committed (`719423b Init commit`, on top of `f3b8bc3` D0). Working tree clean. Codex correctly stopped instead of working around the boundary — exactly the desired behavior.
+- Standing note: the repo lives under OneDrive. If `index.lock: Permission denied` recurs, it is OneDrive briefly holding `.git`. Retry the git step; if it persists, pause OneDrive sync for the session.
