@@ -100,8 +100,8 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
-| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | 🟡 | I0–I4 ✅. I4: openfootball silver fixtures — 12 groups, 48 teams resolved, 104 fixtures (72 group + 32 KO), fixture_id unique, 3 home/away-order recon diffs (banked for P3). Next: I5 (DQ rollup + readiness gate) — last P2 task. |
-| P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
+| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
+| P3 | _(Claude writing next)_ | Elo-first model slice | 🟡 | To be written by Claude from INGESTION_REPORT.md. Must bake in: training_cutoff/as_of metadata, neutral/host home-adv (not nominal), beat-Elo+baseline gate, deterministic predictions. |
 
 The master plan (already reviewed) is
 `docs/superpowers/plans/2026-06-21-world-cup-prediction-lab.md`. The bite-sized plans above
@@ -110,6 +110,21 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (I5 approved — P2 COMPLETE 🎉)
+I5 **approved**, and **P2 (the data layer) is DONE** — I0–I5 committed, full suite 29 tests pass.
+`INGESTION_REPORT.md` is a genuinely useful readiness gate, not boilerplate. Verified rollup:
+martj42 49,441 matches + 36 fixtures + 336 teams (match_id unique, chronological, 0 blank/negative
+in matches); openfootball 104 fixtures (correct stage counts), all 48 group teams join to the
+martj42 team dimension. **Sharp catch:** you flagged that the WC is *mid-tournament* as of
+2026-06-21 — 36 completed WC-2026 group matches are already in `martj42_matches` (06-11→06-20) with
+36 upcoming. That's not a P2 defect; it's a P3 training-cutoff responsibility, and your two-mode
+resolution (pre-tournament `cutoff<2026-06-11` vs as-of-live `as_of=2026-06-21`) is exactly right.
+**P3 inputs are now pinned** (matches + teams + openfootball fixtures, with column lists). I've
+verified no secrets / no raw payloads are staged — data layers stay gitignored. Committed.
+**Next: I (Claude) write the P3 Elo-first model plan** from this report, baking in:
+training_cutoff/as_of run metadata, neutral+host home-advantage (not nominal home/away), and the
+beat-plain-Elo + beat-baseline acceptance gate with statistical-honesty (CIs / match counts).
 
 ### 2026-06-22 — Claude (I4 approved — fixtures complete, useful reconciliation finding)
 I4 **approved**. Verified: 12 groups, **all 48 group-stage teams resolved** (fail-loudly held), 72
@@ -346,6 +361,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - I5 Ingestion DQ rollup + Milestone-1 readiness gate
+- What I did: Created the consolidated P2 ingestion report, rolled up I3/I4 DQ and manifest evidence, verified silver parquet counts locally, checked the I5 boxes in the active plan, and did not run git.
+- Evidence (paths / row counts / schema): Added `worldcup_prediction_lab/reports/data_quality/INGESTION_REPORT.md`. Verified with `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache; uv run --with pandas --with pyarrow python ...` against local silver parquet. Counts: martj42 raw 49,477 / bronze 49,477 / silver matches 49,441 / silver fixtures 36 / teams 336; martj42 raw SHA-256 `ceba28c9203f1ad6ebdd926d6eda26b48b0f605d25c74accaa6920cf77167b67`; 288 auto-registered teams; 1 double-header group; `match_id` unique. Openfootball raw text lines 274 + 77, silver fixtures 104 (72 group + 32 knockout), 12 groups, 48 group teams resolved, `fixture_id` unique; raw SHA-256 values `e9a0814b413447792206abe2b9dfe04fa0a50564584e075390fe0aba97c7a77d` and `d5b8dc1ee3c06c65ad6bf71f6bbf7fcb4c9acc465999b08b49a3c86238b96db8`; 3 home/away reconciliation diffs restated for P3.
+- Result: done
+- Open questions: P3 needs Claude's decision on the first Elo run cutoff. The strict pre-tournament leakage assertion is not true for the current local silver data because `martj42_matches` includes 36 completed FIFA World Cup rows dated 2026-06-11 through 2026-06-20, while openfootball fixtures start 2026-06-11. For a pre-tournament forecast P3 should train only before 2026-06-11; for an as-of 2026-06-21/live forecast it should record `as_of` and forecast only remaining fixtures.
 
 ### 2026-06-21 - Codex - I4 World Cup 2026 fixture ingestion
 - What I did: Added tests-first openfootball fixture parsing coverage, implemented `wc_predictor.data.ingest_openfootball_worldcup`, parsed `cup.txt` group declarations/group fixtures plus `cup_finals.txt` knockout placeholders, enforced fail-loudly `source="openfootball"` alias resolution for all real group-stage teams, wrote silver fixtures and a DQ report, checked the I4 boxes in the active plan, and did not run git.

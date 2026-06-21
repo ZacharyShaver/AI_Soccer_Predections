@@ -246,18 +246,18 @@ cross-validation check only. Document any date/pairing disagreements found.
 **Files:** `reports/data_quality/INGESTION_REPORT.md`, optional
 `src/wc_predictor/data/quality.py`.
 
-- [ ] **Step 1: Roll up manifests + DQ**
+- [x] **Step 1: Roll up manifests + DQ**
 
 Aggregate the I3/I4 manifests + DQ summaries into one `INGESTION_REPORT.md`: per-source row counts
 per layer, date ranges, split counts, alias coverage, any unresolved names, raw payload hashes.
 
-- [ ] **Step 2: Readiness assertions for P3**
+- [x] **Step 2: Readiness assertions for P3**
 
 State explicitly that the silver `matches` table is leakage-safe for Elo training (chronologically
 ordered, no future fixtures in labels) and that `fixtures` covers all 104 WC-2026 matches. List
 exactly what P3 (Elo) will consume.
 
-- [ ] **Step 3: Recommendations + commit.** Note any gaps/decisions for Claude before P3.
+- [x] **Step 3: Recommendations + commit.** Note any gaps/decisions for Claude before P3.
 
 ---
 
