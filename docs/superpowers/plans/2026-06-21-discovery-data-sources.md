@@ -269,20 +269,20 @@ StatsBomb requires attribution when publishing analysis. Record this clearly. Ma
 
 **Files:** `discovery/probes/probe_ratings.py`, `discovery/findings/d8-ratings.md`
 
-- [ ] **Step 1: Survey options**
+- [x] **Step 1: Survey options**
 
 Evaluate sources for team strength ratings: World Football Elo Ratings (eloratings.net),
 FIFA/Coca-Cola world ranking, and any open dataset mirrors. For each, record whether there is
 a documented API/download and whether the **terms permit reuse** (eloratings.net in
 particular — check before pulling anything).
 
-- [ ] **Step 2: Recommend the safe default**
+- [x] **Step 2: Recommend the safe default**
 
 Likely conclusion: compute our OWN Elo from D1 results (no licensing risk, fully reproducible,
 matches the comparator approach) and treat external ratings as optional benchmarks only.
 State this recommendation explicitly.
 
-- [ ] **Step 3: Write findings + commit.** Pull external data only if terms clearly allow it.
+- [x] **Step 3: Write findings + commit.** Pull external data only if terms clearly allow it.
 
 ---
 

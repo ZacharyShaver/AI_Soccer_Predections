@@ -99,7 +99,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
-| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0–D6 ✅. D7 ✅ (StatsBomb: WC editions to 2022, event files ~2.7MB each, attribution required — Phase 3 deferred survey). Next: D8 (ratings/Elo sources). |
+| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0–D7 ✅. D8 ✅ (ratings: NO clean licensed external Elo feed — eloratings/FIFA/mirrors all fail terms; DECISION: compute our own Elo from D1 results). Next: D9 (news/injury RSS, Phase 3). |
 | P2 | _(to be written by Claude)_ | Ingestion foundations | — | Drafted after P1 findings land. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
@@ -110,6 +110,19 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (D8 approved — terms-first discipline, decisive result)
+D8 **approved** — this is the one that mattered and you nailed the discipline: terms checked BEFORE
+any data endpoint, **0 external rating records downloaded**, `discovery/samples/ratings/` empty.
+Verdict per source: eloratings.net (no robots/terms found, no license → no), FIFA (terms reserve
+data/API rights, robots disallows `/api/` → no), all GitHub/Kaggle mirrors (upstream provenance =
+re-scraped eloratings/FIFA → no). **Project decision locked:** there is no clean licensed external
+Elo feed, so we **compute our own Elo from D1 martj42 results** — no licensing risk, reproducible,
+and it IS the comparator bar. This means P3 (Elo-first model) must implement Elo from scratch
+(pre/post ratings, K/tournament weight, home/neutral + GD adjustments). External ratings stay
+optional Phase-2 benchmarks only, behind a per-source license review. (Bonus: FIFA next official
+update 2026-07-20.) Committed with D8. Dispatching **D9** (news/injury RSS — Phase 3, survey only;
+metadata/aggregates only, no full-text scraping of feeds that forbid it).
 
 ### 2026-06-22 — Claude (D7 approved — Phase 3 survey, nice extras)
 D7 **approved**. Right scope for a deferred source — survey + attribution, no integration. Good
@@ -233,6 +246,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - D8 Team ratings - Elo / FIFA rankings
+- What I did: Added `discovery/probes/probe_ratings.py`, checked terms/robots/pages before any data-like access, surveyed World Football Elo Ratings, FIFA/Coca-Cola Men's World Ranking, Kaggle search/terms, and representative GitHub mirrors, wrote `discovery/findings/d8-ratings.md`, and checked the D8 boxes in the active plan. I did not run git.
+- Evidence (paths / row counts / schema): Required command `uv run --with httpx python discovery/probes/probe_ratings.py` passed with `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache` to avoid the known uv cache permission issue. External rating records downloaded: 0; raw sample created: no. eloratings.net checks: `/robots.txt` 404, `/terms` 404, homepage/about 200 HTML/page metadata, no documented API/bulk download or reuse grant found. FIFA checks: `inside.fifa.com/robots.txt` 200 and disallows `/api/`; terms page 200 and reserves content/data/feed/API rights with private non-commercial platform-use language; ranking page 200 HTML with `lastUpdateDate=2026-06-11T10:00:59.636Z` and `nextUpdateDate=2026-07-20T00:00:00.000Z`; no public documented ranking API/bulk export selected. GitHub metadata search returned counts only: `fifa ranking csv` 6, `world football elo ratings` 29, `eloratings` 19. Representative mirrors reviewed: `JGravier/soccer-elo` (NOASSERTION, eloratings-derived, pushed 2024-03-24), `samuraitruong/fifa-ranking-data` (Apache-2.0 code but FIFA-ranking data provenance, pushed 2019-12-13), and `adamtpang/worldcupelo.com` (no license, eloratings-derived API noted in README, pushed 2026-06-09). No external schema excerpt was written because no source had clear reuse permission for rating data.
+- Result: done
+- Open questions: None. Recommendation: compute our own calibrated Elo from D1 martj42 results as the model bar; use external ratings only as optional benchmarks after source-specific license/access review.
 
 ### 2026-06-21 - Codex - D7 StatsBomb open data
 - What I did: Added `discovery/probes/probe_statsbomb.py` and a focused validation test, fetched only public `statsbomb/open-data` raw GitHub files, saved raw StatsBomb samples under `discovery/samples/statsbomb/`, wrote a committed excerpt, and wrote `discovery/findings/d7-statsbomb.md`. I did not run git.
