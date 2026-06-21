@@ -1,0 +1,29 @@
+{
+  "source": "GDELT DOC 2.0 API RSS archive",
+  "fetched_at": "2026-06-21T19:26:05+00:00",
+  "query_url": "https://api.gdeltproject.org/api/v2/doc/doc?query=%22soccer+injury%22&mode=artlist&maxrecords=3&timespan=1day&sort=datedesc&format=rssarchive",
+  "content_type": "application/rss+xml; charset=utf-8",
+  "rss_root": "rss",
+  "item_count": 1,
+  "schema_fields_observed": [
+    "link",
+    "pubDate",
+    "title"
+  ],
+  "items": [
+    {
+      "title": "Tin n\u00f3ng th\u1ec3 thao s\u00e1ng 21 / 6 : Real Madrid theo d\u00f5i sao tr\u1ebb Maroc g\u00e2y s\u1ed1t t\u1ea1i World Cup 2026 ; Casemiro v\u1ec1 chung \u0111\u1ed9i v\u1edbi Messi",
+      "link": "https://thethaovanhoa.vn/tin-nong-the-thao-sang-21-6-real-madrid-theo-doi-sao-tre-maroc-gay-sot-tai-world-cup-2026-casemiro-ve-chung-doi-voi-messi-20260621071219968.htm",
+      "pubDate": "21 Jun 2026 02:00:00 +0000",
+      "guid": null
+    }
+  ],
+  "body_fields_excluded": [
+    "description",
+    "content:encoded"
+  ],
+  "raw_sample": {
+    "path": "discovery/samples/news/gdelt-doc-rss-sample.xml",
+    "sha256": "f0aa8dbdab3ce5bb3204fe480b7f30dcc974aaf2bbf8b4172d1a014729593227"
+  }
+}

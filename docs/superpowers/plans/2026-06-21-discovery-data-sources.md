@@ -290,18 +290,19 @@ State this recommendation explicitly.
 
 **Files:** `discovery/findings/d9-news.md` (no probe script required unless a free RSS is tested)
 
-- [ ] **Step 1: Survey candidate feeds**
+- [x] **Step 1: Survey candidate feeds**
 
 List free, terms-compliant RSS/news options for injury/lineup signals (e.g. major sports
 outlet football RSS feeds). For each: feed URL, terms, whether full text or headline-only is
 permitted. No scraping of pages that forbid it.
 
-- [ ] **Step 2: Optionally test one RSS feed**
+- [x] **Step 2: Optionally test one RSS feed**
 
 If a clearly-permitted RSS feed exists, fetch it once and record the item schema
 (title, link, pubDate). Save a small sample.
 
-- [ ] **Step 3: Write findings + commit.** Mark Phase 3; store metadata/aggregates only.
+- [x] **Step 3: Write findings + commit.** Mark Phase 3; store metadata/aggregates only.
+  Findings written; Claude commits per `co-op.md`.
 
 ---
 
