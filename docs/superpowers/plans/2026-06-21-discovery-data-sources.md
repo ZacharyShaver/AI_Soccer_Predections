@@ -198,23 +198,23 @@ historical odds-schema reference / club-league benchmark. Be honest about this.
 
 **Files:** `discovery/probes/probe_polymarket.py`, `discovery/findings/d5-polymarket.md`
 
-- [ ] **Step 1: Search for World Cup markets**
+- [x] **Step 1: Search for World Cup markets**
 
 Hit the public Gamma API (`https://gamma-api.polymarket.com/events?...`) and/or search
 endpoint for "World Cup" / "FIFA" events. No API key. Record how many relevant events/markets
 exist and their `outcomes` / `outcomePrices` shape.
 
-- [ ] **Step 2: Assess coverage + liquidity**
+- [x] **Step 2: Assess coverage + liquidity**
 
 Critical per the master plan: confirm whether markets exist for (a) outright winner,
 (b) individual matches, (c) groups, (d) scorelines. Note liquidity / volume where exposed.
 Expect outright to exist and match/scoreline markets to be thin or absent — record reality.
 
-- [ ] **Step 3: Map prices → probabilities**
+- [x] **Step 3: Map prices → probabilities**
 
 Confirm `outcomePrices` parse as numerics and sum ≈ 1 per market. Save a sample event JSON.
 
-- [ ] **Step 4: Write findings + commit.** Note `requires_secret: false`, retention rec.
+- [x] **Step 4: Write findings + commit.** Note `requires_secret: false`, retention rec.
 
 ---
 

@@ -99,7 +99,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
-| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0–D3 ✅. D4 ✅ (Football-Data.co.uk: has WorldCup2026.xlsx + 889-row qualifiers + WC sheets to 2014, bookmaker odds — Phase 2 odds benchmark; NOT CC0, no redistribution). Next: D5 (Polymarket). |
+| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0–D4 ✅. D5 ✅ (Polymarket: FULL coverage — outright/match/group/scoreline, 431 events/10,573 markets, public no-auth; PREMIUM Phase 2 benchmark, needs de-vig). Next: D6 (The Odds API — quota-careful). |
 | P2 | _(to be written by Claude)_ | Ingestion foundations | — | Drafted after P1 findings land. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
@@ -110,6 +110,22 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (D5 approved — premium source, exceeds expectations)
+D5 **approved**, and it beats my prediction. I expected match/scoreline markets to be thin or
+absent — instead Polymarket has **full coverage**: outright winner (1 event/60 mkts), individual
+matches (35/105), group/advancement (11/98), exact scorelines (35/595); 431 events / 10,573
+markets, public no-auth. This is now our **premium Phase 2 market-probability benchmark** (the
+master plan's real test = beat the market). Your rigor is exactly what this needs — three modeling
+notes I'm banking for P2/P3:
+1. `outcomes`/`outcomePrices` are JSON-encoded STRINGS, not native arrays — parse twice.
+2. 250 markets have null/placeholder prices — filter on valid numeric prices + liquidity.
+3. **De-vig required:** binary Yes/No markets sum to 1.0, but event-level mutually-exclusive
+   markets carry overround (World Cup Winner Yes-prices sum 1.029 ≈ 2.9% vig). Never treat raw
+   outcome prices as calibrated probabilities; de-vig per exclusive market group first.
+Retention rec noted (raw=7d — responses are large + stale fast; keep normalized snapshots with
+`observed_at`). Committed with D5. Dispatching **D6** (The Odds API).
+⚠️ D6 is the QUOTA-LIMITED one — spend at most ONE cheap call total, skip gracefully if no key.
 
 ### 2026-06-22 — Claude (D4 approved — more useful than expected)
 D4 **approved**. Better than the "club-only, low relevance" outcome I expected: Football-Data has
@@ -195,6 +211,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - D5 Polymarket public market data
+- What I did: Added `discovery/probes/probe_polymarket.py`, used only Polymarket's public/no-auth Gamma market-data endpoints, validated HTTP 200 responses by `application/json` content type plus JSON shape before parsing, crawled active open FIFA World Cup events via Gamma tag `102232`, saved a raw event sample and full probe output under gitignored `discovery/samples/polymarket/`, wrote a committed event excerpt, and wrote `discovery/findings/d5-polymarket.md`. I did not run git.
+- Evidence (paths / row counts / schema): Required command `uv run --with httpx python discovery/probes/probe_polymarket.py` passed, with `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache` to avoid Windows/OneDrive denial on uv's default cache path. Active World Cup tag crawl returned 431 events and 10,573 nested markets across event offsets 0/100/200/300/400. Search cross-checks reported `World Cup` totalResults=1,168 and `FIFA` totalResults=849. Coverage found outright tournament winner (1 event / 60 markets), individual match results (35 / 105), group winners/advancement (11 / 98), and exact scorelines (35 / 595). `outcomes` / `outcomePrices` usually arrive as JSON-encoded arrays; 10,323 markets had numeric prices and every valid market summed to 1.0, while 250 markets lacked valid `outcomePrices` (mostly placeholder/zero-liquidity outcomes). Raw samples: `discovery/samples/polymarket/sample-event-world-cup-winner.json` and `discovery/samples/polymarket/probe-output.json`; committed excerpt: `discovery/findings/d5-polymarket-event-excerpt.json`; findings: `discovery/findings/d5-polymarket.md`.
+- Result: done
+- Open questions: None. Recommendation: usable with caveats as a Phase 2 public market-implied signal source; store timestamped normalized snapshots rather than long-lived raw Gamma payloads.
 
 ### 2026-06-21 - Codex - D4 Football-Data.co.uk odds
 - What I did: Added `discovery/probes/probe_footballdata.py`, surveyed Football-Data's documented data pages (`data.php`, `downloadm.php`, `all_new_data.php`, `englandm.php`, `notes.txt`), fetched and validated one current league CSV plus the documented World Cup workbook, saved raw samples under gitignored `discovery/samples/footballdata/`, wrote two committed schema samples, and wrote `discovery/findings/d4-footballdata.md`. I did not run git.
