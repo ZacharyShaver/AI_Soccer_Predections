@@ -100,7 +100,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
-| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | 🟡 | I0–I3 ✅. I3 wrote martj42 bronze/silver with 49,441 completed matches, 36 fixtures, 336 canonical teams, 1 double-header group, and unique `match_id`s. Next: I4 (openfootball fixtures ingest). |
+| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | 🟡 | I0–I4 ✅. I4: openfootball silver fixtures — 12 groups, 48 teams resolved, 104 fixtures (72 group + 32 KO), fixture_id unique, 3 home/away-order recon diffs (banked for P3). Next: I5 (DQ rollup + readiness gate) — last P2 task. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
 The master plan (already reviewed) is
@@ -110,6 +110,18 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (I4 approved — fixtures complete, useful reconciliation finding)
+I4 **approved**. Verified: 12 groups, **all 48 group-stage teams resolved** (fail-loudly held), 72
+group + 32 knockout = **104 fixtures**, correct stage counts (RO32 16 / RO16 8 / QF 4 / SF 2 / 3rd 1
+/ final 1), date range 2026-06-11→07-19, `fixture_id` unique, knockout placeholder slots kept as
+strings with null team ids. 4 offline tests pass; silver `openfootball_worldcup_2026_fixtures`
+parquet written. Committed. **Good reconciliation finding:** 3 martj42-vs-openfootball
+home/away-order disagreements (CAN/SUI, MEX/CZE, USA/TUR) — same matchup+date, swapped home/away.
+That's expected for WC group games at neutral/host sites. **Banked for P3:** Elo home-advantage must
+key off `neutral`/host logic, NOT trust nominal home/away ordering for WC matches; openfootball
+stays the fixtures source of truth. Dispatching **I5** (DQ rollup + Milestone-1 readiness gate) —
+the last P2 task.
 
 ### 2026-06-22 — Claude (I3 approved — first real silver tables, great blocker handling)
 I3 **approved**. Two things you did exactly right: (1) you **stopped on the duplicate-key DQ failure
@@ -334,6 +346,15 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - I4 World Cup 2026 fixture ingestion
+- What I did: Added tests-first openfootball fixture parsing coverage, implemented `wc_predictor.data.ingest_openfootball_worldcup`, parsed `cup.txt` group declarations/group fixtures plus `cup_finals.txt` knockout placeholders, enforced fail-loudly `source="openfootball"` alias resolution for all real group-stage teams, wrote silver fixtures and a DQ report, checked the I4 boxes in the active plan, and did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/data/test_ingest_openfootball_worldcup.py` and `worldcup_prediction_lab/src/wc_predictor/data/ingest_openfootball_worldcup.py`. Live raw files were written under gitignored `worldcup_prediction_lab/data/raw/`: `openfootball_worldcup_2026_cup_20260621T213322Z_e9a0814b4134.txt`, `openfootball_worldcup_2026_cup_finals_20260621T213322Z_d5b8dc1ee3c0.txt`, and manifest `openfootball_worldcup_2026_20260621T213322Z.manifest.json`. Silver output: `worldcup_prediction_lab/data/silver/openfootball_worldcup_2026_fixtures.parquet` plus `openfootball_worldcup_2026_fixtures.manifest.json`. DQ summary: `worldcup_prediction_lab/reports/data_quality/openfootball_worldcup_2026_i4.md`.
+- Live numbers: groups parsed 12; distinct group-stage teams resolved 48; resolved canonical group team ids 48; group fixtures 72; knockout fixtures 32; total fixtures 104; date range 2026-06-11 to 2026-07-19; fixture IDs unique true. Stage counts: group 72, round_of_32 16, round_of_16 8, quarter_final 4, semi_final 2, third_place 1, final 1. Raw SHA-256 values: cup `e9a0814b413447792206abe2b9dfe04fa0a50564584e075390fe0aba97c7a77d`, cup_finals `d5b8dc1ee3c06c65ad6bf71f6bbf7fcb4c9acc465999b08b49a3c86238b96db8`.
+- Martj42 reconciliation: checked 36 martj42 blank-score fixture rows against openfootball. Found 3 disagreements, all home/away order differences on the same dates: martj42 `CAN` vs `SUI` where openfootball has `SUI` vs `CAN` on 2026-06-24; martj42 `MEX` vs `CZE` where openfootball has `CZE` vs `MEX` on 2026-06-24; martj42 `USA` vs `TUR` where openfootball has `TUR` vs `USA` on 2026-06-25. Openfootball remains the source of truth.
+- Test result: `uv run --with pytest --with pandas pytest worldcup_prediction_lab/tests/data/test_ingest_openfootball_worldcup.py -v` passed with 4 tests.
+- Result: done
+- Open questions: None.
 
 ### 2026-06-21 - Codex - I3 Historical results ingestion
 - What I did: Finished I3 from the existing ingestion implementation. Added tests-first coverage for deterministic surrogate `match_id`, legitimate same-day double-headers, exact-identical duplicate dropping, and deterministic IDs across repeated runs. Updated martj42 ingestion to drop only exact duplicate source rows, assign `occurrence_index` by original source row order within the natural key, generate 12-char SHA-1 `match_id`s, assert uniqueness on `match_id`, write bronze/silver parquet, and write the aggregate DQ report. I did not run git.

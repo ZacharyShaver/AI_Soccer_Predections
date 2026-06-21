@@ -211,33 +211,33 @@ fixtures/results split (decision #1).
 **Files:** `src/wc_predictor/data/ingest_openfootball_worldcup.py`,
 `tests/data/test_ingest_openfootball_worldcup.py`.
 
-- [ ] **Step 1: Parser tests**
+- [x] **Step 1: Parser tests**
 
 Test parsing a 2026 group line (e.g. `Group A | Mexico ...`) and a knockout line from
 `cup_finals.txt` (e.g. `(73) 2026-06-28 2A v 2B @ Los Angeles (Inglewood)`), including the
 placeholder slots (`1A`, `3A/B/C/D/F`, `W74`, `L101`).
 
-- [ ] **Step 2: Implement the football.txt parser**
+- [x] **Step 2: Implement the football.txt parser**
 
 Parse `2026--usa/cup.txt` (groups + 72 group fixtures) and `2026--usa/cup_finals.txt` (32 knockout
 fixtures) into a normalized silver `fixtures` table. Resolve real team names via I2; **leave
 knockout placeholder slots as `home_slot`/`away_slot` strings** with null team ids (they resolve as
 results come in — that's P3/live).
 
-- [ ] **Step 3: Required fields + cross-check**
+- [x] **Step 3: Required fields + cross-check**
 
 Fields: `fixture_id`, `stage` (group/RO32/RO16/QF/SF/3rd/final), `group`, `home_team_id`,
 `away_team_id` (nullable for knockouts), `home_slot`/`away_slot`, `match_date`, `venue`,
 `match_number`. Cross-check counts against D2: 12 groups, 48 teams, 72 group + 32 knockout = 104
 fixtures, dates 2026-06-11→07-19. Assert all 48 group-stage teams resolve via I2.
 
-- [ ] **Step 4: Reconcile martj42 vs openfootball fixtures**
+- [x] **Step 4: Reconcile martj42 vs openfootball fixtures**
 
 Both D1 (blank-score rows) and D2 carry 2026 fixtures. Decide the **fixtures source of truth =
 openfootball (D2)** (richer: stage/group/venue/bracket). Note martj42 future rows as a
 cross-validation check only. Document any date/pairing disagreements found.
 
-- [ ] **Step 5: Run tests + commit.** DQ summary appended; Claude commits.
+- [x] **Step 5: Run tests + commit.** DQ summary appended; Claude commits.
 
 ---
 
