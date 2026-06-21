@@ -133,16 +133,16 @@ to the ledger → score after results → advance T. Records `training_cutoff`/`
 
 **Files:** `src/wc_predictor/models/baseline.py`, `tests/models/test_baseline.py`.
 
-- [ ] **Step 1: Tests first**
+- [x] **Step 1: Tests first**
 
 Probabilities sum to 1; scoreline matrix non-negative; fit uses only training rows.
 
-- [ ] **Step 2: Implement `baseline_climatology`**
+- [x] **Step 2: Implement `baseline_climatology`**
 
 Fit global home/neutral goal rates + draw rate from training data; generate home/draw/away probs and
 a scoreline matrix from global goal rates. This is the metric floor (the thing Elo must beat).
 
-- [ ] **Step 3: Run tests; Claude commits.**
+- [x] **Step 3: Run tests; Claude commits.**
 
 ---
 
