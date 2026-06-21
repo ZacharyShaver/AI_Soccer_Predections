@@ -1,0 +1,37 @@
+openfootball World Cup 2026 fixture excerpt
+
+Discovered fixture files:
+- 2026--usa/cup.txt
+- 2026--usa/cup_finals.txt
+
+First 20 non-comment fixture/group lines from cup.txt:
+= World Cup 2026      # in Canada, USA, and Mexico
+Group A | Mexico        South Africa    South Korea    Czech Republic
+Group B | Canada      Bosnia & Herzegovina  Qatar    Switzerland
+Group C | Brazil          Morocco      Haiti   Scotland
+Group D | USA   Paraguay     Australia   Turkey
+Group E | Germany         Curaçao      Ivory Coast   Ecuador
+Group F | Netherlands   Japan        Sweden  Tunisia
+Group G | Belgium         Egypt        Iran        New Zealand
+Group H | Spain           Cape Verde   Saudi Arabia   Uruguay
+Group I | France      Senegal   Iraq   Norway
+Group J | Argentina    Algeria   Austria   Jordan
+Group K | Portugal   DR Congo   Uzbekistan  Colombia
+Group L | England    Croatia     Ghana   Panama
+▪ Matchday 1 | Thu Jun 11
+▪ Matchday 2 | Fri Jun 12
+▪ Matchday 3 | Sat Jun 13
+▪ Matchday 4 | Sun Jun 14
+▪ Matchday 5 | Mon Jun 15
+▪ Matchday 6 | Tue Jun 16
+▪ Matchday 7 | Wed Jun 17
+
+First 8 parsed knockout fixtures:
+- (73) 2026-06-28 2A v 2B @ Los Angeles (Inglewood)
+- (74) 2026-06-29 1E v 3A/B/C/D/F @ Boston (Foxborough)
+- (75) 2026-06-29 1F v 2C @ Monterrey (Guadalupe)
+- (76) 2026-06-29 1C v 2F @ Houston
+- (77) 2026-06-30 1I v 3C/D/F/G/H @ New York/New Jersey (East Rutherford)
+- (78) 2026-06-30 2E v 2I @ Dallas (Arlington)
+- (79) 2026-06-30 1A v 3C/E/F/H/I @ Mexico City
+- (80) 2026-07-01 1L v 3E/H/I/J/K @ Atlanta

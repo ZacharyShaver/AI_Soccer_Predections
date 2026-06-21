@@ -133,24 +133,24 @@ Fill the findings template at `discovery/findings/d1-martj42.md`. License is on 
 
 **Files:** `discovery/probes/probe_openfootball.py`, `discovery/findings/d2-openfootball.md`
 
-- [ ] **Step 1: Locate the 2026 fixture files**
+- [x] **Step 1: Locate the 2026 fixture files**
 
 Use the GitHub contents API (`https://api.github.com/repos/openfootball/worldcup/contents/`)
 or the repo tree to find the 2026 (`2026--north-america` or similar) Football.TXT files. Log
 the exact path discovered — do not assume it.
 
-- [ ] **Step 2: Capture facts**
+- [x] **Step 2: Capture facts**
 
 Parse one fixture file enough to confirm: number of fixtures, presence of all 48 teams /
 12 groups, date range, venues/cities present, and whether knockout bracket structure is
 encoded. Save raw sample (gitignored) + a small committed excerpt.
 
-- [ ] **Step 3: Cross-check team names against D1**
+- [x] **Step 3: Cross-check team names against D1**
 
 List any team names in the 2026 fixtures that do NOT appear in martj42 results (these become
 alias-table work later). Record them in the findings note.
 
-- [ ] **Step 4: Write findings + commit.**
+- [x] **Step 4: Write findings + commit.**
 
 ---
 
