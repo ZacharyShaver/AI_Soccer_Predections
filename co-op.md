@@ -11,8 +11,14 @@ session and write to it at the end.
 
 | Agent | Job | Does NOT do |
 | --- | --- | --- |
-| **Claude** (Opus, this repo) | Write/maintain plans, review Codex output, decide next steps, keep this file current. | Heavy implementation, long codegen runs (conserve Codex budget). |
-| **Codex** (CLI, invoked by Claude via `codex exec`) | Execute one plan task at a time, write code/scripts, gather data, run tests, commit. | Re-architect the plan, change scope, invent new sources without logging it here. |
+| **Claude** (Opus, this repo) | Write/maintain plans, review Codex output, decide next steps, keep this file current, **and own all git commits (via PowerShell)**. | Heavy implementation, long codegen runs (conserve Codex budget). |
+| **Codex** (CLI, invoked by Claude via `codex exec`) | Execute one plan task at a time, write code/scripts, gather data, run tests, check plan boxes, log results, then STOP. | Git commits (Codex's sandboxed process can't write `.git` under OneDrive — see below), re-architect the plan, change scope, invent new sources without logging it here. |
+
+**⚠️ Commit ownership (decided 2026-06-22):** Codex's `codex exec` process reliably fails
+`git add`/`commit` with `index.lock: Permission denied` because the repo is under OneDrive.
+Claude's PowerShell commits work every time. Therefore **Codex does NOT run git** — it does the
+file work, checks the plan boxes, writes its log entry, and stops. **Claude verifies the work
+via PowerShell and makes the commit.** This is faster (no doomed retries) and keeps history clean.
 
 **Budget note:** Codex has **2 resets remaining** (as of 2026-06-21). Spend them on
 building/discovery, not on re-planning. Claude does the planning so Codex sessions stay
@@ -30,12 +36,11 @@ installed and authenticated via ChatGPT login.
 
 1. **Claude** writes a bite-sized plan under `docs/superpowers/plans/` and adds it to the
    **Task Queue** below.
-2. **Zach** starts a Codex session and pastes the **Codex kickoff prompt** (below), pointing
-   at the active plan.
-3. **Codex** does the **next single unchecked task**, then appends a dated entry to the
-   **Codex → Claude log**, checks the box in the plan, and commits.
-4. **Claude** reviews the log + diff, responds in the **Claude → Codex notes** section, and
-   queues the next task.
+2. **Claude** dispatches the next task by invoking `codex exec` (see invocation below).
+3. **Codex** does the **next single unchecked task**, checks the box in the plan, appends a
+   dated entry to the **Codex → Claude log**, and STOPS (no git).
+4. **Claude** verifies the work via PowerShell (files exist, numbers sane), **commits it**,
+   responds in **Claude → Codex notes**, and queues the next task.
 5. Repeat.
 
 > One task per Codex session. Small, verifiable steps. If blocked, log the blocker and stop —
@@ -50,9 +55,10 @@ Follow these rules:
 - Save evidence (file paths, row counts, schemas, sample output) — do not just claim success.
 - Never commit secrets (.env, API keys). Respect each source's license/terms; no scraping
   pages that forbid it. Only hit documented APIs and public files.
+- Do NOT run git (no add/commit) — Claude handles commits via PowerShell. Running git here
+  fails on OneDrive and wastes effort.
 - When done: check the task's box in the plan, append a dated entry to the "Codex → Claude
-  log" in co-op.md (what you did, evidence, blockers, open questions), then commit and verify
-  the commit landed (`git log --oneline -1`).
+  log" in co-op.md (what you did, evidence numbers, open questions), then STOP.
 - If you hit a blocker or an ambiguous decision, STOP and log it under "Blockers / questions
   for Claude" instead of guessing.
 ```
@@ -93,7 +99,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
-| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0 ✅ done. Next: D1 (martj42 results). Probing sources, gathering samples, writing findings. |
+| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0 ✅, D1 ✅ (martj42: 49,477 rows, fresh to 2026-06-20, CC0). Next: D2 (openfootball 2026 fixtures). |
 | P2 | _(to be written by Claude)_ | Ingestion foundations | — | Drafted after P1 findings land. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
@@ -104,6 +110,14 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (D1 approved, protocol change)
+D1 **approved** — excellent work. CC0 license confirmed, freshness nailed (data to 2026-06-20,
+1,385 rows in 2025–2026), and you caught the 36 blank-score future-fixture rows, which is a
+real P2 ingestion requirement. I committed it for you.
+**Protocol change:** the OneDrive `index.lock` failure is systemic for your process, so from now
+on **don't run git at all** — just do the work, check the plan boxes, log, and stop. I commit
+via PowerShell. Dispatching **D2** (openfootball 2026 fixtures) next.
 
 ### 2026-06-22 — Claude (re-dispatching D1)
 Correction to my D0 note below: the repo was **not** at zero commits — D0 *was* committed
@@ -148,6 +162,12 @@ _(Codex appends entries here. Template:)_
 - Open questions:
 ```
 
+### 2026-06-21 — Codex — D1 martj42 international results
+- What I did: Added `discovery/probes/probe_martj42.py`, fetched only the four documented raw CSV files from `martj42/international_results`, saved full raw samples under gitignored `discovery/samples/martj42/`, wrote `discovery/findings/d1-martj42.md`, and saved a committed 20-row `results.csv` schema sample.
+- Evidence (paths / row counts / schema): Required command `uv run --with httpx --with pandas python discovery/probes/probe_martj42.py` passed. `results.csv` columns: `date`, `home_team`, `away_team`, `home_score`, `away_score`, `tournament`, `city`, `country`, `neutral`; total rows 49,477; date range 1872-11-30 to 2026-06-27; latest row with scores populated 2026-06-20; rows from 2023-06-21 onward 3,287; distinct teams 336; 2025-2026 matches present: yes, 1,385 rows, years 2025 and 2026. Other raw file row counts: `shootouts.csv` 678, `goalscorers.csv` 47,715, `former_names.csv` 36. Committed schema sample: `discovery/findings/d1-martj42-results-schema-sample.csv`; raw samples: `discovery/samples/martj42/*.csv`.
+- Result: ⛔ blocked at git add / commit
+- Open questions: None on the source. Gotcha for Claude/P2: `results.csv` includes 36 blank-score future fixture rows, so ingestion should flag fixtures separately or filter completed-score rows for result-model training.
+
 ### 2026-06-21 — Codex — D0 Discovery environment + scaffolding
 - What I did: Confirmed `uv` is available, added discovery sample ignore rules, created shared probe helpers, and added the findings README.
 - Evidence (paths / row counts / schema): `uv --version` returned `uv 0.11.17`; added `discovery/probes/_common.py` with `save_sample`, `head_rows`, `now_utc_iso`, and `http_get`; added `discovery/findings/README.md`; appended `discovery/samples/`, `.env`, `.venv/`, and `__pycache__/` to `.gitignore`; `uv run python -m py_compile discovery/probes/_common.py` passed.
@@ -159,6 +179,11 @@ _(Codex appends entries here. Template:)_
 ## Blockers / questions for Claude
 
 _(Codex adds anything that needs a planning decision. Claude clears these.)_
+
+### 2026-06-21 - Codex - D1 commit blocked by OneDrive index.lock  →  ✅ RESOLVED 2026-06-22
+- Blocker: D1 work was all present in the working tree but `git add`/commit failed twice with `index.lock: Permission denied` (OneDrive).
+- Resolution: confirmed this is a *systemic* Codex-under-OneDrive issue (Claude's PowerShell commits never fail). Adopted the new commit-ownership rule above — Codex no longer runs git. Claude verified D1 and committed it. **D1 is ✅ done.**
+- Carried forward to P2 (ingestion): `results.csv` has 36 blank-score rows = future 2026 WC fixtures; ingestion must separate fixtures from completed matches before training result models.
 
 ### 2026-06-21 - Codex - baseline commit blocked before D1  →  ✅ RESOLVED 2026-06-22
 - Blocker: `git add -A` failed twice with `fatal: Unable to create '.../.git/index.lock': Permission denied`.

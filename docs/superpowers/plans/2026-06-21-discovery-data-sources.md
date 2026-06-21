@@ -109,20 +109,20 @@ git commit -m "discovery: scaffold probe harness and outputs"
 
 **Files:** `discovery/probes/probe_martj42.py`, `discovery/findings/d1-martj42.md`
 
-- [ ] **Step 1: Probe the raw CSVs**
+- [x] **Step 1: Probe the raw CSVs**
 
 Fetch and inspect (raw GitHub, `master` branch):
 `results.csv`, `shootouts.csv`, `goalscorers.csv`, `former_names.csv` from
 `https://raw.githubusercontent.com/martj42/international_results/master/<file>`.
 
-- [ ] **Step 2: Capture facts**
+- [x] **Step 2: Capture facts**
 
 For `results.csv`: columns, total row count, min/max `date`, count of rows in last 3 years,
 number of distinct teams, and whether 2025–2026 matches are present (freshness check — the
 master plan flags this). Save a 20-row schema sample (committed) and the full raw sample
 (gitignored).
 
-- [ ] **Step 3: Write findings + commit**
+- [x] **Step 3: Write findings + commit**
 
 Fill the findings template at `discovery/findings/d1-martj42.md`. License is on the repo
 (note it). Recommend Phase 1. Commit and log to co-op.md.

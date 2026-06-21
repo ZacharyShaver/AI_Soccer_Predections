@@ -1,0 +1,26 @@
+# Source: martj42 international results (martj42)
+
+- **Reachable:** yes
+- **Access method:** public file
+- **Auth required:** none
+- **License / terms URL:** https://github.com/martj42/international_results/blob/master/LICENSE
+- **Allowed use (1 line):** Repository is licensed CC0-1.0; data can be reused with no copyright restrictions, but keep source provenance in the registry.
+- **Endpoint(s) / URL(s) probed:**
+  - https://raw.githubusercontent.com/martj42/international_results/master/results.csv
+  - https://raw.githubusercontent.com/martj42/international_results/master/shootouts.csv
+  - https://raw.githubusercontent.com/martj42/international_results/master/goalscorers.csv
+  - https://raw.githubusercontent.com/martj42/international_results/master/former_names.csv
+- **Schema (key columns/fields):**
+  - `results.csv`: `date`, `home_team`, `away_team`, `home_score`, `away_score`, `tournament`, `city`, `country`, `neutral`
+  - `shootouts.csv`: `date`, `home_team`, `away_team`, `winner`, `first_shooter`
+  - `goalscorers.csv`: `date`, `home_team`, `away_team`, `team`, `scorer`, `minute`, `own_goal`, `penalty`
+  - `former_names.csv`: `current`, `former`, `start_date`, `end_date`
+- **Row / record count in sample:** full raw files saved locally: `results.csv` 49,477 rows; `shootouts.csv` 678 rows; `goalscorers.csv` 47,715 rows; `former_names.csv` 36 rows. Committed schema sample has 20 `results.csv` data rows.
+- **Date range / freshness (latest record date):** `results.csv` spans 1872-11-30 to 2026-06-27. Latest row with both scores populated is 2026-06-20. Last-3-years window from 2023-06-21 contains 3,287 rows. Distinct teams across home/away columns: 336. 2025-2026 matches are present: yes, 1,385 rows, with both 2025 and 2026 present.
+- **Frozen?** no - current file includes 2025 and 2026 records, including 2026 FIFA World Cup fixture rows.
+- **2026 World Cup relevance:** high - useful Phase 1 source for historical international results, Elo-style features, team-name coverage, and early 2026 World Cup fixture awareness.
+- **Gotchas:** `results.csv` currently includes 36 rows with blank `home_score` or `away_score`; these are future 2026 FIFA World Cup fixtures relative to the 2026-06-21 probe run, so ingestion must flag fixtures separately or filter for completed matches before training result models. Team names use current successor names, while `country` uses the country name at match time.
+- **Recommended phase:** 1
+- **Retention recommendation:** raw_retention_days=30, bronze_retention_days=3650
+- **Sample saved at:** `discovery/samples/martj42/results.csv`, `discovery/samples/martj42/shootouts.csv`, `discovery/samples/martj42/goalscorers.csv`, `discovery/samples/martj42/former_names.csv`; committed schema sample: `discovery/findings/d1-martj42-results-schema-sample.csv`
+- **Status:** usable with caveats

@@ -1,0 +1,21 @@
+date,home_team,away_team,home_score,away_score,tournament,city,country,neutral
+1872-11-30,Scotland,England,0.0,0.0,Friendly,Glasgow,Scotland,False
+1873-03-08,England,Scotland,4.0,2.0,Friendly,London,England,False
+1874-03-07,Scotland,England,2.0,1.0,Friendly,Glasgow,Scotland,False
+1875-03-06,England,Scotland,2.0,2.0,Friendly,London,England,False
+1876-03-04,Scotland,England,3.0,0.0,Friendly,Glasgow,Scotland,False
+1876-03-25,Scotland,Wales,4.0,0.0,Friendly,Glasgow,Scotland,False
+1877-03-03,England,Scotland,1.0,3.0,Friendly,London,England,False
+1877-03-05,Wales,Scotland,0.0,2.0,Friendly,Wrexham,Wales,False
+1878-03-02,Scotland,England,7.0,2.0,Friendly,Glasgow,Scotland,False
+1878-03-23,Scotland,Wales,9.0,0.0,Friendly,Glasgow,Scotland,False
+1879-01-18,England,Wales,2.0,1.0,Friendly,London,England,False
+1879-04-05,England,Scotland,5.0,4.0,Friendly,London,England,False
+1879-04-07,Wales,Scotland,0.0,3.0,Friendly,Wrexham,Wales,False
+1880-03-13,Scotland,England,5.0,4.0,Friendly,Glasgow,Scotland,False
+1880-03-15,Wales,England,2.0,3.0,Friendly,Wrexham,Wales,False
+1880-03-27,Scotland,Wales,5.0,1.0,Friendly,Glasgow,Scotland,False
+1881-02-26,England,Wales,0.0,1.0,Friendly,Blackburn,England,False
+1881-03-12,England,Scotland,1.0,6.0,Friendly,London,England,False
+1881-03-14,Wales,Scotland,1.0,5.0,Friendly,Wrexham,Wales,False
+1882-02-18,Northern Ireland,England,0.0,13.0,Friendly,Belfast,Ireland,False
