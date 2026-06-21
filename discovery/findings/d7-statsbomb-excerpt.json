@@ -1,0 +1,299 @@
+{
+  "event_summary": {
+    "distinct_event_types": [
+      "50/50",
+      "Ball Receipt*",
+      "Ball Recovery",
+      "Block",
+      "Carry",
+      "Clearance",
+      "Dispossessed",
+      "Dribble",
+      "Dribbled Past",
+      "Duel",
+      "Foul Committed",
+      "Foul Won",
+      "Goal Keeper",
+      "Half End",
+      "Half Start",
+      "Injury Stoppage",
+      "Interception",
+      "Miscontrol",
+      "Offside",
+      "Pass",
+      "Player Off",
+      "Player On",
+      "Pressure",
+      "Shield",
+      "Shot",
+      "Starting XI",
+      "Substitution",
+      "Tactical Shift"
+    ],
+    "event_count": 3299,
+    "example_events": [
+      {
+        "id": "acba06a5-b261-4cb4-bc79-8a5cdec328e3",
+        "index": 1,
+        "location": null,
+        "period": 1,
+        "player": null,
+        "team": "Qatar",
+        "timestamp": "00:00:00.000",
+        "type": "Starting XI"
+      },
+      {
+        "id": "01154885-90ea-4577-9c0d-9bf97721a323",
+        "index": 431,
+        "location": [
+          108.1,
+          40.1
+        ],
+        "period": 1,
+        "player": "Enner Remberto Valencia Lastra",
+        "shot": {
+          "body_part": "Right Foot",
+          "outcome": "Goal",
+          "statsbomb_xg": 0.7835
+        },
+        "team": "Ecuador",
+        "timestamp": "00:15:49.482",
+        "type": "Shot"
+      },
+      {
+        "id": "70734a3c-66ec-495c-8a1d-30a771406518",
+        "index": 5,
+        "location": [
+          60.0,
+          40.0
+        ],
+        "pass": {
+          "angle": 2.5748634,
+          "height": "Ground Pass",
+          "length": 2.607681,
+          "outcome": null,
+          "recipient": "Akram Hassan Afif"
+        },
+        "period": 1,
+        "player": "Almoez Ali Zainalabiddin Abdulla",
+        "team": "Qatar",
+        "timestamp": "00:00:00.887",
+        "type": "Pass"
+      },
+      {
+        "id": "b81dd9d3-c008-4993-bdee-4d954785794b",
+        "index": 2405,
+        "location": null,
+        "period": 2,
+        "player": "Romario Andr\u00e9s Ibarra Mina",
+        "team": "Ecuador",
+        "timestamp": "00:22:06.845",
+        "type": "Substitution"
+      }
+    ],
+    "pass_count": 987,
+    "shot_count": 11,
+    "shots_with_statsbomb_xg": 11,
+    "starting_xi_event_count": 2
+  },
+  "events_file_bytes": 2799478,
+  "events_file_kilobytes": 2733.9,
+  "fifa_world_cup_rows": [
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T02:02:41.853159",
+      "match_updated": "2026-05-04T02:02:41.853159",
+      "season_id": 269,
+      "season_name": "1958"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T02:05:35.653887",
+      "match_updated": "2026-05-04T02:05:35.653887",
+      "season_id": 270,
+      "season_name": "1962"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T02:09:10.916859",
+      "match_updated": "2026-05-04T02:09:10.916859",
+      "season_id": 272,
+      "season_name": "1970"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-15T02:20:43.439689",
+      "match_updated": "2026-05-15T02:20:43.439689",
+      "season_id": 51,
+      "season_name": "1974"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T01:30:23.212111",
+      "match_updated": "2026-05-04T01:30:23.212111",
+      "season_id": 54,
+      "season_name": "1986"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2023-06-28T10:58:20.137929",
+      "match_updated": "2023-06-28T10:58:20.137929",
+      "season_id": 55,
+      "season_name": "1990"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-15T15:48:12.789440",
+      "match_updated": "2026-05-15T15:48:12.789440",
+      "season_id": 3,
+      "season_name": "2018"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T01:48:57.914346",
+      "match_updated": "2026-05-04T01:48:57.914346",
+      "season_id": 106,
+      "season_name": "2022"
+    }
+  ],
+  "generated_at": "2026-06-21T19:08:17+00:00",
+  "sample_match": {
+    "away_score": 2,
+    "away_team": "Ecuador",
+    "competition": "FIFA World Cup",
+    "home_score": 0,
+    "home_team": "Qatar",
+    "kick_off": "16:00:00.000",
+    "match_date": "2022-11-20",
+    "match_id": 3857286,
+    "season": "2022",
+    "stadium": "Al Bayt Stadium"
+  },
+  "selected_competition": {
+    "competition_id": 43,
+    "competition_name": "FIFA World Cup",
+    "country_name": "International",
+    "match_available": "2026-05-04T01:48:57.914346",
+    "match_updated": "2026-05-04T01:48:57.914346",
+    "season_id": 106,
+    "season_name": "2022"
+  },
+  "source": "StatsBomb open data",
+  "world_cup_rows": [
+    {
+      "competition_id": 1470,
+      "competition_name": "FIFA U20 World Cup",
+      "country_name": "International",
+      "match_available": "2024-02-13T14:20:59.825440",
+      "match_updated": "2024-02-13T14:20:59.825440",
+      "season_id": 274,
+      "season_name": "1979"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T02:02:41.853159",
+      "match_updated": "2026-05-04T02:02:41.853159",
+      "season_id": 269,
+      "season_name": "1958"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T02:05:35.653887",
+      "match_updated": "2026-05-04T02:05:35.653887",
+      "season_id": 270,
+      "season_name": "1962"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T02:09:10.916859",
+      "match_updated": "2026-05-04T02:09:10.916859",
+      "season_id": 272,
+      "season_name": "1970"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-15T02:20:43.439689",
+      "match_updated": "2026-05-15T02:20:43.439689",
+      "season_id": 51,
+      "season_name": "1974"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T01:30:23.212111",
+      "match_updated": "2026-05-04T01:30:23.212111",
+      "season_id": 54,
+      "season_name": "1986"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2023-06-28T10:58:20.137929",
+      "match_updated": "2023-06-28T10:58:20.137929",
+      "season_id": 55,
+      "season_name": "1990"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-15T15:48:12.789440",
+      "match_updated": "2026-05-15T15:48:12.789440",
+      "season_id": 3,
+      "season_name": "2018"
+    },
+    {
+      "competition_id": 43,
+      "competition_name": "FIFA World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-04T01:48:57.914346",
+      "match_updated": "2026-05-04T01:48:57.914346",
+      "season_id": 106,
+      "season_name": "2022"
+    },
+    {
+      "competition_id": 72,
+      "competition_name": "Women's World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-15T15:31:40.299642",
+      "match_updated": "2026-05-15T15:31:40.299642",
+      "season_id": 30,
+      "season_name": "2019"
+    },
+    {
+      "competition_id": 72,
+      "competition_name": "Women's World Cup",
+      "country_name": "International",
+      "match_available": "2026-05-03T13:51:31.021141",
+      "match_updated": "2026-05-03T13:51:31.021141",
+      "season_id": 107,
+      "season_name": "2023"
+    }
+  ]
+}

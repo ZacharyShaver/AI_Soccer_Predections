@@ -248,20 +248,20 @@ live runner later).
 
 **Files:** `discovery/probes/probe_statsbomb.py`, `discovery/findings/d7-statsbomb.md`
 
-- [ ] **Step 1: List competitions**
+- [x] **Step 1: List competitions**
 
 Fetch `competitions.json` from the statsbomb/open-data repo. Identify which World Cup editions
 and other international competitions are available (competition/season ids).
 
-- [ ] **Step 2: Inspect one match's event file**
+- [x] **Step 2: Inspect one match's event file**
 
 Pull one events JSON for a World Cup match; record event types available (shots with xG,
 lineups, etc.) and approximate file size (storage planning).
 
-- [ ] **Step 3: Note attribution requirement**
+- [x] **Step 3: Note attribution requirement**
 
 StatsBomb requires attribution when publishing analysis. Record this clearly. Mark Phase 3
-(event features are deferred per master plan). Write findings + commit.
+(event features are deferred per master plan). Findings written; Claude commits per `co-op.md`.
 
 ---
 
