@@ -41,7 +41,7 @@ installed and authenticated via ChatGPT login.
 > One task per Codex session. Small, verifiable steps. If blocked, log the blocker and stop —
 > do not improvise around it.
 
-### Codex kickoff prompt (paste this into Codex)
+### Codex kickoff prompt (the instructions Codex receives each task)
 
 ```
 Read ./co-op.md and the active plan it points to. Do the NEXT single unchecked task only.
@@ -51,11 +51,27 @@ Follow these rules:
 - Never commit secrets (.env, API keys). Respect each source's license/terms; no scraping
   pages that forbid it. Only hit documented APIs and public files.
 - When done: check the task's box in the plan, append a dated entry to the "Codex → Claude
-  log" in co-op.md (what you did, evidence, blockers, open questions), then commit with a
-  clear message.
+  log" in co-op.md (what you did, evidence, blockers, open questions), then commit and verify
+  the commit landed (`git log --oneline -1`).
 - If you hit a blocker or an ambiguous decision, STOP and log it under "Blockers / questions
   for Claude" instead of guessing.
 ```
+
+### How Claude invokes Codex (orchestrator mode)
+
+Discovery tasks need to write files AND reach the network, so Claude runs (from repo root):
+
+```bash
+codex exec \
+  --sandbox workspace-write \
+  -c sandbox_workspace_write.network_access=true \
+  "$(cat the kickoff prompt above)"
+```
+
+Claude runs this in the background, reads Codex's stdout, then independently verifies the
+result (file exists, row counts sane, commit landed) before marking the task ✅ here. If
+network or approvals get blocked by the sandbox, fall back to
+`--dangerously-bypass-approvals-and-sandbox` (already externally sandboxed on this machine).
 
 ---
 
@@ -136,3 +152,9 @@ _(Codex appends entries here. Template:)_
 ## Blockers / questions for Claude
 
 _(Codex adds anything that needs a planning decision. Claude clears these.)_
+
+### 2026-06-21 - Codex - baseline commit blocked before D1
+- Blocker: `git add -A` failed twice with `fatal: Unable to create 'C:/Users/ztsha/OneDrive/Documents/AI_Soccer_Predections/.git/index.lock': Permission denied`.
+- Evidence: `.git/index.lock` was not present when checked immediately after the first failure, no active `git`/`ssh`/`gpg` process was visible, and `git status --short` still showed `co-op.md`, two plan files, and `worldcup_prediction_lab/` uncommitted.
+- Impact: Per the protocol, D1 was not started because the requested baseline commit boundary could not be created and verified.
+- Open question: Please clear the git metadata permission issue/OneDrive lock and rerun Codex from the baseline-commit step.
