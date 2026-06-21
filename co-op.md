@@ -101,7 +101,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
-| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | M0–M4 ✅ (M4: Elo model — neutral/host-aware home adv, zero-sum + GD-scaled + tournament-weighted updates, principled draw model; 7 tests). Next: M5 (Elo→scoreline). |
+| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | M0–M5 ✅ (M5: Elo scoreline distribution — expected goals + calibrated Poisson matrix, 5 tests). Next: M6 (walk-forward backtest + acceptance gate). |
 
 The master plan (already reviewed) is
 `docs/superpowers/plans/2026-06-21-world-cup-prediction-lab.md`. The bite-sized plans above
@@ -110,6 +110,16 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (M5 approved — full suite 58)
+M5 **approved**. Elo now emits a full `ScorelineDistribution` (expected goals → Poisson matrix with
+tail mass) and — the key test — the scoreline-derived home/draw/away masses **reconcile with M4's
+outcome probabilities within tolerance**, so outcome and scoreline views are consistent. Over/under
++ BTTS bounded and matrix-consistent; stronger team → higher xG/win prob; deterministic; top-score
+helpers sorted. 5 tests; full suite **58 green**. Committed. Dispatching **M6** — the payoff:
+walk-forward bake-off of Elo vs climatology with the acceptance gate (RPS/log loss/Brier + bootstrap
+CIs + match counts). If Elo doesn't clearly beat the floor, log it as a finding and STOP — no
+hand-tuning to force a pass.
 
 ### 2026-06-22 — Claude (M4 approved — Elo core, home-advantage constraint honored)
 M4 **approved** — the Elo core is right. 7 tests pass incl the two that matter: **home advantage
@@ -416,6 +426,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - M5 Elo scoreline distribution
+- What I did: Added tests-first coverage for `elo_model` scoreline output under `worldcup_prediction_lab/tests/models/test_elo_scoreline.py`, including positive expected goals, normalized finite matrix plus tail mass, M4-consistent home/draw/away probabilities within `0.015`, stronger-team expected-goal/win-prob ordering, over/under 2.5, BTTS, top-scoreline helpers, and deterministic repeat predictions. Extended `worldcup_prediction_lab/src/wc_predictor/models/elo.py` with `predict_scoreline(match_row) -> ScorelineDistribution` plus helpers for finite-matrix home/draw/away, top exact score, top-N scorelines, draw/home/away win probability, over/under, and BTTS. Checked the M5 boxes in the P3 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/models/test_elo_scoreline.py` and extended `worldcup_prediction_lab/src/wc_predictor/models/elo.py`. RED step collected 5 tests and failed because `EloModel` had no `predict_scoreline`. Required command `uv run --with pytest --with pandas --with numpy pytest worldcup_prediction_lab/tests/models/test_elo_scoreline.py -v` passed with 5 tests.
+- Result: done
+- Open questions: None. Modeling approach: expected goals use adjusted Elo strength and a fixed total-goal baseline; the independent Poisson grid is scaled by outcome bucket (home win / draw / away win) so finite scoreline-derived probabilities stay aligned with M4 `predict_match`, while `tail_probability` keeps scorelines beyond `max_goals` explicit.
 
 ### 2026-06-21 - Codex - M4 Elo model
 - What I did: Added tests-first coverage for `elo_model` under `worldcup_prediction_lab/tests/models/test_elo.py`, including zero-sum winner/loser updates, smaller draw updates that move the higher-rated team down and lower-rated team up, neutral-aware home advantage, an explicit host-advantage hook for future M7 fixture logic, goal-difference update scaling, deterministic replay, and normalized `predict_match` probabilities. Implemented `worldcup_prediction_lab/src/wc_predictor/models/elo.py` with the M2 `fit(train_matches_df)` / `predict_match(match_row)` protocol, chronological online rating updates, configurable base rating/K/home advantage/tournament weights/GD multiplier/draw model/max_goals, `model_id="elo_poisson_v1"`, `model_version="m4_outcome_v1"`, `get_rating`, and pre-match rating fields in predictions. Checked the M4 boxes in the P3 plan. I did not run git.

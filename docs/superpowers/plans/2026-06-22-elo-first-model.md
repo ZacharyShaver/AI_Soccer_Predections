@@ -172,18 +172,23 @@ probabilities (draw handled explicitly). Export pre-match rating features per ma
 **Files:** extend `src/wc_predictor/models/elo.py` (or `models/poisson.py`),
 `tests/models/test_elo_scoreline.py`.
 
-- [ ] **Step 1: Tests first**
+- [x] **Step 1: Tests first**
 
 Expected goals positive; scoreline matrix sums to 1 incl tail mass; home/draw/away derived from the
 matrix matches the M4 outcome probabilities within tolerance.
 
-- [ ] **Step 2: Implement scoreline mapping**
+- [x] **Step 2: Implement scoreline mapping**
 
 Map Elo rating difference + home/host adjustment → home/away expected goals → bivariate-Poisson-style
 `ScorelineDistribution` (top exact score, top-5, draw=diagonal, over/under, BTTS). This makes Elo
 emit the full `ScorelineDistribution` schema from M0.
 
-- [ ] **Step 3: Run tests; Claude commits.**
+M5 implementation note: expected goals are mapped deterministically from adjusted Elo strength and
+a fixed total-goal baseline, then an independent Poisson grid is bucket-scaled across home-win,
+draw, and away-win cells so the finite matrix's normalized outcome masses match M4's three-way
+probabilities; `tail_probability` remains separate for scores beyond `max_goals`.
+
+- [x] **Step 3: Run tests; Claude commits.**
 
 ---
 
