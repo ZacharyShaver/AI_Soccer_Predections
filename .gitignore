@@ -6,3 +6,16 @@ discovery/samples/
 .env
 .venv/
 __pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+worldcup_prediction_lab/data/raw/*
+!worldcup_prediction_lab/data/raw/.gitkeep
+worldcup_prediction_lab/data/bronze/*
+!worldcup_prediction_lab/data/bronze/.gitkeep
+worldcup_prediction_lab/data/silver/*
+!worldcup_prediction_lab/data/silver/.gitkeep
+worldcup_prediction_lab/data/gold/*
+!worldcup_prediction_lab/data/gold/.gitkeep

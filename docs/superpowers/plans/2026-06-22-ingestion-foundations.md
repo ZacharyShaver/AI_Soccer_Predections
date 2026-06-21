@@ -69,26 +69,26 @@ These resolve the "Decisions Needed Before P2" list in `discovery/DISCOVERY_REPO
 **Files:** `worldcup_prediction_lab/pyproject.toml`, `.env.example`, the medallion + reports + runs
 `.gitkeep` dirs, `src/wc_predictor/__init__.py`, `src/wc_predictor/config/settings.py`.
 
-- [ ] **Step 1: Create the directory + file skeleton**
+- [x] **Step 1: Create the directory + file skeleton**
 
 Create exactly the structure from the master plan "Files and folders to create" (data/raw|bronze|
 silver|gold, reports/{data_quality,model_cards,backtests}, runs/{predictions,evaluations,models},
 config/, src/wc_predictor/{config,data}). Use `.gitkeep` for empty dirs.
 
-- [ ] **Step 2: pyproject + settings**
+- [x] **Step 2: pyproject + settings**
 
 Minimal `pyproject.toml` (package `wc_predictor`, src layout, deps: pandas or polars, duckdb,
 pyyaml, pydantic or dataclasses, pytest, httpx). `settings.py` exposes repo-root-relative paths to
 each medallion layer + config dir. `.env.example` lists only future-optional secret NAMES
 (`THE_ODDS_API_KEY=`) — no values.
 
-- [ ] **Step 3: gitignore data layers**
+- [x] **Step 3: gitignore data layers**
 
 Ensure `worldcup_prediction_lab/data/raw/**`, `bronze/**`, `silver/**`, `gold/**` are gitignored
 (keep `.gitkeep`). Confirm `.env` is ignored. Run `uv run python -c "import wc_predictor"` (or
 py_compile) to confirm the package imports.
 
-- [ ] **Step 4: Findings/log.** Append to co-op log; Claude commits.
+- [x] **Step 4: Findings/log.** Append to co-op log; Claude commits.
 
 ---
 

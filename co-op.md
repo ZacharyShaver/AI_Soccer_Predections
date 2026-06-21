@@ -100,7 +100,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
-| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ⬜ | **Written, ready to dispatch.** 6 tasks I0–I5: scaffold, source registry, alias resolver, results ingest (w/ fixtures-vs-results split), fixtures ingest, DQ rollup. Milestone-1 sources only (martj42 + openfootball). Awaiting go to dispatch I0. |
+| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | 🟡 | I0 ✅ (scaffold: wc_predictor package, medallion dirs, pyproject, settings, gitignore — imports clean). Next: I1 (source registry). |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
 The master plan (already reviewed) is
@@ -110,6 +110,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (I0 approved — build phase begins)
+I0 **approved** — clean scaffold. Full medallion layout matches the master plan, `pyproject.toml`
+uses proper src layout (`wc_predictor`, deps duckdb/httpx/pandas/pyyaml + pytest), `settings.py`
+resolves all layer paths off the package location (CWD-independent), and the gitignore correctly
+ignores data-layer *contents* while keeping `.gitkeep`. Import check passed. Committed.
+Dispatching **I1** (source registry): port `discovery/sources_evidence.yaml` → `config/sources.yaml`
+with the master plan's fuller field shape, typed loader + validation, tests. Zach approved starting
+the build.
 
 ### 2026-06-22 — Claude (D11 approved — DISCOVERY (P1) COMPLETE 🎉)
 D11 **approved**. `DISCOVERY_REPORT.md` is a clean capstone (Milestone-1 shortlist, 10-source
@@ -287,6 +296,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - I0 Package scaffold
+- What I did: Created the `worldcup_prediction_lab/` package scaffold for P2 only: medallion data dirs, reports dirs, runs dirs, notebooks/exploration, package dirs, `pyproject.toml`, `.env.example`, and repo-root-relative path settings. Added root `.gitignore` rules for `worldcup_prediction_lab/data/{raw,bronze,silver,gold}/*` with `.gitkeep` exceptions, and confirmed `.env` was already ignored. I did not run git.
+- Evidence (paths / row counts / schema): Filtered file-tree evidence includes `worldcup_prediction_lab/data/.gitkeep`, `data/raw/.gitkeep`, `data/bronze/.gitkeep`, `data/silver/.gitkeep`, `data/gold/.gitkeep`, `reports/{data_quality,model_cards,backtests}/.gitkeep`, `runs/{predictions,evaluations,models}/.gitkeep`, `notebooks/exploration/.gitkeep`, `src/wc_predictor/__init__.py`, `src/wc_predictor/config/__init__.py`, `src/wc_predictor/config/settings.py`, and `src/wc_predictor/data/__init__.py`. Import check passed with `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache; uv run --with pandas --with duckdb --with pyyaml --with httpx python -c "import sys; sys.path.insert(0,'worldcup_prediction_lab/src'); import wc_predictor; from wc_predictor.config import settings; print('import OK'); print(settings.RAW_DIR)"`, output: `import OK` and `C:\Users\ztsha\OneDrive\Documents\AI_Soccer_Predections\worldcup_prediction_lab\data\raw`.
+- Result: done
+- Open questions: None.
 
 ### 2026-06-21 - Codex - D11 Aggregate discovery report + evidence registry
 - What I did: Synthesized the already-committed D1-D10 findings into the final discovery report and evidence registry without re-probing the network or running git. Checked the D11 boxes in the active plan.
