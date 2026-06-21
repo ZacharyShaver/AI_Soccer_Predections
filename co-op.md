@@ -100,7 +100,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
-| P2 | _(Claude writing next)_ | Ingestion foundations | 🟡 | Being written by Claude from P1 findings. Must bake in: fixtures/results split, alias table, de-vig, own-Elo, footballdata-local-only. |
+| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ⬜ | **Written, ready to dispatch.** 6 tasks I0–I5: scaffold, source registry, alias resolver, results ingest (w/ fixtures-vs-results split), fixtures ingest, DQ rollup. Milestone-1 sources only (martj42 + openfootball). Awaiting go to dispatch I0. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
 The master plan (already reviewed) is
