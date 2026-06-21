@@ -178,19 +178,19 @@ finding, not an error.
 
 **Files:** `discovery/probes/probe_footballdata.py`, `discovery/findings/d4-footballdata.md`
 
-- [ ] **Step 1: Survey coverage**
+- [x] **Step 1: Survey coverage**
 
 Football-Data.co.uk is primarily club leagues. Determine whether it has any
 international / World Cup historical odds at all, or only domestic leagues. Fetch one sample
 CSV/Excel (e.g. a recent league file) to confirm the odds column schema (B365H/D/A, etc.) and
 test that `openpyxl` reads their `.xlsx`.
 
-- [ ] **Step 2: Verdict on relevance**
+- [x] **Step 2: Verdict on relevance**
 
 If it lacks international coverage, mark 2026 relevance LOW and recommend it only as a
 historical odds-schema reference / club-league benchmark. Be honest about this.
 
-- [ ] **Step 3: Write findings + commit.**
+- [x] **Step 3: Write findings + commit.** Findings written; Claude commits per `co-op.md`.
 
 ---
 
