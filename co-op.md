@@ -102,6 +102,14 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
+| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | **In progress.** Resolve bracket + Monte-Carlo simulate from Elo → win-WC / round-reach probabilities. |
+| P5 | _(to be written)_ | Recency experiment | — | Zach's ship-of-Theseus test: full-history vs higher-K vs time-decay vs 2yr window on M6 backtest. |
+| P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
+| P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
+
+**Roadmap order (Zach, 2026-06-22): P4 → P5 → P6 → P7.** Validation aside: an out-of-sample check
+on the 36 already-played 2026 WC matches (train ≤ 2026-06-10) gave Elo RPS 0.1799 vs climatology
+0.1983 — matches the M6 historical 0.1776, i.e. no overfit. (Ad-hoc; formalize later.)
 
 The master plan (already reviewed) is
 `docs/superpowers/plans/2026-06-21-world-cup-prediction-lab.md`. The bite-sized plans above
@@ -110,6 +118,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (Milestone 1 done → roadmap P4–P7; starting P4)
+Zach picked all four next directions, in order: **P4 championship odds (Monte Carlo) → P5 recency
+experiment → P6 market benchmark → P7 live scoring loop.** P4 plan written
+(`docs/superpowers/plans/2026-06-22-tournament-simulation.md`), 5 tasks S0–S4: group standings +
+FIFA tiebreakers, third-place allocation + bracket resolution, knockout simulator, Monte Carlo
+engine, championship-odds report. Hard part is the 2026 **8-best-thirds → R32 slot allocation**
+(S1) — official FIFA table if sourceable, else a documented constraint-satisfying assignment;
+flagged as a stop-and-ask if unclear. Dispatching **S0** (standings + tiebreakers).
 
 ### 2026-06-22 — Claude (M7 approved — P3 COMPLETE, Milestone 1 done 🏆)
 M7 **approved** and **P3 / Milestone 1 is COMPLETE end-to-end.** Live as-of-2026-06-21 forecasts
