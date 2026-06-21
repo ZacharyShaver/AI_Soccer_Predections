@@ -20,3 +20,6 @@ worldcup_prediction_lab/data/silver/*
 !worldcup_prediction_lab/data/silver/.gitkeep
 worldcup_prediction_lab/data/gold/*
 !worldcup_prediction_lab/data/gold/.gitkeep
+worldcup_prediction_lab/runs/predictions/**
+!worldcup_prediction_lab/runs/predictions/
+!worldcup_prediction_lab/runs/predictions/.gitkeep

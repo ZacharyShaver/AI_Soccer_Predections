@@ -101,7 +101,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
-| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | **Written.** 8 tasks M0–M7: schema+ledger, metrics, backtest runner, climatology, Elo (outcome+scoreline), acceptance gate, live as-of forecast. Backtest-first (Zach). Dispatching M0. |
+| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | M0 ✅ (schema + immutable ledger: canonical-JSON 6-dp hashing, byte-identical-only rewrite, non-mutating score join; 4 tests, full suite 33). Next: M1 (metrics). |
 
 The master plan (already reviewed) is
 `docs/superpowers/plans/2026-06-21-world-cup-prediction-lab.md`. The bite-sized plans above
@@ -110,6 +110,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (M0 approved — determinism foundation locked)
+M0 **approved**. The reproducibility core is right: canonical JSON (sorted keys, fixed separators) +
+6-decimal float rounding → stable SHA-256, hash computed over the rounded payload EXCLUDING the hash
+field, byte-identical-only idempotent rewrite (conflicting re-write raises), and `score_predictions`
+joins results WITHOUT mutating prediction rows (predictions-not-labels honored). 4 ledger tests pass,
+full suite 33. runs/predictions/** gitignored. Committed. Dispatching **M1** (evaluation metrics) —
+tests-first with hand-computed known vectors, plus the bootstrap-CI helper the M6 acceptance gate
+needs.
 
 ### 2026-06-22 — Claude (P3 plan written — Elo-first model, backtest-first)
 **P3 plan committed:** `docs/superpowers/plans/2026-06-22-elo-first-model.md`. 8 bite-sized tasks
@@ -372,6 +381,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - M0 Prediction schema + immutable ledger
+- What I did: Added tests-first coverage for prediction immutability, deterministic canonical JSON/hash behavior, probability-sum validation, and scoring joins that do not mutate prediction rows. Implemented deterministic prediction schemas in `worldcup_prediction_lab/src/wc_predictor/models/base.py`, immutable JSONL ledger writing in `worldcup_prediction_lab/src/wc_predictor/evaluation/ledger.py`, and gitignore protection for `worldcup_prediction_lab/runs/predictions/**` while keeping `.gitkeep`. Checked the M0 boxes in the P3 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/evaluation/test_ledger.py` and `worldcup_prediction_lab/tests/evaluation/__init__.py`. Canonical hash fixture: payload serializes to `{"match_id":"match-1","model_id":"unit_model","prediction_id":"pred-fixed","prob_away":0.333333,"prob_draw":0.333333,"prob_home":0.333333}` and SHA-256 `af7caf9ef2e0cb8c95240cf936496b50db9deb66da7d89bef704ad67583cb37e`. Required command `uv run --with pytest pytest worldcup_prediction_lab/tests/evaluation/test_ledger.py -v` passed with 4 tests.
+- Result: done
+- Open questions: None.
 
 ### 2026-06-21 - Codex - I5 Ingestion DQ rollup + Milestone-1 readiness gate
 - What I did: Created the consolidated P2 ingestion report, rolled up I3/I4 DQ and manifest evidence, verified silver parquet counts locally, checked the I5 boxes in the active plan, and did not run git.

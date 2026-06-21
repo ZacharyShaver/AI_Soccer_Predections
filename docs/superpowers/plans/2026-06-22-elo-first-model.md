@@ -69,25 +69,25 @@ the first live forecast set.
 **Files:** `src/wc_predictor/models/base.py`, `src/wc_predictor/evaluation/ledger.py`,
 `tests/evaluation/test_ledger.py`.
 
-- [ ] **Step 1: Tests first — immutability + determinism**
+- [x] **Step 1: Tests first — immutability + determinism**
 
 Assert writing the same `prediction_id` twice fails UNLESS byte-identical. Assert canonical-JSON
 serialization (sorted keys, fixed separators, probabilities rounded to 6 decimals) yields a stable
 SHA-256 `prediction_hash` across re-serialization.
 
-- [ ] **Step 2: Schemas**
+- [x] **Step 2: Schemas**
 
 Define `MatchPrediction` (incl `prediction_hash`, `model_id`, `model_version`, `generated_at_utc`,
 `training_cutoff`, `as_of`, `home/draw/away` probs), `ScorelineDistribution` (per master plan:
 `max_goals`, `home_expected_goals`, `away_expected_goals`, `probabilities`, `tail_probability`),
 `ModelMetadata`, `FeatureSnapshotMetadata`. Probabilities sum to 1 within tolerance.
 
-- [ ] **Step 3: Ledger writer + result-scoring join**
+- [x] **Step 3: Ledger writer + result-scoring join**
 
 Write JSONL partitioned `runs/predictions/date=YYYY-MM-DD/predictions.jsonl`; never overwrite. A
 separate join attaches actual results to stored predictions without mutating prediction rows.
 
-- [ ] **Step 4: Run tests; Claude commits.**
+- [x] **Step 4: Run tests; Claude commits.**
 
 ---
 
