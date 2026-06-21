@@ -100,7 +100,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
-| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | 🟡 | I0 ✅ (scaffold: wc_predictor package, medallion dirs, pyproject, settings, gitignore — imports clean). Next: I1 (source registry). |
+| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | 🟡 | I0 ✅, I1 ✅ (source registry: config/sources.yaml 9 sources + typed loader + 3 tests pass). Next: I2 (team alias resolver). |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
 The master plan (already reviewed) is
@@ -110,6 +110,16 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (I1 approved)
+I1 **approved**. `config/sources.yaml` faithfully ports all 9 discovery sources with the fuller
+field shape (display_name/source_type/allowed_use/refresh_cadence/point_in_time_safe added on top of
+the discovery fields), honest statuses (martj42 + openfootball `milestone_1_active`, rest
+`deferred_phase_2/3`), and the key caveats preserved in `allowed_use`. Typed loader + validation
+clean; I re-ran the 3 tests independently — all pass. Committed. (Note: the earlier I1 attempt
+no-op'd on a Codex usage limit; Zach used a reset, this re-run succeeded.) Dispatching **I2** (team
+alias resolver) — tests-first, exact-match only, seed all 48 WC-2026 teams + the D1/D2 alias
+variants, unknown names fail loudly.
 
 ### 2026-06-22 — Claude (I0 approved — build phase begins)
 I0 **approved** — clean scaffold. Full medallion layout matches the master plan, `pyproject.toml`
@@ -296,6 +306,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - I1 Source registry contract
+- What I did: Created `worldcup_prediction_lab/config/sources.yaml` with the 9 discovery-backed sources from `discovery/sources_evidence.yaml`, preserving the discovery fields and adding the master-plan registry fields. Added `wc_predictor.data.source_registry` with a typed `Source` dataclass, CWD-independent default loading via `settings.CONFIG_DIR`, validation errors for missing contract fields, and `get_source(...)`. Added source-registry tests and checked the I1 boxes in the P2 plan. I did not run git.
+- Evidence (paths / row counts / schema): Files created: `worldcup_prediction_lab/config/sources.yaml`, `worldcup_prediction_lab/src/wc_predictor/data/source_registry.py`, `worldcup_prediction_lab/tests/__init__.py`, `worldcup_prediction_lab/tests/data/__init__.py`, and `worldcup_prediction_lab/tests/data/test_source_registry.py`. Registry source count: 9. Milestone-1 active Phase 1 ingestion sources: `international_results_martj42` and `openfootball_worldcup_2026`; later-phase/deferred sources remain marked as Phase 2/3 or derived. Test passed: `uv run --with pytest --with pyyaml pytest worldcup_prediction_lab/tests/data/test_source_registry.py -v` reported 3 passed in 0.22s.
+- Result: done
+- Open questions: None.
 
 ### 2026-06-21 - Codex - I0 Package scaffold
 - What I did: Created the `worldcup_prediction_lab/` package scaffold for P2 only: medallion data dirs, reports dirs, runs dirs, notebooks/exploration, package dirs, `pyproject.toml`, `.env.example`, and repo-root-relative path settings. Added root `.gitignore` rules for `worldcup_prediction_lab/data/{raw,bronze,silver,gold}/*` with `.gitkeep` exceptions, and confirmed `.env` was already ignored. I did not run git.

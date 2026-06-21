@@ -1,0 +1,280 @@
+sources:
+  - source_id: international_results_martj42
+    display_name: martj42 International Results
+    source_type: historical_results_file
+    access_method: public_file
+    license_or_terms_url: https://github.com/martj42/international_results/blob/master/LICENSE
+    allowed_use: historical international results and Elo training history; split blank-score rows as fixtures only
+    refresh_cadence: per_ingestion_snapshot
+    requires_secret: false
+    point_in_time_safe: true
+    raw_retention_days: 30
+    bronze_retention_days: 3650
+    primary_keys:
+      - date
+      - home_team
+      - away_team
+      - tournament
+      - city
+      - country
+    required_fields:
+      - date
+      - home_team
+      - away_team
+      - home_score
+      - away_score
+      - tournament
+      - city
+      - country
+      - neutral
+    phase: 1
+    status: milestone_1_active_usable_with_caveats
+
+  - source_id: openfootball_worldcup_2026
+    display_name: openfootball World Cup 2026 Fixtures
+    source_type: fixture_files
+    access_method: github_contents_plus_raw_files
+    license_or_terms_url: https://github.com/openfootball/worldcup/blob/master/LICENSE.md
+    allowed_use: 2026 World Cup fixture and bracket source for Milestone 1
+    refresh_cadence: per_ingestion_snapshot
+    requires_secret: false
+    point_in_time_safe: true
+    raw_retention_days: 30
+    bronze_retention_days: 3650
+    primary_keys:
+      - match_date
+      - home_team
+      - away_team
+      - section
+      - venue
+    required_fields:
+      - file_path
+      - section
+      - match_date
+      - home_team
+      - away_team
+      - venue
+    phase: 1
+    status: milestone_1_active_usable_with_caveats
+
+  - source_id: football_data_uk_worldcup_odds
+    display_name: Football-Data.co.uk World Cup Odds
+    source_type: odds_workbook_files
+    access_method: public_html_index_plus_csv_xlsx_files
+    license_or_terms_url: https://www.football-data.co.uk/data.php
+    allowed_use: phase 2 odds benchmark; keep raw files local and do not redistribute
+    refresh_cadence: deferred_phase_2
+    requires_secret: false
+    point_in_time_safe: false
+    raw_retention_days: 30
+    bronze_retention_days: 3650
+    primary_keys:
+      - Competition
+      - Date
+      - Home
+      - Away
+    required_fields:
+      - Competition
+      - Home
+      - Away
+      - Date
+      - Time
+      - bet365-H
+      - bet365-D
+      - bet365-A
+      - H-Max
+      - D-Max
+      - A-Max
+      - H-Avg
+      - D-Avg
+      - A-Avg
+    phase: 2
+    status: deferred_phase_2_usable_with_caveats
+
+  - source_id: polymarket_gamma_worldcup
+    display_name: Polymarket Gamma World Cup Markets
+    source_type: market_data_api
+    access_method: public_rest
+    license_or_terms_url: https://docs.polymarket.com/market-data/overview
+    allowed_use: phase 2 market-implied benchmark after valid-price filtering and de-vig
+    refresh_cadence: deferred_phase_2
+    requires_secret: false
+    point_in_time_safe: true
+    raw_retention_days: 7
+    bronze_retention_days: 3650
+    primary_keys:
+      - event_id
+      - market_id
+      - observed_at
+    required_fields:
+      - id
+      - title
+      - slug
+      - active
+      - closed
+      - endDate
+      - volume
+      - liquidity
+      - markets
+      - question
+      - outcomes
+      - outcomePrices
+    phase: 2
+    status: deferred_phase_2_usable_with_caveats
+
+  - source_id: the_odds_api_worldcup
+    display_name: The Odds API World Cup
+    source_type: odds_api
+    access_method: rest_api_key
+    license_or_terms_url: https://the-odds-api.com/liveapi/guides/v4/
+    allowed_use: optional phase 2 live odds source with API key, quota guard, and request allowlist
+    refresh_cadence: deferred_phase_2
+    requires_secret: true
+    point_in_time_safe: true
+    raw_retention_days: 7
+    bronze_retention_days: 3650
+    primary_keys:
+      - id
+      - bookmaker_key
+      - market_key
+      - outcome_name
+      - observed_at
+    required_fields:
+      - id
+      - sport_key
+      - sport_title
+      - commence_time
+      - home_team
+      - away_team
+      - bookmakers
+      - key
+      - title
+      - last_update
+      - markets
+      - outcomes
+    phase: 2
+    status: deferred_phase_2_usable_with_caveats_docs_only_no_key
+
+  - source_id: statsbomb_open_data
+    display_name: StatsBomb Open Data
+    source_type: event_data_files
+    access_method: github_raw_public_files
+    license_or_terms_url: https://raw.githubusercontent.com/statsbomb/open-data/master/LICENSE.pdf
+    allowed_use: phase 3 historical event-feature source with attribution
+    refresh_cadence: deferred_phase_3
+    requires_secret: false
+    point_in_time_safe: false
+    raw_retention_days: 30
+    bronze_retention_days: 3650
+    primary_keys:
+      - competition_id
+      - season_id
+      - match_id
+      - event_id
+    required_fields:
+      - competition_id
+      - season_id
+      - competition_name
+      - season_name
+      - match_id
+      - match_date
+      - home_team
+      - away_team
+      - id
+      - index
+      - period
+      - timestamp
+      - type.name
+      - team.name
+    phase: 3
+    status: deferred_phase_3_usable_with_caveats
+
+  - source_id: internal_elo_from_martj42
+    display_name: Internal Elo From martj42 Results
+    source_type: derived_feature_table
+    access_method: derived_internal_from_international_results
+    license_or_terms_url: https://github.com/martj42/international_results/blob/master/LICENSE
+    allowed_use: deterministic internal Elo features derived from completed martj42 result rows
+    refresh_cadence: derived_after_international_results_ingestion
+    requires_secret: false
+    point_in_time_safe: true
+    raw_retention_days: 0
+    bronze_retention_days: 3650
+    primary_keys:
+      - match_id
+      - date
+      - home_team
+      - away_team
+    required_fields:
+      - match_id
+      - date
+      - home_team
+      - away_team
+      - pre_match_home_elo
+      - pre_match_away_elo
+      - expected_score
+      - result
+      - k_factor
+      - tournament_weight
+      - neutral
+      - post_match_home_elo
+      - post_match_away_elo
+    phase: 1
+    status: phase_1_derived_for_p3_usable
+
+  - source_id: gdelt_doc_news_metadata
+    display_name: GDELT DOC News Metadata
+    source_type: news_metadata_api
+    access_method: public_rest_metadata_only
+    license_or_terms_url: https://www.gdeltproject.org/data.html
+    allowed_use: phase 3 metadata-only news context; no article body storage
+    refresh_cadence: deferred_phase_3
+    requires_secret: false
+    point_in_time_safe: true
+    raw_retention_days: 7
+    bronze_retention_days: 365
+    primary_keys:
+      - source
+      - url
+      - published_at
+      - observed_at
+    required_fields:
+      - observed_at
+      - source
+      - title
+      - url
+      - published_at
+    phase: 3
+    status: deferred_phase_3_usable_with_caveats_metadata_only
+
+  - source_id: social_aggregates_x_reddit
+    display_name: X and Reddit Social Aggregates
+    source_type: social_aggregate_api
+    access_method: future_api_aggregate_only
+    license_or_terms_url: https://redditinc.com/policies/data-api-terms
+    allowed_use: phase 3 compliant timestamped aggregates only; no raw user text and no training on user content without permission
+    refresh_cadence: deferred_phase_3
+    requires_secret: true
+    point_in_time_safe: true
+    raw_retention_days: 0
+    bronze_retention_days: 365
+    primary_keys:
+      - source
+      - observed_at
+      - team_id
+      - window_start
+      - window_end
+      - metric_name
+      - method_version
+    required_fields:
+      - source
+      - observed_at
+      - team_id
+      - match_id
+      - window_start
+      - window_end
+      - metric_name
+      - metric_value
+      - method_version
+    phase: 3
+    status: deferred_phase_3_usable_with_strict_caveats_aggregate_only

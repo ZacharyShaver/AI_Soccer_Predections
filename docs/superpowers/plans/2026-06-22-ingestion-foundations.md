@@ -97,7 +97,7 @@ py_compile) to confirm the package imports.
 **Files:** `config/sources.yaml`, `src/wc_predictor/data/source_registry.py`,
 `tests/data/test_source_registry.py`.
 
-- [ ] **Step 1: Port the registry from discovery evidence**
+- [x] **Step 1: Port the registry from discovery evidence**
 
 Translate `discovery/sources_evidence.yaml` into `config/sources.yaml` using the master plan's
 **full** field shape (add `display_name`, `source_type`, `allowed_use`, `refresh_cadence`,
@@ -105,19 +105,19 @@ Translate `discovery/sources_evidence.yaml` into `config/sources.yaml` using the
 status honestly: martj42 + openfootball as Milestone-1 active; the rest as later-phase. Do not
 invent fields not backed by discovery.
 
-- [ ] **Step 2: Loader + validation**
+- [x] **Step 2: Loader + validation**
 
 `source_registry.py`: load `sources.yaml` into typed `Source` objects; validate each has
 `source_id`, non-empty `required_fields`, `raw_retention_days >= 0`, a `license_or_terms_url`, and a
 valid `phase`/`status`. Expose lookup by `source_id`.
 
-- [ ] **Step 3: Tests**
+- [x] **Step 3: Tests**
 
 Port the master plan's `test_sources_have_required_fields` shape: every source has an id, retention
 >= 0, and non-empty required fields. Add a test that `international_results_martj42` and
 `openfootball_worldcup_2026` are present and Phase 1. `uv run pytest .../test_source_registry.py -v`.
 
-- [ ] **Step 4: Findings/log.** Claude commits.
+- [x] **Step 4: Findings/log.** Claude commits.
 
 ---
 
