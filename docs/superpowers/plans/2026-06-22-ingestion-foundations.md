@@ -126,14 +126,14 @@ Port the master plan's `test_sources_have_required_fields` shape: every source h
 **Files:** `config/team_aliases.csv`, `src/wc_predictor/data/team_aliases.py`,
 `tests/data/test_team_aliases.py`.
 
-- [ ] **Step 1: Write alias tests first**
+- [x] **Step 1: Write alias tests first**
 
 Cover the difficult cases from discovery: `USA`→`United States`, `Bosnia & Herzegovina`→
 `Bosnia and Herzegovina`, `Czech Republic`/`Czechia`, `DR Congo`/`Congo DR`,
 `Ivory Coast`/`Cote d'Ivoire`, `IR Iran`, `Korea Republic`, `Cabo Verde`, `Turkiye`/`Turkey`. Also
 test that an unknown name raises (no silent pass).
 
-- [ ] **Step 2: Seed `team_aliases.csv`**
+- [x] **Step 2: Seed `team_aliases.csv`**
 
 Columns from the master plan: `canonical_team_id`, `canonical_name`, `source_name`,
 `source_team_name`, `valid_from`, `valid_to`, `confidence`, `manual_review_status`. Seed all 48
@@ -141,19 +141,19 @@ WC-2026 teams (from D2 fixtures) + the alias variants observed in D1/D2. Source 
 from the openfootball/FIFA display set; map martj42 `home_team`/`away_team` spellings as
 `source_name=martj42`.
 
-- [ ] **Step 3: Implement resolver**
+- [x] **Step 3: Implement resolver**
 
 `TeamAliasResolver.from_csv(...)`, `.resolve(name, source) -> Alias(canonical_team_id,
 canonical_name)`. Exact match (case/whitespace-normalized) only; explicit failure on unknown. No
 fuzzy matching in Milestone 1.
 
-- [ ] **Step 4: Validate coverage against real data**
+- [x] **Step 4: Validate coverage against real data**
 
 Load the D1 sample (`discovery/findings/d1-martj42-results-schema-sample.csv`) and the D2 fixture
 team list; assert every WC-2026 fixture team resolves. List any martj42 team in recent results that
 does NOT resolve (report, don't crash) so we can extend the table. Run tests.
 
-- [ ] **Step 5: Findings/log.** Claude commits.
+- [x] **Step 5: Findings/log.** Claude commits.
 
 ---
 
@@ -175,14 +175,20 @@ fixtures/results split (decision #1).
 - Parse to bronze Parquet (source-shaped, stable columns).
 - **Split:** rows with both scores populated → silver `matches`; blank-score rows → silver
   `fixtures` (tagged `source=martj42`, status `scheduled`). Never let blank-score rows become labels.
-- Normalize `home_team`/`away_team` via the I2 resolver → `home_team_id`/`away_team_id`.
+- Normalize `home_team`/`away_team` → `home_team_id`/`away_team_id`. **Canonical set comes FROM
+  martj42** (the reference corpus, ~336 distinct teams): build the canonical team dimension from the
+  martj42 distinct names. A martj42 name not in the I2 alias table is **identity-canonicalized**
+  (auto-registered with a deterministic id) — it does NOT fail. The I2 alias table maps *other*
+  sources' spellings onto these canonical names; "fail loudly on unknown" applies to openfootball in
+  I4, not to the martj42 base corpus here.
 
 - [ ] **Step 3: Data-quality checks**
 
 - `matches`: no missing date/team/score; scores are non-negative integers; `neutral` boolean; no
   duplicate `(date, home_team_id, away_team_id, tournament, city)`.
 - Freshness assertion: `matches` contains 2025 AND 2026 rows (D1 recorded 1,385 in 2025–2026).
-- Every team id resolved (no nulls); unresolved names fail the run with a clear list.
+- Every team id resolved (no nulls). Since martj42 names are identity-canonicalized, this should
+  always hold; emit the count of auto-registered (non-aliased) canonical teams for visibility.
 
 - [ ] **Step 4: Run tests + DQ summary**
 

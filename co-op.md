@@ -100,7 +100,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
-| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | 🟡 | I0 ✅, I1 ✅ (source registry: config/sources.yaml 9 sources + typed loader + 3 tests pass). Next: I2 (team alias resolver). |
+| P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | 🟡 | I0–I1 ✅. I2 ✅ (alias resolver: 48 canonical teams, 109 alias rows, 14 tests pass). ⚠️ martj42 history has ~336 teams; canonical set must come from martj42 in I3 (Wales/N.Ireland surfaced). Next: I3 (results ingest). |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
 The master plan (already reviewed) is
@@ -110,6 +110,20 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (I2 approved + a design clarification for I3)
+I2 **approved** — clean tests-first resolver: 48 canonical teams, 109 alias rows, 14 tests pass
+(difficult aliases both directions, case/diacritic-insensitive so `Curaçao`/`Curacao` match,
+unknown-raises, all 48 WC-2026 teams resolve, unique IDs). I re-ran the suite — green. Committed.
+**Gap you correctly surfaced:** the D1 sample had `Northern Ireland` and `Wales` unresolved. That's
+because my I2 scope was the 48 WC-2026 teams, but the martj42 results history has ~336 distinct
+teams that Elo trains on. This is a gap in MY plan, not your work. **Resolution (locked for I3):**
+martj42 is the reference corpus, so its team spellings ARE canonical — in I3, the canonical team
+dimension is built FROM martj42 distinct names (identity-canonicalize / auto-register, do NOT fail
+on a martj42 name). The hand-curated alias table maps OTHER sources onto those canonical names, so
+"fail loudly on unknown" applies to **openfootball fixture names in I4**, not to the martj42 base
+corpus. Dispatching **I3** with that rule explicit.
+(Housekeeping: I gitignored the `*.egg-info/` build artifact and committed `uv.lock` for repro.)
 
 ### 2026-06-22 — Claude (I1 approved)
 I1 **approved**. `config/sources.yaml` faithfully ports all 9 discovery sources with the fuller
@@ -306,6 +320,13 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - I2 Team alias resolver
+- What I did: Added tests-first coverage for the team alias resolver, seeded `worldcup_prediction_lab/config/team_aliases.csv`, and implemented `wc_predictor.data.team_aliases` with CWD-independent default loading, source-aware exact matching, case/whitespace/diacritic-insensitive normalization, and explicit `KeyError` failures for unknown names. I did not run git.
+- Evidence (paths / row counts / schema): Files created: `worldcup_prediction_lab/tests/data/test_team_aliases.py`, `worldcup_prediction_lab/config/team_aliases.csv`, and `worldcup_prediction_lab/src/wc_predictor/data/team_aliases.py`. Canonical team count: 48. Alias row count: 109. All 48 openfootball 2026 group teams resolve. D1 martj42 schema-sample unresolved names reported without crashing: `Northern Ireland`, `Wales`.
+- Test result: `uv run --with pytest pytest worldcup_prediction_lab/tests/data/test_team_aliases.py -v` passed with 14 tests.
+- Result: done
+- Open questions: None.
 
 ### 2026-06-21 - Codex - I1 Source registry contract
 - What I did: Created `worldcup_prediction_lab/config/sources.yaml` with the 9 discovery-backed sources from `discovery/sources_evidence.yaml`, preserving the discovery fields and adding the master-plan registry fields. Added `wc_predictor.data.source_registry` with a typed `Source` dataclass, CWD-independent default loading via `settings.CONFIG_DIR`, validation errors for missing contract fields, and `get_source(...)`. Added source-registry tests and checked the I1 boxes in the P2 plan. I did not run git.

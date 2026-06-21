@@ -1,0 +1,110 @@
+canonical_team_id,canonical_name,source_name,source_team_name,valid_from,valid_to,confidence,manual_review_status
+MEX,Mexico,manual,Mexico,,,1.0,approved
+ZAF,South Africa,manual,South Africa,,,1.0,approved
+KOR,South Korea,manual,South Korea,,,1.0,approved
+CZE,Czechia,manual,Czechia,,,1.0,approved
+CAN,Canada,manual,Canada,,,1.0,approved
+BIH,Bosnia and Herzegovina,manual,Bosnia and Herzegovina,,,1.0,approved
+QAT,Qatar,manual,Qatar,,,1.0,approved
+SUI,Switzerland,manual,Switzerland,,,1.0,approved
+BRA,Brazil,manual,Brazil,,,1.0,approved
+MAR,Morocco,manual,Morocco,,,1.0,approved
+HAI,Haiti,manual,Haiti,,,1.0,approved
+SCO,Scotland,manual,Scotland,,,1.0,approved
+USA,United States,manual,United States,,,1.0,approved
+PAR,Paraguay,manual,Paraguay,,,1.0,approved
+AUS,Australia,manual,Australia,,,1.0,approved
+TUR,Turkey,manual,Turkey,,,1.0,approved
+GER,Germany,manual,Germany,,,1.0,approved
+CUW,Curaçao,manual,Curaçao,,,1.0,approved
+CIV,Ivory Coast,manual,Ivory Coast,,,1.0,approved
+ECU,Ecuador,manual,Ecuador,,,1.0,approved
+NED,Netherlands,manual,Netherlands,,,1.0,approved
+JPN,Japan,manual,Japan,,,1.0,approved
+SWE,Sweden,manual,Sweden,,,1.0,approved
+TUN,Tunisia,manual,Tunisia,,,1.0,approved
+BEL,Belgium,manual,Belgium,,,1.0,approved
+EGY,Egypt,manual,Egypt,,,1.0,approved
+IRN,Iran,manual,Iran,,,1.0,approved
+NZL,New Zealand,manual,New Zealand,,,1.0,approved
+ESP,Spain,manual,Spain,,,1.0,approved
+CPV,Cape Verde,manual,Cape Verde,,,1.0,approved
+KSA,Saudi Arabia,manual,Saudi Arabia,,,1.0,approved
+URU,Uruguay,manual,Uruguay,,,1.0,approved
+FRA,France,manual,France,,,1.0,approved
+SEN,Senegal,manual,Senegal,,,1.0,approved
+IRQ,Iraq,manual,Iraq,,,1.0,approved
+NOR,Norway,manual,Norway,,,1.0,approved
+ARG,Argentina,manual,Argentina,,,1.0,approved
+ALG,Algeria,manual,Algeria,,,1.0,approved
+AUT,Austria,manual,Austria,,,1.0,approved
+JOR,Jordan,manual,Jordan,,,1.0,approved
+POR,Portugal,manual,Portugal,,,1.0,approved
+COD,DR Congo,manual,DR Congo,,,1.0,approved
+UZB,Uzbekistan,manual,Uzbekistan,,,1.0,approved
+COL,Colombia,manual,Colombia,,,1.0,approved
+ENG,England,manual,England,,,1.0,approved
+CRO,Croatia,manual,Croatia,,,1.0,approved
+GHA,Ghana,manual,Ghana,,,1.0,approved
+PAN,Panama,manual,Panama,,,1.0,approved
+MEX,Mexico,openfootball,Mexico,,,1.0,approved
+ZAF,South Africa,openfootball,South Africa,,,1.0,approved
+KOR,South Korea,openfootball,South Korea,,,1.0,approved
+CZE,Czechia,openfootball,Czech Republic,,,1.0,approved
+CAN,Canada,openfootball,Canada,,,1.0,approved
+BIH,Bosnia and Herzegovina,openfootball,Bosnia & Herzegovina,,,1.0,approved
+QAT,Qatar,openfootball,Qatar,,,1.0,approved
+SUI,Switzerland,openfootball,Switzerland,,,1.0,approved
+BRA,Brazil,openfootball,Brazil,,,1.0,approved
+MAR,Morocco,openfootball,Morocco,,,1.0,approved
+HAI,Haiti,openfootball,Haiti,,,1.0,approved
+SCO,Scotland,openfootball,Scotland,,,1.0,approved
+USA,United States,openfootball,USA,,,1.0,approved
+PAR,Paraguay,openfootball,Paraguay,,,1.0,approved
+AUS,Australia,openfootball,Australia,,,1.0,approved
+TUR,Turkey,openfootball,Turkey,,,1.0,approved
+GER,Germany,openfootball,Germany,,,1.0,approved
+CUW,Curaçao,openfootball,Curaçao,,,1.0,approved
+CIV,Ivory Coast,openfootball,Ivory Coast,,,1.0,approved
+ECU,Ecuador,openfootball,Ecuador,,,1.0,approved
+NED,Netherlands,openfootball,Netherlands,,,1.0,approved
+JPN,Japan,openfootball,Japan,,,1.0,approved
+SWE,Sweden,openfootball,Sweden,,,1.0,approved
+TUN,Tunisia,openfootball,Tunisia,,,1.0,approved
+BEL,Belgium,openfootball,Belgium,,,1.0,approved
+EGY,Egypt,openfootball,Egypt,,,1.0,approved
+IRN,Iran,openfootball,Iran,,,1.0,approved
+NZL,New Zealand,openfootball,New Zealand,,,1.0,approved
+ESP,Spain,openfootball,Spain,,,1.0,approved
+CPV,Cape Verde,openfootball,Cape Verde,,,1.0,approved
+KSA,Saudi Arabia,openfootball,Saudi Arabia,,,1.0,approved
+URU,Uruguay,openfootball,Uruguay,,,1.0,approved
+FRA,France,openfootball,France,,,1.0,approved
+SEN,Senegal,openfootball,Senegal,,,1.0,approved
+IRQ,Iraq,openfootball,Iraq,,,1.0,approved
+NOR,Norway,openfootball,Norway,,,1.0,approved
+ARG,Argentina,openfootball,Argentina,,,1.0,approved
+ALG,Algeria,openfootball,Algeria,,,1.0,approved
+AUT,Austria,openfootball,Austria,,,1.0,approved
+JOR,Jordan,openfootball,Jordan,,,1.0,approved
+POR,Portugal,openfootball,Portugal,,,1.0,approved
+COD,DR Congo,openfootball,DR Congo,,,1.0,approved
+UZB,Uzbekistan,openfootball,Uzbekistan,,,1.0,approved
+COL,Colombia,openfootball,Colombia,,,1.0,approved
+ENG,England,openfootball,England,,,1.0,approved
+CRO,Croatia,openfootball,Croatia,,,1.0,approved
+GHA,Ghana,openfootball,Ghana,,,1.0,approved
+PAN,Panama,openfootball,Panama,,,1.0,approved
+USA,United States,martj42,United States,,,1.0,approved
+BIH,Bosnia and Herzegovina,martj42,Bosnia and Herzegovina,,,1.0,approved
+CZE,Czechia,martj42,Czech Republic,,,1.0,approved
+CZE,Czechia,martj42,Czechia,,,1.0,approved
+KOR,South Korea,fifa,Korea Republic,,,1.0,approved
+IRN,Iran,fifa,IR Iran,,,1.0,approved
+CPV,Cape Verde,fifa,Cabo Verde,,,1.0,approved
+COD,DR Congo,fifa,Congo DR,,,1.0,approved
+COD,DR Congo,fifa,DR Congo,,,1.0,approved
+CIV,Ivory Coast,fifa,Cote d'Ivoire,,,1.0,approved
+CZE,Czechia,fifa,Czech Republic,,,1.0,approved
+CZE,Czechia,fifa,Czechia,,,1.0,approved
+TUR,Turkey,fifa,Turkiye,,,1.0,approved

@@ -11,6 +11,7 @@ __pycache__/
 .ruff_cache/
 .mypy_cache/
 
+worldcup_prediction_lab/src/*.egg-info/
 worldcup_prediction_lab/data/raw/*
 !worldcup_prediction_lab/data/raw/.gitkeep
 worldcup_prediction_lab/data/bronze/*
