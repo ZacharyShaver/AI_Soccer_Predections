@@ -222,25 +222,25 @@ Confirm `outcomePrices` parse as numerics and sum ≈ 1 per market. Save a sampl
 
 **Files:** `discovery/probes/probe_oddsapi.py`, `discovery/findings/d6-oddsapi.md`
 
-- [ ] **Step 1: Key-aware probe**
+- [x] **Step 1: Key-aware probe**
 
 Read `THE_ODDS_API_KEY` from env. If absent, SKIP gracefully and write findings from the
 public docs only (sports list, soccer keys like `soccer_fifa_world_cup`, credit model). Do
 NOT fail.
 
-- [ ] **Step 2: If a key exists, spend exactly ONE cheap call**
+- [x] **Step 2: If a key exists, spend exactly ONE cheap call**
 
 Call `/v4/sports/` (free) to list available soccer competitions, and at most one `/v4/odds`
 call for a single region+market to confirm schema. Record the `x-requests-remaining` /
 `x-requests-used` response headers. Do not loop.
 
-- [ ] **Step 3: Document the credit budget**
+- [x] **Step 3: Document the credit budget**
 
 Restate: free tier ~500 credits/month; cost = 1 credit per region per market per call.
 Estimate credits for the match-day cadence and confirm it needs a budget guard (feeds the
 live runner later).
 
-- [ ] **Step 4: Write findings + commit.**
+- [x] **Step 4: Write findings + commit.** Findings written; Claude commits per `co-op.md`.
 
 ---
 

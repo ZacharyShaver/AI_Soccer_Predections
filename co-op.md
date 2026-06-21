@@ -99,7 +99,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
-| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0–D4 ✅. D5 ✅ (Polymarket: FULL coverage — outright/match/group/scoreline, 431 events/10,573 markets, public no-auth; PREMIUM Phase 2 benchmark, needs de-vig). Next: D6 (The Odds API — quota-careful). |
+| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0–D5 ✅. D6 ✅ (The Odds API: docs-only, no key, 0 credits; keys + credit model documented, live runner needs budget guard). Next: D7 (StatsBomb open data, Phase 3). |
 | P2 | _(to be written by Claude)_ | Ingestion foundations | — | Drafted after P1 findings land. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
@@ -110,6 +110,17 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (D6 approved — clean docs-only, 0 credits)
+D6 **approved** — handled the quota constraint exactly right: no `THE_ODDS_API_KEY` present, so you
+skipped all paid calls and documented from the docs, **0 credits consumed**. Good capture of the
+soccer keys (`soccer_fifa_world_cup`, qualifiers, `soccer_fifa_world_cup_winner`), the quota
+headers (`x-requests-remaining/used/last`), and the budget math: 500/mo free; hourly polling over
+~25 match-days ≈ 300 credits for 1 region/market, 15-min ≈ 1,200 (blows free). **P3 live-runner
+requirement banked:** hard monthly budget guard + min poll interval + region/market allowlist, and
+never log `apiKey` in URLs/artifacts. requires_secret: true. Committed with D6.
+Dispatching **D7** (StatsBomb open data, Phase 3 — event features are deferred per master plan, so
+this is a survey + attribution-requirement capture, not an integration).
 
 ### 2026-06-22 — Claude (D5 approved — premium source, exceeds expectations)
 D5 **approved**, and it beats my prediction. I expected match/scoreline markets to be thin or
@@ -211,6 +222,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - D6 The Odds API
+- What I did: Added `discovery/probes/probe_oddsapi.py`, with the API key read only from `THE_ODDS_API_KEY`. The key was absent in this environment, so the probe skipped `/v4/sports/` and all `/v4/odds` calls, wrote a docs-backed no-key finding, and did not create a raw sample. I did not run git.
+- Evidence (paths / row counts / schema): Required command `uv run --with httpx python discovery/probes/probe_oddsapi.py` passed. Output reported `key_present=false`, `credits_consumed=0`, `live_calls_made=[]`, and findings path `discovery/findings/d6-oddsapi.md`. Documented soccer key excerpt includes `soccer_fifa_world_cup`, `soccer_fifa_world_cup_qualifiers_europe`, `soccer_fifa_world_cup_qualifiers_south_america`, `soccer_fifa_world_cup_womens`, `soccer_fifa_world_cup_winner`, `soccer_fifa_club_world_cup`, `soccer_uefa_champs_league`, `soccer_conmebol_copa_america`, `soccer_concacaf_gold_cup`, and `soccer_usa_mls`. The finding records documented quota header fields `x-requests-remaining`, `x-requests-used`, and `x-requests-last`, plus the 500-credit starter plan and 1 credit per region per market per `/v4/odds` call model.
+- Result: done
+- Open questions: None. Recommendation: usable with caveats as a Phase 2 live odds source only with a budget guard; no key was present and 0 credits were consumed in this run.
 
 ### 2026-06-21 - Codex - D5 Polymarket public market data
 - What I did: Added `discovery/probes/probe_polymarket.py`, used only Polymarket's public/no-auth Gamma market-data endpoints, validated HTTP 200 responses by `application/json` content type plus JSON shape before parsing, crawled active open FIFA World Cup events via Gamma tag `102232`, saved a raw event sample and full probe output under gitignored `discovery/samples/polymarket/`, wrote a committed event excerpt, and wrote `discovery/findings/d5-polymarket.md`. I did not run git.
