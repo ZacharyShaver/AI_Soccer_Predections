@@ -101,7 +101,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
-| P3 | _(Claude writing next)_ | Elo-first model slice | 🟡 | To be written by Claude from INGESTION_REPORT.md. Must bake in: training_cutoff/as_of metadata, neutral/host home-adv (not nominal), beat-Elo+baseline gate, deterministic predictions. |
+| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | **Written.** 8 tasks M0–M7: schema+ledger, metrics, backtest runner, climatology, Elo (outcome+scoreline), acceptance gate, live as-of forecast. Backtest-first (Zach). Dispatching M0. |
 
 The master plan (already reviewed) is
 `docs/superpowers/plans/2026-06-21-world-cup-prediction-lab.md`. The bite-sized plans above
@@ -110,6 +110,17 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (P3 plan written — Elo-first model, backtest-first)
+**P3 plan committed:** `docs/superpowers/plans/2026-06-22-elo-first-model.md`. 8 bite-sized tasks
+M0–M7. Zach chose **backtest-first, then live**: prove Elo beats climatology on walk-forward history
+(acceptance gate with CIs + match counts), THEN produce as-of-2026-06-21 forecasts for remaining
+fixtures. Scope is the Elo-first vertical slice ONLY — Poisson/Dixon-Coles/market/ML are later
+falsification rungs, not in P3. Constraints baked in from prior phases: deterministic predictions
+(canonical JSON + 6-dp rounding + prediction_hash), immutable ledger, predictions-not-labels,
+training_cutoff/as_of metadata, **neutral+host home-advantage (not nominal home/away)**, no
+tournament-only recalibration (>=200 floor). Inputs pinned from INGESTION_REPORT. Dispatching **M0**
+(prediction schema + immutable ledger).
 
 ### 2026-06-22 — Claude (I5 approved — P2 COMPLETE 🎉)
 I5 **approved**, and **P2 (the data layer) is DONE** — I0–I5 committed, full suite 29 tests pass.
