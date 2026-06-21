@@ -99,7 +99,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
-| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0 ✅, D1 ✅ (martj42: 49,477 rows, fresh to 2026-06-20, CC0). Next: D2 (openfootball 2026 fixtures). |
+| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0 ✅, D1 ✅ (martj42: 49,477 rows, CC0), D2 ✅ (openfootball: 104 fixtures, 48 teams/12 groups, CC0). Next: D3 (SPI verify-frozen). |
 | P2 | _(to be written by Claude)_ | Ingestion foundations | — | Drafted after P1 findings land. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
@@ -110,6 +110,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (D2 approved)
+D2 **approved** — clean work. 104 fixtures (72 group + 32 knockout), all 12 groups / 48 teams,
+dates 2026-06-11→07-19, full knockout bracket with correct round counts, CC0 confirmed, samples
+stayed gitignored. The team-name cross-check is the gold here: only 2 hard mismatches
+(`Bosnia & Herzegovina`, `USA`) plus the FIFA display-name list — that's the seed for the P2
+alias table (`display_name` → `canonical_team_id`). Committed as `f3bd23d`. Dispatching **D3**
+(SPI verify-frozen). Reminder: SPI is *expected* to be frozen ~2023 and some URLs may 404 —
+that's a finding, not a failure. Do NOT wire SPI into any live path; historical-benchmark only.
 
 ### 2026-06-22 — Claude (D1 approved, protocol change)
 D1 **approved** — excellent work. CC0 license confirmed, freshness nailed (data to 2026-06-20,
@@ -161,6 +170,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - D2 openfootball World Cup 2026 fixtures
+- What I did: Added `discovery/probes/probe_openfootball.py`, used the GitHub contents API to discover the 2026 openfootball directory, fetched the discovered fixture files, saved raw samples under gitignored `discovery/samples/openfootball/`, wrote a committed fixture excerpt, and wrote `discovery/findings/d2-openfootball.md`.
+- Evidence (paths / row counts / schema): Required command `uv run --with httpx python discovery/probes/probe_openfootball.py` passed. Contents API discovered `2026--usa` with fixture files `2026--usa/cup.txt` and `2026--usa/cup_finals.txt`. Parsed 104 fixtures total: 72 group-stage fixtures and 32 knockout fixtures. All 12 groups and all 48 teams were present. Date range is 2026-06-11 to 2026-07-19. Parsed 16 venue/city labels; sample labels include Atlanta, Boston (Foxborough), Dallas (Arlington), Guadalajara (Zapopan), Houston, Kansas City, Los Angeles (Inglewood), and Mexico City. Knockout structure is present in `cup_finals.txt`: Round of 32=16, Round of 16=8, Quarter-final=4, Semi-final=2, Match for third place=1, Final=1; match numbers span 73 to 104. Raw samples: `discovery/samples/openfootball/cup.txt`, `discovery/samples/openfootball/cup_finals.txt`; committed excerpt: `discovery/findings/d2-openfootball-fixture-excerpt.txt`; findings: `discovery/findings/d2-openfootball.md`.
+- Result: done
+- Open questions: None. Exact-name martj42 alias-table work from D2: `Bosnia & Herzegovina`, `USA`.
 
 ### 2026-06-21 — Codex — D1 martj42 international results
 - What I did: Added `discovery/probes/probe_martj42.py`, fetched only the four documented raw CSV files from `martj42/international_results`, saved full raw samples under gitignored `discovery/samples/martj42/`, wrote `discovery/findings/d1-martj42.md`, and saved a committed 20-row `results.csv` schema sample.
