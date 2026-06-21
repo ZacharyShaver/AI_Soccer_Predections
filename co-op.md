@@ -99,7 +99,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 
 | # | Plan | Phase | Status | Notes |
 | --- | --- | --- | --- | --- |
-| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0 ✅, D1 ✅ (martj42: 49,477 rows, CC0), D2 ✅ (openfootball: 104 fixtures, 48 teams/12 groups, CC0). Next: D3 (SPI verify-frozen). |
+| P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | 🟡 | D0 ✅, D1 ✅ (martj42, CC0), D2 ✅ (openfootball, CC0), D3 ✅ (SPI = DEAD, not just frozen — CSVs 404/redirect to ABC News; drop as live source). Next: D4 (Football-Data.co.uk). |
 | P2 | _(to be written by Claude)_ | Ingestion foundations | — | Drafted after P1 findings land. |
 | P3 | _(to be written by Claude)_ | Elo-first model slice | — | Milestone 1 from the master plan. |
 
@@ -110,6 +110,19 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (D3 approved — bigger finding than expected)
+D3 **approved**, and the defensive coding paid off. SPI isn't just frozen — it's **gone**: GitHub
+CSVs 404 on both `master` and `main`, and the legacy `projects.fivethirtyeight.com` URLs return
+200 but redirect to an ABC News HTML page. Your probe validating content-type (not trusting the
+200) is exactly right — that's a reusable rule for all future probes: **a 200 is not a CSV until
+the content-type / header row says so.**
+**Decision (affects the master plan):** SPI is dropped as a sourceable benchmark. The master plan
+cited SPI as a frozen historical comparator; that's no longer retrievable from public endpoints.
+We do NOT need it — plain calibrated **Elo is already the bar** in our plan. If we ever want the
+SPI benchmark specifically, it'd require an archived mirror (Kaggle/web-archive), which is a
+separate opt-in task, not a blocker. No live path ever touches SPI. Committed with D3.
+Dispatching **D4** (Football-Data.co.uk odds).
 
 ### 2026-06-22 — Claude (D2 approved)
 D2 **approved** — clean work. 104 fixtures (72 group + 32 knockout), all 12 groups / 48 teams,
@@ -171,6 +184,12 @@ _(Codex appends entries here. Template:)_
 - Open questions:
 ```
 
+### 2026-06-21 - Codex - D3 FiveThirtyEight SPI verify-frozen
+- What I did: Added `discovery/probes/probe_spi.py`, probed the current `fivethirtyeight/data` GitHub `soccer-spi` directory, the documented GitHub raw CSV paths, and the legacy `projects.fivethirtyeight.com/soccer-api/international/` CSV URLs. Wrote `discovery/findings/d3-spi.md` as a blocked verification note and did not wire SPI into any live path.
+- Evidence (paths / row counts / schema): Required command `uv run --with httpx --with pandas python discovery/probes/probe_spi.py` passed. GitHub contents API returned HTTP 200 with only `README.md`; documented CSVs `spi_matches_intl.csv` and `spi_global_rankings_intl.csv` were absent from the directory. GitHub raw CSV URLs on `master` and `main` returned HTTP 404. Legacy international CSV URLs returned HTTP 200 but redirected/finalized to `https://abcnews.com/politics` with `text/html; charset=utf-8`, not CSV. `downloaded_csv_count=0`, `parseable_csvs_found=false`, `latest_downloaded_date=null`. Saved README evidence at `discovery/samples/spi/README.md`; no CSV raw sample or schema sample exists because no CSV downloaded.
+- Result: blocked
+- Open questions: Should Claude allow an archived snapshot source for historical-benchmark SPI, or should P1 mark SPI dropped because current documented endpoints no longer serve parseable CSVs?
+
 ### 2026-06-21 - Codex - D2 openfootball World Cup 2026 fixtures
 - What I did: Added `discovery/probes/probe_openfootball.py`, used the GitHub contents API to discover the 2026 openfootball directory, fetched the discovered fixture files, saved raw samples under gitignored `discovery/samples/openfootball/`, wrote a committed fixture excerpt, and wrote `discovery/findings/d2-openfootball.md`.
 - Evidence (paths / row counts / schema): Required command `uv run --with httpx python discovery/probes/probe_openfootball.py` passed. Contents API discovered `2026--usa` with fixture files `2026--usa/cup.txt` and `2026--usa/cup_finals.txt`. Parsed 104 fixtures total: 72 group-stage fixtures and 32 knockout fixtures. All 12 groups and all 48 teams were present. Date range is 2026-06-11 to 2026-07-19. Parsed 16 venue/city labels; sample labels include Atlanta, Boston (Foxborough), Dallas (Arlington), Guadalajara (Zapopan), Houston, Kansas City, Los Angeles (Inglewood), and Mexico City. Knockout structure is present in `cup_finals.txt`: Round of 32=16, Round of 16=8, Quarter-final=4, Semi-final=2, Match for third place=1, Final=1; match numbers span 73 to 104. Raw samples: `discovery/samples/openfootball/cup.txt`, `discovery/samples/openfootball/cup_finals.txt`; committed excerpt: `discovery/findings/d2-openfootball-fixture-excerpt.txt`; findings: `discovery/findings/d2-openfootball.md`.
@@ -194,6 +213,11 @@ _(Codex appends entries here. Template:)_
 ## Blockers / questions for Claude
 
 _(Codex adds anything that needs a planning decision. Claude clears these.)_
+
+### 2026-06-21 - Codex - D3 SPI latest-date verification blocked
+- Blocker: D3 requires the latest match/ranking date as evidence that FiveThirtyEight SPI stops around 2023, but the current documented public endpoints did not return any parseable CSV data. GitHub raw CSV paths returned 404; legacy documented CSV URLs returned ABC News HTML after redirects.
+- Evidence: `discovery/probes/probe_spi.py`; required command `uv run --with httpx --with pandas python discovery/probes/probe_spi.py` passed with `downloaded_csv_count=0`, `parseable_csvs_found=false`, and `latest_downloaded_date=null`; details are in `discovery/findings/d3-spi.md`.
+- Question: Should the next pass use an archived snapshot source for historical benchmarking, or should SPI be marked dropped/unusable because the current documented endpoints no longer serve CSVs?
 
 ### 2026-06-21 - Codex - D1 commit blocked by OneDrive index.lock  →  ✅ RESOLVED 2026-06-22
 - Blocker: D1 work was all present in the working tree but `git add`/commit failed twice with `index.lock: Permission denied` (OneDrive).

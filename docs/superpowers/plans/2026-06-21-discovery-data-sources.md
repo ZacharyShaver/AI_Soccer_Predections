@@ -158,19 +158,19 @@ alias-table work later). Record them in the findings note.
 
 **Files:** `discovery/probes/probe_spi.py`, `discovery/findings/d3-spi.md`
 
-- [ ] **Step 1: Attempt download**
+- [x] **Step 1: Attempt download**
 
 Try the international SPI files (e.g. `spi_matches_intl.csv`,
 `spi_global_rankings_intl.csv`) from the fivethirtyeight/data GitHub repo and/or the legacy
 `projects.fivethirtyeight.com/soccer-api/` endpoints. Some may 404 — that is an expected
 finding, not an error.
 
-- [ ] **Step 2: Confirm frozen status**
+- [x] **Step 2: Confirm frozen status** — superseded by reality: SPI CSVs are no longer
+  publicly downloadable (GitHub 404s; legacy URLs redirect to ABC News HTML). Date-based freeze
+  unverifiable; marked "Frozen? yes / unavailable" and "historical-benchmark only (not live)".
 
-Record the latest match/ranking date present. Confirm it stops ~2023. Explicitly mark
-"Frozen? yes" and "Recommended phase: historical-benchmark only (not live)".
-
-- [ ] **Step 3: Write findings + commit.** Do not wire SPI into any live path.
+- [x] **Step 3: Write findings + commit.** Do not wire SPI into any live path. (Findings written;
+  Claude commits.)
 
 ---
 
