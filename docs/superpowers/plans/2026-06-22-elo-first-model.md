@@ -95,18 +95,18 @@ separate join attaches actual results to stored predictions without mutating pre
 
 **Files:** `src/wc_predictor/evaluation/metrics.py`, `tests/evaluation/test_metrics.py`.
 
-- [ ] **Step 1: Tests first — known vectors**
+- [x] **Step 1: Tests first — known vectors**
 
 Use fixed probability vectors + outcomes with hand-computed expected values for `brier_score`,
 `home_draw_away_log_loss`, `ranked_probability_score`, `exact_score_hit`, probability-sum checks.
 
-- [ ] **Step 2: Implement metrics**
+- [x] **Step 2: Implement metrics**
 
 `scoreline_log_loss`, `home_draw_away_log_loss`, `brier_score`, `ranked_probability_score`,
 `exact_score_hit`, `top_k_score_hit`, `expected_goals_mae`, `calibration_bins`. Include a helper for
 bootstrap confidence intervals + n (for the acceptance gate's statistical-honesty requirement).
 
-- [ ] **Step 3: Run tests; Claude commits.**
+- [x] **Step 3: Run tests; Claude commits.**
 
 ---
 

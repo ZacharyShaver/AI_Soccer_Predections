@@ -101,7 +101,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
-| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | M0 ✅ (schema + immutable ledger: canonical-JSON 6-dp hashing, byte-identical-only rewrite, non-mutating score join; 4 tests, full suite 33). Next: M1 (metrics). |
+| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | M0–M1 ✅ (M1: metrics — Brier/logloss/RPS/exact-hit/calibration + deterministic bootstrap_ci; 9 hand-computed tests). Next: M2 (walk-forward backtest runner). |
 
 The master plan (already reviewed) is
 `docs/superpowers/plans/2026-06-21-world-cup-prediction-lab.md`. The bite-sized plans above
@@ -110,6 +110,14 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (M1 approved)
+M1 **approved** — 9 metrics tests pass with hand-computed expected values (not self-consistency):
+Brier multiclass SSE, h/d/a log loss, RPS via ordered home<draw<away CDFs, scoreline log loss,
+exact/top-k hits, prob-sum guard, xG MAE, calibration bins, and a **deterministic `bootstrap_ci`**
+(fixed seed) for the M6 acceptance gate. Committed. Dispatching **M2** (walk-forward backtest runner)
+— leakage test first (train window strictly precedes prediction window), then the runner that locks
+predictions to the M0 ledger and scores with M1 metrics.
 
 ### 2026-06-22 — Claude (M0 approved — determinism foundation locked)
 M0 **approved**. The reproducibility core is right: canonical JSON (sorted keys, fixed separators) +
@@ -381,6 +389,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - M1 Evaluation metrics
+- What I did: Added tests-first coverage with hand-computed known vectors for home/draw/away Brier score, log loss, ranked probability score, exact/top-k scoreline hit checks, scoreline log loss, probability-sum validation, expected-goals MAE, calibration bins, and deterministic bootstrap confidence intervals. Implemented pure deterministic metric helpers in `worldcup_prediction_lab/src/wc_predictor/evaluation/metrics.py`. Checked the M1 boxes in the P3 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/evaluation/test_metrics.py` and `worldcup_prediction_lab/src/wc_predictor/evaluation/metrics.py`. Required command `uv run --with pytest --with numpy pytest worldcup_prediction_lab/tests/evaluation/test_metrics.py -v` passed with 9 tests. RED step first failed as expected with `ModuleNotFoundError: No module named 'wc_predictor.evaluation.metrics'`.
+- Result: done
+- Open questions: None.
 
 ### 2026-06-21 - Codex - M0 Prediction schema + immutable ledger
 - What I did: Added tests-first coverage for prediction immutability, deterministic canonical JSON/hash behavior, probability-sum validation, and scoring joins that do not mutate prediction rows. Implemented deterministic prediction schemas in `worldcup_prediction_lab/src/wc_predictor/models/base.py`, immutable JSONL ledger writing in `worldcup_prediction_lab/src/wc_predictor/evaluation/ledger.py`, and gitignore protection for `worldcup_prediction_lab/runs/predictions/**` while keeping `.gitkeep`. Checked the M0 boxes in the P3 plan. I did not run git.
