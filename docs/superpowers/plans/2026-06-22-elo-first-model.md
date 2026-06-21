@@ -150,20 +150,20 @@ a scoreline matrix from global goal rates. This is the metric floor (the thing E
 
 **Files:** `src/wc_predictor/models/elo.py`, `tests/models/test_elo.py`.
 
-- [ ] **Step 1: Tests first — update rules + home logic**
+- [x] **Step 1: Tests first — update rules + home logic**
 
 Assert: winner gains / loser loses Elo; draw changes are smaller; **home advantage applies via
 `neutral`/host logic, not nominal home/away** (a neutral-site match gives no home bump; a host team
 in its own country does). Goal-difference scales the update. Deterministic given input order.
 
-- [ ] **Step 2: Implement Elo**
+- [x] **Step 2: Implement Elo**
 
 Maintain team Elo through chronological match order (sequential online update is leakage-safe).
 Configurable K, tournament-importance weight, home/host advantage, goal-difference multiplier.
 Convert pre-match rating diff (+ home/host adjustment) → expected score → home/draw/away
 probabilities (draw handled explicitly). Export pre-match rating features per match.
 
-- [ ] **Step 3: Run tests; Claude commits.**
+- [x] **Step 3: Run tests; Claude commits.**
 
 ---
 
