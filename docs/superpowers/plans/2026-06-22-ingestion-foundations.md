@@ -162,13 +162,13 @@ does NOT resolve (report, don't crash) so we can extend the table. Run tests.
 **Files:** `src/wc_predictor/data/ingest_international_results.py`,
 `tests/data/test_ingest_international_results.py`.
 
-- [ ] **Step 1: Parser test using an embedded fixture CSV**
+- [x] **Step 1: Parser test using an embedded fixture CSV**
 
 Small embedded CSV with the real schema (`date, home_team, away_team, home_score, away_score,
 tournament, city, country, neutral`), including **at least one blank-score future row** to prove the
 fixtures/results split (decision #1).
 
-- [ ] **Step 2: Implement ingestion (raw → bronze → silver)**
+- [x] **Step 2: Implement ingestion (raw → bronze → silver)**
 
 - Download raw `results.csv` from the registry URL; save raw snapshot + SHA-256 + manifest JSON
   (source URL, ingest UTC, row count, hash) under `data/raw/`.
@@ -182,20 +182,27 @@ fixtures/results split (decision #1).
   sources' spellings onto these canonical names; "fail loudly on unknown" applies to openfootball in
   I4, not to the martj42 base corpus here.
 
-- [ ] **Step 3: Data-quality checks**
+- [x] **Step 3: Data-quality checks**
 
-- `matches`: no missing date/team/score; scores are non-negative integers; `neutral` boolean; no
-  duplicate `(date, home_team_id, away_team_id, tournament, city)`.
+- **Deterministic `match_id` (handles legit same-day double-headers).** The natural key
+  `(date, home_team_id, away_team_id, tournament, city)` is NOT unique — martj42 contains real
+  distinct same-day rematches (e.g. 1974-02-17 Tahiti vs New Caledonia, 2-1 and 1-2). Resolution:
+  (a) drop only **exact-identical** rows (all columns equal) as true duplicates, logging the count;
+  (b) for remaining rows sharing the natural key, assign a stable `occurrence_index` by original
+  source row order; (c) build `match_id = sha1(date|home_team_id|away_team_id|tournament|city|occurrence_index)[:12]`.
+- `matches`: no missing date/team/score; scores are non-negative integers; `neutral` boolean;
+  **uniqueness asserted on `match_id`** (not the natural key). Report the count of multi-match
+  same-day natural-key groups (double-headers) for visibility.
 - Freshness assertion: `matches` contains 2025 AND 2026 rows (D1 recorded 1,385 in 2025–2026).
 - Every team id resolved (no nulls). Since martj42 names are identity-canonicalized, this should
   always hold; emit the count of auto-registered (non-aliased) canonical teams for visibility.
 
-- [ ] **Step 4: Run tests + DQ summary**
+- [x] **Step 4: Run tests + DQ summary**
 
 `uv run pytest .../test_ingest_international_results.py -v`. Write a short DQ summary to
 `reports/data_quality/` (row counts per layer, date range, split counts, unresolved-name count).
 
-- [ ] **Step 5: Findings/log.** Claude commits.
+- [x] **Step 5: Findings/log.** Claude commits.
 
 ---
 
