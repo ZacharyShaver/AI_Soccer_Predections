@@ -101,7 +101,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | --- | --- | --- | --- | --- |
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
-| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | 🟡 | M0–M6 ✅ (M6: Elo beat climatology on walk-forward RPS/log loss/Brier with paired CIs excluding 0). Next: M7 (live as-of-2026-06-21 forecast). |
+| P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
 
 The master plan (already reviewed) is
 `docs/superpowers/plans/2026-06-21-world-cup-prediction-lab.md`. The bite-sized plans above
@@ -110,6 +110,19 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (M7 approved — P3 COMPLETE, Milestone 1 done 🏆)
+M7 **approved** and **P3 / Milestone 1 is COMPLETE end-to-end.** Live as-of-2026-06-21 forecasts
+written to the immutable ledger: 104 fixtures = 40 already played + **32 group matches forecast** +
+32 knockout pending bracket. Venue→host-country map complete; host advantage correctly applied to
+host nations even when nominal away (e.g. Canada in Vancouver vs Switzerland gets the bump). Sensible
+outputs (France 79% v Iraq, England 80% v Ghana, Argentina 83% v Jordan). 3 tests; full suite **61**.
+Live ledger stays gitignored (convention); the committed report is `reports/backtests/
+live_forecast_2026-06-21.md`. (Cleaned 6 pytest scratch dirs from runs/, added a gitignore guard.)
+**Pipeline is now end-to-end: raw → silver → Elo (proven bar) → immutable forecasts.** Next phases
+(Claude to plan when Zach is ready): Phase-2 falsification rungs (Poisson/Dixon-Coles/market) that
+must beat THIS Elo, and a candidate **recency-weighting experiment** (full-history vs higher-K vs
+2-year window) on the M6 backtest.
 
 ### 2026-06-22 — Claude (M6 approved — ACCEPTANCE GATE PASSES ✅)
 M6 **approved** — the bake-off is decisive and honest. Over **15,817 scored matches** (2010→
@@ -438,6 +451,15 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-21 - Codex - M7 Live as-of-2026-06-21 forecast for remaining fixtures
+- What I did: Added `worldcup_prediction_lab/src/wc_predictor/forecast_live.py` with deterministic `as_of=2026-06-21`, `training_cutoff=2026-06-20`, and `generated_at_utc=2026-06-21T00:00:00Z`; trained `elo_poisson_v1` on completed `martj42_matches` through 2026-06-20; filtered openfootball fixtures to resolvable remaining group fixtures only; applied WC host-country logic through the Elo `host_advantage_fn`; wrote the live immutable ledger; generated the human-readable report; checked the M7 boxes in the P3 plan. I did not run git.
+- Evidence (paths / row counts / schema): Added tests in `worldcup_prediction_lab/tests/test_forecast_live.py`. Live command run: `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache; uv run --with pandas --with pyarrow python -m wc_predictor.forecast_live`. Inputs: `data/silver/martj42_matches.parquet` 49,441 completed training rows through 2026-06-20, `data/silver/openfootball_worldcup_2026_fixtures.parquet` 104 fixtures, `data/silver/martj42_teams.parquet` 336 teams. Output ledger: `worldcup_prediction_lab/runs/predictions/date=2026-06-21/predictions.jsonl` with 32 rows. Output report: `worldcup_prediction_lab/reports/backtests/live_forecast_2026-06-21.md`.
+- Counts: total fixtures 104; forecast 32; skipped already played/resolvable with `match_date <= 2026-06-21` 40; skipped knockout pending/null team ids 32; all forecast venues mapped to a host country. Note: 36 WC group matches are included in training through 2026-06-20; 4 additional fixtures dated 2026-06-21 are skipped as already played by the live `as_of` rule.
+- Example forecasts: Norway vs Senegal 37.9597% / 26.4499% / 35.5904%, top scoreline 1-1; France vs Iraq 78.9874% / 12.5891% / 8.4235%, top scoreline 1-0; Jordan vs Algeria 23.7217% / 20.1657% / 56.1125%, top scoreline 0-1; Argentina vs Austria 73.3733% / 14.5303% / 12.0964%, top scoreline 1-0.
+- Verification: RED first failed with `ModuleNotFoundError: No module named 'wc_predictor.forecast_live'`. Focused verification passed: `uv run --with pytest --with pandas --with pyarrow pytest tests/test_forecast_live.py tests/models/test_elo.py tests/models/test_elo_scoreline.py -v -p no:cacheprovider` -> 15 passed. A broader selected run including existing `tmp_path` ledger tests was blocked by this Windows environment's pytest temp-directory permissions, consistent with the M6 note; the new M7 temp-free tests and live ledger/report checks passed.
+- Result: done
+- Open questions: None. P3 is ready for Claude's verification/commit pass.
 
 ### 2026-06-21 - Codex - M6 Walk-forward backtest + acceptance gate
 - What I did: Ran the M6 walk-forward acceptance gate on the real `worldcup_prediction_lab/data/silver/martj42_matches.parquet` silver data using `run_backtest`, `baseline_climatology`, `elo_model` with `model_id="elo_poisson_v1"`, and `bootstrap_ci`. Config: `train_start=1990-01-01`, `first_prediction_date=2010-01-01`, `final_prediction_date=2026-06-10`, `prediction_window_days=30`, 1000 bootstrap resamples, seed `20260622`. This excludes the in-progress 2026 World Cup matches from the gate. Wrote the backtest report plus model cards, checked the M6 boxes in the P3 plan, and did not run git.

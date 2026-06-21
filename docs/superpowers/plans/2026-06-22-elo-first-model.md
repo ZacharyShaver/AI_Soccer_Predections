@@ -223,20 +223,20 @@ Re-run a small backtest slice; assert identical `prediction_hash`es. Claude comm
 **Files:** `src/wc_predictor/forecast_live.py` (or a CLI entry), `reports/backtests/` or
 `reports/` live forecast summary, `runs/predictions/date=2026-06-21/predictions.jsonl`.
 
-- [ ] **Step 1: Build the as-of forecast**
+- [x] **Step 1: Build the as-of forecast**
 
 `as_of=2026-06-21`, `training_cutoff=2026-06-20` (train Elo on completed matches through 06-20,
 including the 36 already-played WC group games). Forecast ONLY remaining `openfootball` fixtures
 (match_date > as_of, or unresolved knockout slots left pending). Resolve fixture team ids → Elo
 ratings; apply neutral/host logic (all WC matches neutral except host nations at home).
 
-- [ ] **Step 2: Write predictions to the ledger**
+- [x] **Step 2: Write predictions to the ledger**
 
 One immutable `MatchPrediction` + `ScorelineDistribution` per remaining fixture, with
 `prediction_hash`, model metadata, `training_cutoff`/`as_of`. Partitioned JSONL under
 `runs/predictions/date=2026-06-21/`.
 
-- [ ] **Step 3: Human-readable forecast report**
+- [x] **Step 3: Human-readable forecast report**
 
 Summarize: per-remaining-match home/draw/away + top scoreline; note these are Elo-only (the proven
 bar), not market-calibrated. Restate the statistical-honesty caveat. Claude commits.

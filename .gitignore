@@ -29,3 +29,4 @@ worldcup_prediction_lab/runs/backtests/**
 !worldcup_prediction_lab/runs/backtests/.gitkeep
 worldcup_prediction_lab/runs/*.lock
 worldcup_prediction_lab/runs/.tmp*
+worldcup_prediction_lab/runs/pytest-*
