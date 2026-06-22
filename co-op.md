@@ -103,7 +103,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
-| P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | 🟡 | R0 ✅ (WindowedEloModel — trailing-window training, 3 tests). **Claude building (Codex out).** Next: R1 (run variants + paired report). |
+| P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | ✅ | **COMPLETE.** R0–R1. 7-variant backtest: hard windows monotonically WORSE (2y RPS 0.204 vs 0.178); K=30 marginally BETTER (paired CI excludes 0, +0.0009). Hypothesis falsified; tiny K bump real. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market benchmark). |
 | P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
 
@@ -118,6 +118,17 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (R1 done — P5 COMPLETE, hypothesis falsified)
+**P5 COMPLETE** (Claude built R0–R1). 7 Elo variants through the M6 walk-forward window (15,817
+matches), paired bootstrap CIs vs full_history_k20. **Ship-of-Theseus hypothesis FALSIFIED:** hard
+trailing windows are monotonically WORSE — 8y +0.0079, 4y +0.0157, **2y +0.0260 RPS worse**, all CIs
+exclude 0. Slower (low_k10) also worse. **Nuance:** the paired test found K=30 and K=40 *marginally
+BETTER* than K=20 (high_k30 +0.00086, CI [+0.00054, +0.00118], excludes 0) — i.e. recency helps a
+little, but via Elo's K-forgetting, NOT by discarding history. Effect is tiny (~0.5% RPS).
+**Open decision for Zach:** adopt K=30 as the new default bar? Real but small; would mean re-running
+M6/M7/P4 for consistency. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market
+benchmark) — biggest expected signal gain (markets aggregate injuries/lineups).
 
 ### 2026-06-22 — Claude (S4 done — P4 COMPLETE 🏆 championship odds)
 **S4 done, P4 COMPLETE** (Claude built S0–S4 directly while Codex was out). `run_championship_odds.py`
