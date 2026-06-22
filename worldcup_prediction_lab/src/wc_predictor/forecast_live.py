@@ -243,6 +243,7 @@ def _build_prediction(
     team_names_by_id: dict[str, str],
     as_of: str,
     training_cutoff: str,
+    generated_at_utc: str = GENERATED_AT_UTC,
 ) -> tuple[MatchPrediction, ForecastRow]:
     match_row = _fixture_match_row(fixture, team_names_by_id)
     outcome = model.predict_match(match_row)
@@ -253,7 +254,7 @@ def _build_prediction(
         match_id=str(fixture["fixture_id"]),
         model_id=MODEL_ID,
         model_version=str(model.model_version),
-        generated_at_utc=GENERATED_AT_UTC,
+        generated_at_utc=generated_at_utc,
         training_cutoff=training_cutoff,
         as_of=as_of,
         prob_home=float(outcome.prob_home),
@@ -380,12 +381,13 @@ def run_live_forecast(
     reports_dir: str | Path = settings.REPORTS_DIR,
     as_of: str = AS_OF,
     training_cutoff: str = TRAINING_CUTOFF,
+    generated_at_utc: str = GENERATED_AT_UTC,
 ) -> LiveForecastSummary:
     train_matches = _training_matches(matches_df, training_cutoff=training_cutoff)
     split = split_live_fixtures(fixtures_df, as_of=as_of)
     team_names_by_id = _team_names(teams_df)
     model = elo_model(
-        generated_at_utc=GENERATED_AT_UTC,
+        generated_at_utc=generated_at_utc,
         host_advantage_fn=build_world_cup_host_advantage_fn(),
     ).fit(train_matches)
 
@@ -400,6 +402,7 @@ def run_live_forecast(
             team_names_by_id=team_names_by_id,
             as_of=as_of,
             training_cutoff=training_cutoff,
+            generated_at_utc=generated_at_utc,
         )
         ledger_path = write_prediction(prediction, runs_dir=runs_dir)
         forecast_rows.append(forecast_row)
@@ -451,6 +454,19 @@ def _silver_paths(silver_dir: str | Path = settings.SILVER_DIR) -> dict[str, Pat
     }
 
 
+def _read_parquet(path: Path) -> pd.DataFrame:
+    try:
+        return pd.read_parquet(path)
+    except ImportError:
+        import duckdb
+
+        escaped_path = str(path).replace("'", "''")
+        with duckdb.connect(database=":memory:") as connection:
+            return connection.execute(
+                f"SELECT * FROM read_parquet('{escaped_path}')"
+            ).df()
+
+
 def ensure_silver_inputs(silver_dir: str | Path = settings.SILVER_DIR) -> None:
     """Regenerate I3/I4 silver inputs if any required parquet is absent."""
 
@@ -471,9 +487,9 @@ def load_silver_data(
     ensure_silver_inputs(silver_dir)
     paths = _silver_paths(silver_dir)
     return (
-        pd.read_parquet(paths["matches"]),
-        pd.read_parquet(paths["fixtures"]),
-        pd.read_parquet(paths["teams"]),
+        _read_parquet(paths["matches"]),
+        _read_parquet(paths["fixtures"]),
+        _read_parquet(paths["teams"]),
     )
 
 

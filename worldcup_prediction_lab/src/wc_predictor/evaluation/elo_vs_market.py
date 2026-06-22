@@ -27,6 +27,17 @@ MARKET_ODDS_FILE = "footballdata_market_odds.parquet"
 MATCHES_FILE = "martj42_matches.parquet"
 
 
+def _read_parquet(path) -> pd.DataFrame:
+    # DuckDB-only parquet read: this lab declares duckdb but not pyarrow/fastparquet.
+    import duckdb
+
+    escaped_path = str(path).replace("'", "''")
+    with duckdb.connect(database=":memory:") as connection:
+        return connection.execute(
+            f"SELECT * FROM read_parquet('{escaped_path}')"
+        ).df()
+
+
 @dataclass(frozen=True)
 class AlignmentSummary:
     total_odds_rows: int
@@ -489,8 +500,8 @@ def run(
     market_odds_path: str | Path = settings.SILVER_DIR / MARKET_ODDS_FILE,
     report_path: str | Path = settings.REPORTS_DIR / "backtests" / "elo_vs_market.md",
 ) -> EloVsMarketResult:
-    matches = pd.read_parquet(matches_path)
-    market_odds = pd.read_parquet(market_odds_path)
+    matches = _read_parquet(matches_path)
+    market_odds = _read_parquet(market_odds_path)
 
     aligned, alignment = align_matches_with_market(matches, market_odds)
     if alignment.usable_joined_rows < MIN_USABLE_SAMPLE:

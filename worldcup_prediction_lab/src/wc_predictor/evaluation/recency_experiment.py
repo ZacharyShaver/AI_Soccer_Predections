@@ -37,6 +37,17 @@ VARIANTS = {
 }
 
 
+def _read_parquet(path) -> pd.DataFrame:
+    # DuckDB-only parquet read: this lab declares duckdb but not pyarrow/fastparquet.
+    import duckdb
+
+    escaped_path = str(path).replace("'", "''")
+    with duckdb.connect(database=":memory:") as connection:
+        return connection.execute(
+            f"SELECT * FROM read_parquet('{escaped_path}')"
+        ).df()
+
+
 def _ci(values):
     # Log loss can be +inf when a model rounds an actual outcome's probability to
     # zero on an extreme mismatch; drop non-finite values for the CI (RPS/Brier
@@ -47,7 +58,7 @@ def _ci(values):
 
 
 def run():
-    matches = pd.read_parquet(settings.SILVER_DIR / "martj42_matches.parquet")
+    matches = _read_parquet(settings.SILVER_DIR / "martj42_matches.parquet")
     tmp_root = settings.RUNS_DIR / "backtests" / "recency_tmp"
 
     results = {}

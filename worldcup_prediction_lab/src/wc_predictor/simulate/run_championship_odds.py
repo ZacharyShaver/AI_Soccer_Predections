@@ -22,10 +22,21 @@ DEFAULT_N_SIMS = 20000
 DEFAULT_SEED = 0
 
 
+def _read_parquet(path) -> pd.DataFrame:
+    # DuckDB-only parquet read: this lab declares duckdb but not pyarrow/fastparquet.
+    import duckdb
+
+    escaped_path = str(path).replace("'", "''")
+    with duckdb.connect(database=":memory:") as connection:
+        return connection.execute(
+            f"SELECT * FROM read_parquet('{escaped_path}')"
+        ).df()
+
+
 def _load():
-    matches = pd.read_parquet(settings.SILVER_DIR / "martj42_matches.parquet")
-    fixtures = pd.read_parquet(settings.SILVER_DIR / "openfootball_worldcup_2026_fixtures.parquet")
-    teams = pd.read_parquet(settings.SILVER_DIR / "martj42_teams.parquet")
+    matches = _read_parquet(settings.SILVER_DIR / "martj42_matches.parquet")
+    fixtures = _read_parquet(settings.SILVER_DIR / "openfootball_worldcup_2026_fixtures.parquet")
+    teams = _read_parquet(settings.SILVER_DIR / "martj42_teams.parquet")
     matches["date"] = pd.to_datetime(matches["date"])
     return matches, fixtures, teams
 

@@ -52,15 +52,15 @@ remaining matches, or (c) track how we're doing over time vs the market. P7 clos
 
 **Files:** `src/wc_predictor/run_daily_update.py`, `tests/test_run_daily_update.py`.
 
-- [ ] **Step 1: Tests first** — on a small synthetic setup, assert the orchestrator: (a) writes
+- [x] **Step 1: Tests first** — on a small synthetic setup, assert the orchestrator: (a) writes
   forecasts only for matches after `as_of`; (b) is idempotent (re-running the same `as_of` produces
   byte-identical ledger rows, no duplicates); (c) does NOT overwrite a prior `as_of` partition;
   (d) records `as_of`/`training_cutoff` metadata.
-- [ ] **Step 2: Implement** `run_daily_update(as_of=None)` that, for the given/today as-of:
+- [x] **Step 2: Implement** `run_daily_update(as_of=None)` that, for the given/today as-of:
   re-ingests latest martj42 results (reuse I3; network), retrains host-aware Elo through the latest
   completed date, regenerates forecasts for remaining fixtures (reuse forecast_live) into a new
   ledger partition, and refreshes championship odds (reuse P4). Skips gracefully if no new results.
-- [ ] **Step 3: Run tests; Claude commits.**
+- [x] **Step 3: Run tests; Claude commits.**
 
 ---
 
