@@ -104,7 +104,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
 | P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | ✅ | **COMPLETE.** R0–R1. 7-variant backtest: hard windows monotonically WORSE (2y RPS 0.204 vs 0.178); K=30 marginally BETTER (paired CI excludes 0, +0.0009). Hypothesis falsified; tiny K bump real. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market benchmark). |
-| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | 🟡 | **Plan written.** Q0 de-vig util, Q1 Football-Data historical odds, Q2 Elo-vs-market backtest, Q3 live Polymarket vs Elo forecast. **Codex available again — dispatching Q0.** |
+| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | 🟡 | Q0 ✅ (de-vig utility: implied/remove_vig/no_vig_three_way, 17 tests). Next: Q1 (Football-Data historical odds ingestion). |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
 
 **Roadmap order (Zach, 2026-06-22): P4 → P5 → P6 → P7.** Validation aside: an out-of-sample check
@@ -118,6 +118,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (Q0 approved)
+Q0 **approved** — de-vig utility clean: `implied_from_decimal`, `remove_vig` (proportional),
+`no_vig_three_way`. 17 tests incl inf/nan rejection, fair-book invariance, proportional margin
+removal, Polymarket-style normalization, malformed-input rejection. Committed. Dispatching **Q1**
+(Football-Data historical odds ingestion) — raw `WorldCup2026.xlsx` stays local/gitignored, parse WC
+2014/2018/2022 + qualifier sheets to a silver `market_odds` table with no-vig probs, resolve teams
+via the I2 alias resolver, report unmatched names. Reminder: NOT CC0 — no redistribution; commit only
+code + tiny schema sample + DQ report.
 
 ### 2026-06-22 — Claude (P6 plan; K=20 kept; Codex back in)
 Decision: **keep K=20** (K=30 logged as a validated finding, adopt only when finalizing the model —
@@ -535,6 +544,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-22 - Codex - Q0 De-vig utility
+- What I did: Added tests-first coverage for decimal odds implied probability, proportional three-way bookmaker de-vigging, unchanged fair books, Polymarket-style mutually-exclusive price normalization, and malformed input rejection. Implemented `wc_predictor.data.devig` with pure deterministic functions `implied_from_decimal`, `remove_vig`, and `no_vig_three_way`. Checked the Q0 boxes in the P6 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/data/test_devig.py` and `worldcup_prediction_lab/src/wc_predictor/data/devig.py`. RED step failed first with `ModuleNotFoundError: No module named 'wc_predictor.data.devig'`. Required command `uv run --with pytest pytest worldcup_prediction_lab/tests/data/test_devig.py -v` passed with 17 tests.
+- Result: done
+- Open questions: None.
 
 ### 2026-06-21 - Codex - M7 Live as-of-2026-06-21 forecast for remaining fixtures
 - What I did: Added `worldcup_prediction_lab/src/wc_predictor/forecast_live.py` with deterministic `as_of=2026-06-21`, `training_cutoff=2026-06-20`, and `generated_at_utc=2026-06-21T00:00:00Z`; trained `elo_poisson_v1` on completed `martj42_matches` through 2026-06-20; filtered openfootball fixtures to resolvable remaining group fixtures only; applied WC host-country logic through the Elo `host_advantage_fn`; wrote the live immutable ledger; generated the human-readable report; checked the M7 boxes in the P3 plan. I did not run git.

@@ -41,13 +41,13 @@ probabilities are the strongest realistic benchmark. Two questions:
 
 **Files:** `src/wc_predictor/data/devig.py`, `tests/data/test_devig.py`.
 
-- [ ] **Step 1: Tests first** — known odds → known no-vig probabilities. Cover: 3-way decimal odds
+- [x] **Step 1: Tests first** — known odds → known no-vig probabilities. Cover: 3-way decimal odds
   (home/draw/away) with a margin → probabilities sum to 1 and preserve relative order; a fair book
   (no margin) is unchanged; Polymarket-style outcome prices (already ~probabilities, but a mutually-
   exclusive set with overround) → normalized to sum 1; reject malformed/zero odds.
-- [ ] **Step 2: Implement** `implied_from_decimal(odds)`, `remove_vig(probs)` (proportional
+- [x] **Step 2: Implement** `implied_from_decimal(odds)`, `remove_vig(probs)` (proportional
   normalization), and a `no_vig_three_way(home_odds, draw_odds, away_odds)` convenience. Pure funcs.
-- [ ] **Step 3: Run tests; Claude commits.**
+- [x] **Step 3: Run tests; Claude commits.**
 
 ---
 
