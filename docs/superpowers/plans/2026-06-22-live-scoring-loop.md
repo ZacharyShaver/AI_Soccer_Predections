@@ -69,14 +69,14 @@ remaining matches, or (c) track how we're doing over time vs the market. P7 clos
 **Files:** extend `score_ledger.py` or add `src/wc_predictor/evaluation/scorecard.py`,
 `reports/backtests/forecast_scorecard.md`.
 
-- [ ] **Step 1: Build the scorecard** — across all scored ledger predictions to date, compare our
+- [x] **Step 1: Build the scorecard** — across all scored ledger predictions to date, compare our
   Elo forecasts to actual outcomes and, where available, to the de-vigged Polymarket/Football-Data
   market probs on the same matches (reuse P6). Report per-metric (RPS/log loss/Brier) for us vs
   market, with bootstrap CIs once n is large enough (note when n is too small).
-- [ ] **Step 2: Write the committed report** `forecast_scorecard.md`: matches scored so far, our
+- [x] **Step 2: Write the committed report** `forecast_scorecard.md`: matches scored so far, our
   running metrics, market comparison, notable hits/misses, and honest caveats (small in-tournament
   n; don't over-read a handful of matches).
-- [ ] **Step 3: Commit.**
+- [x] **Step 3: Commit.**
 
 ---
 
