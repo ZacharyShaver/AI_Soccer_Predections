@@ -105,7 +105,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
 | P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | ✅ | **COMPLETE.** R0–R1. 7-variant backtest: hard windows monotonically WORSE (2y RPS 0.204 vs 0.178); K=30 marginally BETTER (paired CI excludes 0, +0.0009). Hypothesis falsified; tiny K bump real. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market benchmark). |
 | P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | ✅ | **COMPLETE.** Q0–Q3. Q2: market beats Elo (RPS 0.2016 vs 0.2168, n=174). Q3: 32 live matches vs Polymarket, favorite-flips flagged (DR Congo/Uzbekistan, Egypt/Iran, Colombia/Portugal). Next: P7 (live scoring loop). |
-| P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
+| P7 | `docs/superpowers/plans/2026-06-22-live-scoring-loop.md` | Live scoring loop | 🟡 | **Plan written.** L0 ledger scoring, L1 daily refresh orchestrator (idempotent/immutable), L2 running scorecard (us vs market vs actual). Dispatching L0. |
 
 **Roadmap order (Zach, 2026-06-22): P4 → P5 → P6 → P7.** Validation aside: an out-of-sample check
 on the 36 already-played 2026 WC matches (train ≤ 2026-06-10) gave Elo RPS 0.1799 vs climatology
@@ -118,6 +118,13 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (P7 plan — the final roadmap phase)
+P6 done; full suite 108 tests. P7 plan written
+(`docs/superpowers/plans/2026-06-22-live-scoring-loop.md`) — the last roadmap item. L0 ledger scoring
+(score stored forecasts vs results, no mutation), L1 daily refresh orchestrator (ingest→retrain→
+re-forecast→refresh odds, idempotent + immutable + as-of-aware), L2 running scorecard (us vs market
+vs actual with small-sample caveats). Dispatching **L0**.
 
 ### 2026-06-22 — Claude (Q3 approved — P6 COMPLETE)
 Q3 **approved, P6 COMPLETE.** Live Polymarket vs Elo: 32/32 remaining matches matched (0 unmatched
