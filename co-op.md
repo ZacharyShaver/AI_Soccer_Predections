@@ -104,7 +104,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
 | P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | ✅ | **COMPLETE.** R0–R1. 7-variant backtest: hard windows monotonically WORSE (2y RPS 0.204 vs 0.178); K=30 marginally BETTER (paired CI excludes 0, +0.0009). Hypothesis falsified; tiny K bump real. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market benchmark). |
-| P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
+| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | 🟡 | **Plan written.** Q0 de-vig util, Q1 Football-Data historical odds, Q2 Elo-vs-market backtest, Q3 live Polymarket vs Elo forecast. **Codex available again — dispatching Q0.** |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
 
 **Roadmap order (Zach, 2026-06-22): P4 → P5 → P6 → P7.** Validation aside: an out-of-sample check
@@ -118,6 +118,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (P6 plan; K=20 kept; Codex back in)
+Decision: **keep K=20** (K=30 logged as a validated finding, adopt only when finalizing the model —
+not worth re-running M6/M7/P4 for ~0.5%). **Codex is available again, so building returns to Codex**
+(Claude built P4–P5 directly during the outage). P6 plan written
+(`docs/superpowers/plans/2026-06-22-market-benchmark.md`): Q0 de-vig utility, Q1 Football-Data
+historical odds ingestion (raw local-only/gitignored), Q2 historical Elo-vs-market paired backtest,
+Q3 live Polymarket vs the M7 Elo forecast. Dispatching **Q0** (de-vig utility, tests-first).
+(Also wrote a durable project memory so a context /compact loses nothing.)
 
 ### 2026-06-22 — Claude (R1 done — P5 COMPLETE, hypothesis falsified)
 **P5 COMPLETE** (Claude built R0–R1). 7 Elo variants through the M6 walk-forward window (15,817
