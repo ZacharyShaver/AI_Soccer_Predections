@@ -36,15 +36,15 @@ remaining matches, or (c) track how we're doing over time vs the market. P7 clos
 
 **Files:** `src/wc_predictor/evaluation/score_ledger.py`, `tests/evaluation/test_score_ledger.py`.
 
-- [ ] **Step 1: Tests first** — given stored predictions (JSONL) and a results table, score each
+- [x] **Step 1: Tests first** — given stored predictions (JSONL) and a results table, score each
   now-completed prediction (home/draw/away outcome) with log loss, Brier, RPS, and a "called it"
   (argmax) flag, WITHOUT mutating the prediction rows. Predictions for not-yet-played matches are
   left unscored. Deterministic.
-- [ ] **Step 2: Implement** `score_ledger(predictions_dir_or_jsonl, results_df)` reusing the M0
+- [x] **Step 2: Implement** `score_ledger(predictions_dir_or_jsonl, results_df)` reusing the M0
   `score_predictions` join + M1 metrics. Return a per-prediction evaluation table + aggregate
   (n scored, mean log loss/Brier/RPS, outcome accuracy on decisive matches, exact-score hits if a
   scoreline was stored).
-- [ ] **Step 3: Run tests; Claude commits.**
+- [x] **Step 3: Run tests; Claude commits.**
 
 ---
 

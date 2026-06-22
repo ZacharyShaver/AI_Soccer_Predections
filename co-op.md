@@ -105,7 +105,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
 | P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | ✅ | **COMPLETE.** R0–R1. 7-variant backtest: hard windows monotonically WORSE (2y RPS 0.204 vs 0.178); K=30 marginally BETTER (paired CI excludes 0, +0.0009). Hypothesis falsified; tiny K bump real. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market benchmark). |
 | P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | ✅ | **COMPLETE.** Q0–Q3. Q2: market beats Elo (RPS 0.2016 vs 0.2168, n=174). Q3: 32 live matches vs Polymarket, favorite-flips flagged (DR Congo/Uzbekistan, Egypt/Iran, Colombia/Portugal). Next: P7 (live scoring loop). |
-| P7 | `docs/superpowers/plans/2026-06-22-live-scoring-loop.md` | Live scoring loop | 🟡 | **Plan written.** L0 ledger scoring, L1 daily refresh orchestrator (idempotent/immutable), L2 running scorecard (us vs market vs actual). Dispatching L0. |
+| P7 | `docs/superpowers/plans/2026-06-22-live-scoring-loop.md` | Live scoring loop | 🟡 | **L0 ✅** `score_ledger` (immutable join, finite-mean guard, pending/exact-score handling); 3 tests, full suite 111 green. Also declared `openpyxl` dep (was undeclared, broke footballdata tests). Next: L1 daily refresh orchestrator, then L2 scorecard. |
 
 **Roadmap order (Zach, 2026-06-22): P4 → P5 → P6 → P7.** Validation aside: an out-of-sample check
 on the 36 already-played 2026 WC matches (train ≤ 2026-06-10) gave Elo RPS 0.1799 vs climatology
@@ -578,6 +578,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-22 - Codex - L0 Ledger scoring
+- What I did: Added tests-first coverage for scoring immutable prediction-ledger rows against completed results, including JSONL loading, pending-match skip behavior, input-row immutability, deterministic output, aggregate metrics, decisive-match accuracy excluding draws, exact-score hit rate when scoreline distributions are present, all-pending behavior, and non-finite log-loss filtering for aggregate means. Implemented `wc_predictor.evaluation.score_ledger.score_ledger` reusing M0 `score_predictions` for the result join and M1 metric functions for log loss, Brier, RPS, and exact-score hits. Checked the L0 boxes in the P7 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/evaluation/test_score_ledger.py` and `worldcup_prediction_lab/src/wc_predictor/evaluation/score_ledger.py`. RED steps failed first with `ModuleNotFoundError: No module named 'wc_predictor.evaluation.score_ledger'`, then the all-pending edge failed with `KeyError: 'actual_outcome'` before the narrow fix. Required command `uv run --with pytest --with pandas pytest worldcup_prediction_lab/tests/evaluation/test_score_ledger.py -v` passed with 3 tests.
+- Result: done
+- Open questions: None. Aggregate `decisive_accuracy` excludes draws from its denominator; `overall_accuracy` includes all scored matches. `mean_log_loss` excludes non-finite values, while per-prediction rows retain the original `inf` log-loss value for inspection.
 
 ### 2026-06-22 - Codex - Q3 Live Polymarket vs current Elo forecast
 - What I did: Added tests-first offline coverage for Polymarket Gamma match-result parsing, including JSON-encoded `outcomes` / `outcomePrices`, null/missing/zero placeholder price filtering, proportional de-vig via Q0 `remove_vig`, unmatched-name reporting, and the live Bosnia-Herzegovina title/question alias variant. Implemented `wc_predictor.data.ingest_polymarket` with public no-auth Gamma fetch, content-type and JSON-shape validation, gitignored raw snapshot + manifest, full-match H/D/A market parsing, second-half/prop/exact-score exclusion, alias-resolved team ids, host-aware M7 Elo forecast reuse, and a live disagreement report. Checked the Q3 boxes in the P6 plan. I did not run git.
