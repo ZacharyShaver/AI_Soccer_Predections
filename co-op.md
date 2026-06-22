@@ -104,7 +104,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
 | P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | ✅ | **COMPLETE.** R0–R1. 7-variant backtest: hard windows monotonically WORSE (2y RPS 0.204 vs 0.178); K=30 marginally BETTER (paired CI excludes 0, +0.0009). Hypothesis falsified; tiny K bump real. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market benchmark). |
-| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | 🟡 | Q0–Q1 ✅ (Q1: 1,098 de-vigged odds rows 2014–2026, raw local-only; ⚠️ 160 unmatched team names — qualifiers long tail). Next: Q2 (Elo-vs-market backtest on resolved subset). |
+| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | 🟡 | Q0–Q2 ✅ (Q2: market BEATS Elo on n=174 — RPS 0.2016 vs 0.2168, paired CI excludes 0; small/biased sample, alias gaps = Chile/Peru/Nigeria/etc). Next: Q3 (live Polymarket vs Elo). |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
 
 **Roadmap order (Zach, 2026-06-22): P4 → P5 → P6 → P7.** Validation aside: an out-of-sample check
@@ -118,6 +118,16 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (Q2 approved — market beats Elo, as expected)
+Q2 **approved**. Honest, expected result: on n=174 matches with both a result and odds, the
+**market beats Elo** on RPS (0.2016 vs 0.2168), log loss, and Brier — all paired CIs exclude 0.
+2 tests pass. The market wins because it prices injuries/lineups/wisdom Elo lacks → motivates
+market-calibrated models later. **Caveat banked:** sample is small + biased — only 208/1,098 odds
+rows resolved both teams because the unmatched names are MAJOR teams (Chile, Peru, Nigeria, Poland,
+Denmark, Serbia, Cameroon, China…) absent from the 48-WC alias seed. Extending the alias table would
+grow n to ~400-500 and de-bias (optional future task; verdict unlikely to flip). Committed.
+Dispatching **Q3** (live Polymarket vs the M7 Elo forecast) — the last P6 task.
 
 ### 2026-06-22 — Claude (Q1 approved — odds in, watch the join coverage)
 Q1 **approved**. 1,098 de-vigged odds rows (WC 2014/2018/2022 + 882 qualifiers, 2014→2026); 3 tests;
@@ -552,6 +562,14 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-22 - Codex - Q2 Historical Elo-vs-market backtest
+- What I did: Added tests-first coverage for Q2 market/result alignment, including reversed Football-Data home/away ordering, unmatched-name reporting, paired market-minus-Elo metric summaries, and non-finite log-loss filtering. Implemented `wc_predictor.evaluation.elo_vs_market` with silver parquet loading, bidirectional result/odds joins, leak-free incremental Elo predictions that withhold all same-date results, RPS / H-D-A log loss / Brier scoring, deterministic bootstrap CIs with seed `20260622`, paired mean differences, and the markdown report. Checked the Q2 boxes in the P6 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/evaluation/test_elo_vs_market.py`, `worldcup_prediction_lab/src/wc_predictor/evaluation/elo_vs_market.py`, and `worldcup_prediction_lab/reports/backtests/elo_vs_market.md`. RED step failed first with `ModuleNotFoundError: No module named 'wc_predictor.evaluation.elo_vs_market'`. Targeted verification `uv run --with pytest --with pandas --with pyarrow pytest tests/evaluation/test_elo_vs_market.py -q` passed with 2 tests. Live command `uv run --with pandas --with pyarrow python -m wc_predictor.evaluation.elo_vs_market` passed and wrote the report.
+- Live numbers: total Football-Data odds rows `1,098`; odds rows with both canonical team ids `208`; usable joined result/market rows `174`; date range `2014-06-12` to `2026-06-17`; as-listed joins `173`; reversed-orientation joins `1`. Top unmatched Football-Data names by null canonical id include Chile `22`, Peru `21`, Bolivia `20`, Costa Rica `20`, Indonesia `20`, United Arab Emirates `20`, Nigeria `19`, Oman `18`, Venezuela `18`, Cameroon `17`, and Poland `17`.
+- Headline metrics: Football-Data market RPS `0.2016` CI `[0.1796, 0.2238]`, log loss `0.9958` CI `[0.9154, 1.0784]`, Brier `0.5954` CI `[0.5400, 0.6504]`; Elo RPS `0.2168` CI `[0.1952, 0.2393]`, log loss `1.0473` CI `[0.9675, 1.1323]`, Brier `0.6303` CI `[0.5727, 0.6903]`. Paired market-minus-Elo differences: RPS `-0.01524` CI `[-0.02568, -0.00411]`, log loss `-0.05152` CI `[-0.08999, -0.01071]`, Brier `-0.03483` CI `[-0.05921, -0.01004]`.
+- Result: done. Verdict: Elo trails the Football-Data market on this resolved subset; all three paired CIs are below zero, meaning market probabilities scored lower on the same matches.
+- Open questions: None. Caveat: usable n is only just above the stop threshold (`174` vs `150`), and alias gaps still dominate coverage, so extending aliases could materially change the sample.
 
 ### 2026-06-22 - Codex - Q1 Football-Data historical odds ingestion
 - What I did: Added tests-first offline coverage for parsing Football-Data World Cup workbook-style sheets from embedded in-memory DataFrames, preferring average odds, falling back to bet365 odds, applying Q0 `no_vig_three_way`, resolving team names through the I2 alias resolver with source fallback, and skipping/reporting missing odds without crashing. Implemented `wc_predictor.data.ingest_footballdata` with XLSX download validation, raw local snapshot + manifest under `data/raw/footballdata/`, normalized silver `market_odds` parsing/writing, aggregate DQ reporting, and a tiny normalized schema sample. Checked the Q1 boxes in the P6 plan. I did not run git.

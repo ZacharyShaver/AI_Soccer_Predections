@@ -71,13 +71,13 @@ probabilities are the strongest realistic benchmark. Two questions:
 
 **Files:** `src/wc_predictor/evaluation/elo_vs_market.py`, `reports/backtests/elo_vs_market.md`.
 
-- [ ] **Step 1: Align** matches that have BOTH a silver result and Football-Data no-vig odds
+- [x] **Step 1: Align** matches that have BOTH a silver result and Football-Data no-vig odds
   (historical WC + qualifiers). For each, get the Elo prediction (train Elo on results strictly
   before the match date — reuse walk-forward / as-of training to avoid leakage).
-- [ ] **Step 2: Compare** market-implied vs Elo on RPS / H-D-A log loss / Brier, with bootstrap CIs
+- [x] **Step 2: Compare** market-implied vs Elo on RPS / H-D-A log loss / Brier, with bootstrap CIs
   and the paired mean-difference (market minus Elo). Honest verdict: does Elo match the market, lose
   a little, or beat it? (Prior: market is hard to beat; measuring the gap is the value.)
-- [ ] **Step 3: Write report + commit.**
+- [x] **Step 3: Write report + commit.**
 
 ---
 
