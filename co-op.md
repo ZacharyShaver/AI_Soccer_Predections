@@ -102,7 +102,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
-| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | S0–S2 ✅ (S2: match_sim — group scoreline sampling + single-winner knockouts, rng-injected, 5 tests). **Claude building directly (Codex out).** Next: S3 (Monte Carlo engine). |
+| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | S0–S3 ✅ (S3: Monte Carlo engine — played-fixed, sim groups→bracket→knockouts, memoized, 4 tests; win-probs sum to 1, advance to 32). **Claude building (Codex out).** Next: S4 (live run + report). |
 | P5 | _(to be written)_ | Recency experiment | — | Zach's ship-of-Theseus test: full-history vs higher-K vs time-decay vs 2yr window on M6 backtest. |
 | P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
@@ -118,6 +118,16 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (S3 done — Monte Carlo engine)
+**S3 done** (Claude building). `simulate/montecarlo.py`: `TournamentSimulator` + `run_tournament_
+simulation` — per sim holds played group results fixed, simulates remaining group games → S0 tables →
+S1 R32 resolution (incl best-thirds) → S2 knockouts → champion; tallies advance/R16/QF/SF/Final/Win.
+Per-matchup scoreline grids + advance probs memoized (ratings static within a run) so 20k sims stay
+fast. `played_group_results` keys by unordered pair (handles home/away disagreements) + honors as_of.
+4 tests: played-lookup, degenerate strong team (advance=1.0, win>0.95), nested+bounded probs (win
+sums to 1.0, advance to 32.0), reproducibility. Next: S4 (real run vs live data + championship-odds
+report) — I'll attach the M7 venue→host fn so USA/CAN/MEX get host advantage.
 
 ### 2026-06-22 — Claude (S2 done — match simulator)
 **S2 done** (Claude building). `simulate/match_sim.py`: `simulate_group_match` samples a full
