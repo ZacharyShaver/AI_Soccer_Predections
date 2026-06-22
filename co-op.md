@@ -102,7 +102,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
-| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | S0–S3 ✅ (S3: Monte Carlo engine — played-fixed, sim groups→bracket→knockouts, memoized, 4 tests; win-probs sum to 1, advance to 32). **Claude building (Codex out).** Next: S4 (live run + report). |
+| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
 | P5 | _(to be written)_ | Recency experiment | — | Zach's ship-of-Theseus test: full-history vs higher-K vs time-decay vs 2yr window on M6 backtest. |
 | P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
@@ -118,6 +118,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (S4 done — P4 COMPLETE 🏆 championship odds)
+**S4 done, P4 COMPLETE** (Claude built S0–S4 directly while Codex was out). `run_championship_odds.py`
+trains host-aware Elo through 2026-06-20, holds the 36 played group results fixed, runs **20,000**
+simulations (seed 0, determinism PASS) → committed report `reports/backtests/
+championship_odds_2026-06-21.md`. Headline odds: **Argentina 19.2%, Spain 16.1%, France 13.5%,
+Brazil 7.2%, England 6.6%** — realistic shape (no team runaway; favourites ~15-20%), USA bumped to
+2.7% by host advantage, Portugal only 84% to advance (group K). Full suite **80 tests**. Roadmap
+continues: **P5 next** (recency experiment — Zach's ship-of-Theseus test).
 
 ### 2026-06-22 — Claude (S3 done — Monte Carlo engine)
 **S3 done** (Claude building). `simulate/montecarlo.py`: `TournamentSimulator` + `run_tournament_
