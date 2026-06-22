@@ -86,11 +86,11 @@ probabilities are the strongest realistic benchmark. Two questions:
 **Files:** `src/wc_predictor/data/ingest_polymarket.py`,
 `reports/backtests/market_disagreement_2026-06-21.md`.
 
-- [ ] **Step 1: Tests first** — parse a Polymarket event fixture (`outcomes`/`outcomePrices` as JSON
+- [x] **Step 1: Tests first** — parse a Polymarket event fixture (`outcomes`/`outcomePrices` as JSON
   strings), filter null/placeholder prices, de-vig the mutually-exclusive market (Q0). Offline.
-- [ ] **Step 2: Fetch** current 2026 WC match markets from the public Gamma API (no key); map to
+- [x] **Step 2: Fetch** current 2026 WC match markets from the public Gamma API (no key); map to
   fixtures via the alias resolver; de-vig to home/draw/away (or match-winner) probabilities.
-- [ ] **Step 3: Compare** to the M7 live Elo forecast per remaining match; report the biggest
+- [x] **Step 3: Compare** to the M7 live Elo forecast per remaining match; report the biggest
   disagreements (where Elo and the market most differ) with a short interpretation. Commit.
 
 ---

@@ -104,7 +104,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
 | P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | ✅ | **COMPLETE.** R0–R1. 7-variant backtest: hard windows monotonically WORSE (2y RPS 0.204 vs 0.178); K=30 marginally BETTER (paired CI excludes 0, +0.0009). Hypothesis falsified; tiny K bump real. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market benchmark). |
-| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | 🟡 | Q0–Q2 ✅ (Q2: market BEATS Elo on n=174 — RPS 0.2016 vs 0.2168, paired CI excludes 0; small/biased sample, alias gaps = Chile/Peru/Nigeria/etc). Next: Q3 (live Polymarket vs Elo). |
+| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | ✅ | **COMPLETE.** Q0–Q3. Q2: market beats Elo (RPS 0.2016 vs 0.2168, n=174). Q3: 32 live matches vs Polymarket, favorite-flips flagged (DR Congo/Uzbekistan, Egypt/Iran, Colombia/Portugal). Next: P7 (live scoring loop). |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
 
 **Roadmap order (Zach, 2026-06-22): P4 → P5 → P6 → P7.** Validation aside: an out-of-sample check
@@ -118,6 +118,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (Q3 approved — P6 COMPLETE)
+Q3 **approved, P6 COMPLETE.** Live Polymarket vs Elo: 32/32 remaining matches matched (0 unmatched
+names — 48 WC teams resolve), 4,445 placeholder markets filtered, raw snapshot gitignored. 3 tests.
+Favorite-flip disagreements flagged (DR Congo/Uzbekistan, Egypt/Iran, Colombia/Portugal) plus big
+confidence gaps (Bosnia/Qatar 42% vs 67%). Honest framing (prediction-vs-prediction, flags for
+review). **P6 takeaways:** market beats pure Elo historically (expected — it sees injuries/lineups),
+and the live disagreement view is a genuinely useful scouting tool. Committed.
+**Roadmap: only P7 (live scoring loop) remains.** Will plan it next.
 
 ### 2026-06-22 — Claude (Q2 approved — market beats Elo, as expected)
 Q2 **approved**. Honest, expected result: on n=174 matches with both a result and odds, the
@@ -562,6 +571,14 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-22 - Codex - Q3 Live Polymarket vs current Elo forecast
+- What I did: Added tests-first offline coverage for Polymarket Gamma match-result parsing, including JSON-encoded `outcomes` / `outcomePrices`, null/missing/zero placeholder price filtering, proportional de-vig via Q0 `remove_vig`, unmatched-name reporting, and the live Bosnia-Herzegovina title/question alias variant. Implemented `wc_predictor.data.ingest_polymarket` with public no-auth Gamma fetch, content-type and JSON-shape validation, gitignored raw snapshot + manifest, full-match H/D/A market parsing, second-half/prop/exact-score exclusion, alias-resolved team ids, host-aware M7 Elo forecast reuse, and a live disagreement report. Checked the Q3 boxes in the P6 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/data/test_ingest_polymarket.py`, `worldcup_prediction_lab/src/wc_predictor/data/ingest_polymarket.py`, and `worldcup_prediction_lab/reports/backtests/market_disagreement_2026-06-21.md`. RED steps failed first with missing module, then with the Bosnia-Herzegovina alias variant before implementation. Required command `uv run --with pytest --with pandas pytest worldcup_prediction_lab/tests/data/test_ingest_polymarket.py -v` passed with 3 tests. Live command `uv run python -m wc_predictor.data.ingest_polymarket` passed.
+- Live numbers: Gamma tag `102232` returned 418 active/open events across 5 JSON requests; parsed 32 full-match result market events; 32/32 resolved to canonical team ids; 32/32 overlapped the M7 Elo remaining-fixture forecast; unmatched Polymarket team names `0`; market-only resolved events `0`; Elo-only forecast fixtures `0`; null/missing/placeholder market prices skipped `4,445`. Raw snapshot stayed gitignored at `worldcup_prediction_lab/data/raw/polymarket/worldcup_events_20260622T114850Z_5ae86e389cb1.json`; SHA-256 `5ae86e389cb1e41c766a80c42ec18caee24e8fe50bf8b87dd27e6edb81aff59b`; manifest beside it.
+- Biggest disagreements: Bosnia and Herzegovina vs Qatar was largest (Elo 41.7/25.1/33.2 vs market 67.2/19.4/13.4, home-win diff 25.5 pts); Senegal vs Iraq next (57.1/19.9/23.1 vs 75.1/16.4/8.5, diff 18.1 pts); DR Congo vs Uzbekistan flipped favorite (Elo favors Uzbekistan 30.5/23.6/45.9, market favors DR Congo 46.3/25.4/28.4, diff 15.8 pts); Portugal vs Uzbekistan diff 15.3 pts; Czechia vs Mexico diff 13.0 pts.
+- Result: done
+- Open questions: None. Caveat: this is a live prediction-vs-prediction disagreement table, not a scored backtest; Polymarket can reflect injuries, lineups, sentiment, liquidity, and late news that Elo does not include. Parser intentionally skips two-way/second-half/prop markets rather than mixing incompatible market types.
 
 ### 2026-06-22 - Codex - Q2 Historical Elo-vs-market backtest
 - What I did: Added tests-first coverage for Q2 market/result alignment, including reversed Football-Data home/away ordering, unmatched-name reporting, paired market-minus-Elo metric summaries, and non-finite log-loss filtering. Implemented `wc_predictor.evaluation.elo_vs_market` with silver parquet loading, bidirectional result/odds joins, leak-free incremental Elo predictions that withhold all same-date results, RPS / H-D-A log loss / Brier scoring, deterministic bootstrap CIs with seed `20260622`, paired mean differences, and the markdown report. Checked the Q2 boxes in the P6 plan. I did not run git.
