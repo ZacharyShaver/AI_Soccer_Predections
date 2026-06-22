@@ -55,15 +55,15 @@ probabilities are the strongest realistic benchmark. Two questions:
 
 **Files:** `src/wc_predictor/data/ingest_footballdata.py`, `tests/data/test_ingest_footballdata.py`.
 
-- [ ] **Step 1: Tests first** — parse a small embedded sample of both the WC workbook schema
+- [x] **Step 1: Tests first** — parse a small embedded sample of both the WC workbook schema
   (`bet365-H/D/A`) and (optionally) a club CSV schema (`B365H/D/A`); map to a common odds shape;
   apply Q0 de-vig. Offline/deterministic.
-- [ ] **Step 2: Implement** download of `WorldCup2026.xlsx` (WC 2014/2018/2022 + qualifiers sheets)
+- [x] **Step 2: Implement** download of `WorldCup2026.xlsx` (WC 2014/2018/2022 + qualifiers sheets)
   to gitignored `data/raw/footballdata/`; parse to a silver `market_odds` table keyed by
   (date, home_team_id, away_team_id, bookmaker) with no-vig home/draw/away. Resolve team names via
   the I2 alias resolver; report unmatched names. Raw files stay local; commit only a tiny schema
   sample + the code.
-- [ ] **Step 3: DQ + commit** — row counts, date coverage, unmatched-name count to a DQ report.
+- [x] **Step 3: DQ + commit** — row counts, date coverage, unmatched-name count to a DQ report.
 
 ---
 

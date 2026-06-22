@@ -104,7 +104,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
 | P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | ✅ | **COMPLETE.** R0–R1. 7-variant backtest: hard windows monotonically WORSE (2y RPS 0.204 vs 0.178); K=30 marginally BETTER (paired CI excludes 0, +0.0009). Hypothesis falsified; tiny K bump real. Report: `reports/backtests/recency_experiment.md`. Next: P6 (market benchmark). |
-| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | 🟡 | Q0 ✅ (de-vig utility: implied/remove_vig/no_vig_three_way, 17 tests). Next: Q1 (Football-Data historical odds ingestion). |
+| P6 | `docs/superpowers/plans/2026-06-22-market-benchmark.md` | Market benchmark | 🟡 | Q0–Q1 ✅ (Q1: 1,098 de-vigged odds rows 2014–2026, raw local-only; ⚠️ 160 unmatched team names — qualifiers long tail). Next: Q2 (Elo-vs-market backtest on resolved subset). |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
 
 **Roadmap order (Zach, 2026-06-22): P4 → P5 → P6 → P7.** Validation aside: an out-of-sample check
@@ -118,6 +118,14 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (Q1 approved — odds in, watch the join coverage)
+Q1 **approved**. 1,098 de-vigged odds rows (WC 2014/2018/2022 + 882 qualifiers, 2014→2026); 3 tests;
+raw `.xlsx` correctly stayed gitignored (licensing respected); only derived data + DQ + tiny schema
+sample committed. **Flag for Q2:** 160 unmatched team names (qualifiers long tail beyond the 48-WC
+alias seed) → only rows where BOTH teams resolve can join to Elo. Q2 should report the usable n and
+list the top unmatched Football-Data names so we can decide whether to extend the alias table.
+Committed. Dispatching **Q2** (historical Elo-vs-market paired backtest).
 
 ### 2026-06-22 — Claude (Q0 approved)
 Q0 **approved** — de-vig utility clean: `implied_from_decimal`, `remove_vig` (proportional),
@@ -544,6 +552,13 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-22 - Codex - Q1 Football-Data historical odds ingestion
+- What I did: Added tests-first offline coverage for parsing Football-Data World Cup workbook-style sheets from embedded in-memory DataFrames, preferring average odds, falling back to bet365 odds, applying Q0 `no_vig_three_way`, resolving team names through the I2 alias resolver with source fallback, and skipping/reporting missing odds without crashing. Implemented `wc_predictor.data.ingest_footballdata` with XLSX download validation, raw local snapshot + manifest under `data/raw/footballdata/`, normalized silver `market_odds` parsing/writing, aggregate DQ reporting, and a tiny normalized schema sample. Checked the Q1 boxes in the P6 plan. I did not run git.
+- Evidence (paths / row counts / schema): Created `worldcup_prediction_lab/tests/data/test_ingest_footballdata.py` and `worldcup_prediction_lab/src/wc_predictor/data/ingest_footballdata.py`; wrote `worldcup_prediction_lab/reports/data_quality/footballdata_market_odds_q1.md` and `worldcup_prediction_lab/reports/data_quality/footballdata_market_odds_schema_sample.csv`. RED step failed first with `ModuleNotFoundError: No module named 'wc_predictor.data.ingest_footballdata'`. Required offline command `uv run --with pytest --with pandas --with numpy --with openpyxl pytest worldcup_prediction_lab/tests/data/test_ingest_footballdata.py -v` passed with 3 tests. Live run `uv run --project worldcup_prediction_lab --with httpx --with pandas --with numpy --with openpyxl python -m wc_predictor.data.ingest_footballdata` downloaded `WorldCup2026.xlsx` to gitignored raw storage and wrote `data/silver/footballdata_market_odds.parquet`.
+- Live numbers: raw SHA-256 `f0ed32638c18b86e3473a1454ac0abc47135bfce0b02d24ed3f62aeec399f4ea`; rows per sheet `WorldCup2014=64`, `WorldCup2018=64`, `WorldCup2022=64`, `WorldCup2026=24`, `WorldCup2026Qualifiers=889`; normalized odds rows per sheet `64/64/64/24/882`; total odds rows `1,098`; date range `2014-06-12` to `2026-06-18`; distinct matches `1,098`; unmatched-name count `160`; skipped missing odds rows `0`; skipped invalid odds rows `7`. `.gitignore` already covers `worldcup_prediction_lab/data/raw/*`, so `data/raw/footballdata/` raw XLSX and manifest stay local.
+- Result: done
+- Open questions: None. Q2 should either add aliases for historical qualifier teams or filter to resolved teams when aligning with Elo.
 
 ### 2026-06-22 - Codex - Q0 De-vig utility
 - What I did: Added tests-first coverage for decimal odds implied probability, proportional three-way bookmaker de-vigging, unchanged fair books, Polymarket-style mutually-exclusive price normalization, and malformed input rejection. Implemented `wc_predictor.data.devig` with pure deterministic functions `implied_from_decimal`, `remove_vig`, and `no_vig_three_way`. Checked the Q0 boxes in the P6 plan. I did not run git.
