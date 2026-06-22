@@ -102,7 +102,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
-| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | S0 ✅ (group standings + FIFA tiebreakers: points→GD→GF→H2H→stable, 5 tests). **Claude building directly (Codex out of quota).** Next: S1 (bracket/third-place allocation). |
+| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | S0–S1 ✅ (S1: third-place allocation via constraint matching + full R32 resolution, 5 tests). **Claude building directly (Codex out).** Next: S2 (knockout match simulator). |
 | P5 | _(to be written)_ | Recency experiment | — | Zach's ship-of-Theseus test: full-history vs higher-K vs time-decay vs 2yr window on M6 backtest. |
 | P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
@@ -118,6 +118,16 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (S1 done — bracket/third-place allocation)
+**S1 done** (Claude building). `simulate/bracket.py`: parses the 8 third-place R32 slots + candidate
+groups from the openfootball fixtures, ranks the 12 thirds (points→GD→GF→stable), takes the best 8,
+and allocates them to slots via **deterministic constraint-satisfying backtracking** against the
+official candidate lists (chosen over embedding FIFA's 495-row table; documented as an approximation
+that always respects the constraints — negligible odds impact). `resolve_round_of_32` returns
+concrete (home,away) per R32 tie. 5 tests: parse matches official candidates, third ranking,
+allocation validity+determinism across 3 qualifying sets, count-mismatch raise, full R32 resolution.
+Next: S2 (knockout match simulator — single winner, no draws).
 
 ### 2026-06-22 — Claude (S0 done — Claude building directly while Codex is out)
 **Protocol note:** Codex hit its usage limit (2nd time today); Zach has ~1 reset left and chose to
