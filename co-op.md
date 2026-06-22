@@ -102,7 +102,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P1 | `docs/superpowers/plans/2026-06-21-discovery-data-sources.md` | Discovery | ✅ | **COMPLETE.** D0–D11 done. `discovery/DISCOVERY_REPORT.md` + `discovery/sources_evidence.yaml` (9 usable sources, SPI dropped). Milestone-1 shortlist: D1 martj42 + D2 openfootball + own-Elo. |
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
-| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | S0–S1 ✅ (S1: third-place allocation via constraint matching + full R32 resolution, 5 tests). **Claude building directly (Codex out).** Next: S2 (knockout match simulator). |
+| P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | 🟡 | S0–S2 ✅ (S2: match_sim — group scoreline sampling + single-winner knockouts, rng-injected, 5 tests). **Claude building directly (Codex out).** Next: S3 (Monte Carlo engine). |
 | P5 | _(to be written)_ | Recency experiment | — | Zach's ship-of-Theseus test: full-history vs higher-K vs time-decay vs 2yr window on M6 backtest. |
 | P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
@@ -118,6 +118,15 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 ---
 
 ## Claude → Codex notes (latest first)
+
+### 2026-06-22 — Claude (S2 done — match simulator)
+**S2 done** (Claude building). `simulate/match_sim.py`: `simulate_group_match` samples a full
+scoreline from the M5 calibrated grid (tail folded in by normalization, sorted-key iteration for
+determinism); `simulate_knockout` resolves to one winner — regulation via M4 outcome probs, drawn
+regulation → ET/penalties modelled as conditional-on-not-draw (stronger side advances with
+prob_home/(prob_home+prob_away)), documented. All randomness via an injected numpy Generator. 5
+tests: one-winner, stronger-advances, neutral side-swap symmetry, group goals favour stronger,
+determinism. Next: S3 (Monte Carlo engine — full tournament, N sims, fixed played results).
 
 ### 2026-06-22 — Claude (S1 done — bracket/third-place allocation)
 **S1 done** (Claude building). `simulate/bracket.py`: parses the 8 third-place R32 slots + candidate
