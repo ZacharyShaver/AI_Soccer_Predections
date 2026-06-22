@@ -103,7 +103,7 @@ Status: ⬜ not started · 🟡 in progress · ✅ done · ⛔ blocked
 | P2 | `docs/superpowers/plans/2026-06-22-ingestion-foundations.md` | Ingestion foundations | ✅ | **COMPLETE.** I0–I5 done, 29 tests pass. Silver: 49,441 matches + 336 teams + 104 WC fixtures. `INGESTION_REPORT.md` = P3 readiness gate. Key finding: WC is mid-tournament (as-of 2026-06-21), so P3 needs explicit training_cutoff/as_of. |
 | P3 | `docs/superpowers/plans/2026-06-22-elo-first-model.md` | Elo-first model slice | ✅ | **COMPLETE — Milestone 1 done end-to-end.** M0–M7. Elo beats climatology (gate passed), live as-of-2026-06-21 forecasts written for 32 remaining group matches (32 knockout pending bracket). 61 tests pass. |
 | P4 | `docs/superpowers/plans/2026-06-22-tournament-simulation.md` | Championship odds (Monte Carlo) | ✅ | **COMPLETE.** S0–S4, 80 tests pass. 20k-sim championship odds (as-of 2026-06-21): Argentina 19.2%, Spain 16.1%, France 13.5%, Brazil 7.2%. Report: `reports/backtests/championship_odds_2026-06-21.md`. Next: P5 (recency experiment). |
-| P5 | _(to be written)_ | Recency experiment | — | Zach's ship-of-Theseus test: full-history vs higher-K vs time-decay vs 2yr window on M6 backtest. |
+| P5 | `docs/superpowers/plans/2026-06-22-recency-experiment.md` | Recency experiment | 🟡 | R0 ✅ (WindowedEloModel — trailing-window training, 3 tests). **Claude building (Codex out).** Next: R1 (run variants + paired report). |
 | P6 | _(to be written)_ | Market benchmark | — | Ingest Polymarket/odds (Phase-2), de-vig, measure Elo vs market. |
 | P7 | _(to be written)_ | Live scoring loop | — | Auto-score ledger vs results as matches finish; refresh forecasts. |
 
