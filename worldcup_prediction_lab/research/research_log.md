@@ -34,3 +34,38 @@ scoring_form 39.5/25.9/34.6).
 
 **Next (Tue 2026-06-23, autonomous cron):** score the 2026-06-22 results that landed,
 update the leaderboard, retire/keep, and build 3 new feature variants.
+
+---
+
+## Day 2 — 2026-06-23 (Tuesday)
+
+**Resolved:** all 4 of the 2026-06-22 fixtures. The model went **4/4 on outcome**:
+- France 3–0 Iraq (HOME; we had 79% home)
+- Argentina 2–0 Austria (HOME; 73%)
+- Jordan 1–2 Algeria (AWAY; 56% away)
+- Norway 3–2 Senegal (HOME; 38/26/36 — our coin-flip landed)
+
+**Leaderboard (n=4 each):**
+| variant | RPS | edge vs baseline |
+| --- | ---: | ---: |
+| `scoring_form` | 0.0968 | +0.0154 |
+| `recent_form` | 0.1021 | +0.0101 |
+| `elo_baseline` | 0.1122 | — |
+| `rest_days` | 0.1122 | +0.0000 |
+
+Both form challengers beat the baseline by leaning harder into the (correct) favorites
+(e.g. scoring_form gave Algeria 63% vs baseline 56%). `rest_days` exactly tied the baseline —
+rest is equal in synchronized group play, as predicted Day 1; expect it to matter only across
+the group→knockout rest gap. **Caveat: n=4 — far too small to separate models; treat as a
+direction, not a verdict.**
+
+**Infra fixes committed by the autonomous run:** results refresh through 2026-06-22
+(`a08f1e9`) and the fixture↔result crosswalk (`992a7bf`) — variant predictions key on
+openfootball `fixture_id` but results land under martj42 `match_id`; the crosswalk matches on
+(team-pair, date) and re-orients the score, which is what makes scoring work at all.
+
+**Bug found:** the headless `claude -p` run dispatched the 3 new Tuesday variants to Codex in
+the *background*, then went idle and exited, orphaning the builds — so **no new variants were
+added today** (still 4). Fix applied to `CRON_PROMPT.md`: run Codex builds in the FOREGROUND
+(blocking), never `run_in_background`, so the headless session stays alive until each file is
+authored. Should self-correct on the Wed 2026-06-24 run.
