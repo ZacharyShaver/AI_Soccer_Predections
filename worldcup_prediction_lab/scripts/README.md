@@ -52,3 +52,32 @@ $trigger  = New-ScheduledTaskTrigger -Daily -At 9:00am
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 30) -MultipleInstances IgnoreNew
 Register-ScheduledTask -TaskName "WorldCupDailyForecast" -Action $action -Trigger $trigger -Settings $settings -Force
 ```
+
+---
+
+# Autonomous model-research lab (Tue–Thu, this week only)
+
+`run_research_lab.ps1` is invoked by the **`WorldCupResearchLab`** task. It launches
+**headless Claude Code** (`claude -p --dangerously-skip-permissions`) with the prompt in
+`research/CRON_PROMPT.md`, which drives the daily Claude-orchestrates-Codex model bake-off
+per `research/DAILY_PLAYBOOK.md`: score yesterday's variants, then build 3 new feature-model
+variants (each in its own git worktree, authored by Codex) and record their predictions.
+
+- **Triggers:** one-time at 2026-06-23, -24, -25 09:08 local (Tue/Wed/Thu). Not recurring —
+  it does not repeat next week. Monday (day 1) was seeded manually.
+- **Output log:** `runs/research_lab.log` (gitignored).
+- **⚠ Security:** runs with `--dangerously-skip-permissions` — the unattended session has full
+  tool access (git, Codex, file writes). Only because every command is bounded by the playbook.
+  The machine must be on and able to run `claude` + `codex` at the trigger time.
+
+```powershell
+Get-ScheduledTaskInfo -TaskName "WorldCupResearchLab"     # status / last result
+Start-ScheduledTask   -TaskName "WorldCupResearchLab"     # run a day now (real run!)
+Disable-ScheduledTask -TaskName "WorldCupResearchLab"     # pause
+Unregister-ScheduledTask -TaskName "WorldCupResearchLab" -Confirm:$false   # remove
+Get-Content "..\runs\research_lab.log" -Tail 40           # see what it did
+```
+
+To run a lab day manually instead of waiting for the trigger, just open Claude Code and say
+"do today's research lab day" (it follows `research/DAILY_PLAYBOOK.md`).
+
