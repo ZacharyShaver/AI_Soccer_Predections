@@ -35,6 +35,9 @@ def run(as_of: str | None = None, *, training_cutoff: str | None = None) -> dict
         generated.append(info.variant_id)
 
     standings = refresh()
+    from wc_predictor.lab.dashboard import build_dashboard
+
+    build_dashboard()
     return {
         "as_of": as_of_date,
         "training_cutoff": cutoff,
