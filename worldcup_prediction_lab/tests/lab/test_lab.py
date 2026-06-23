@@ -3,7 +3,7 @@ import pytest
 
 from wc_predictor.lab import registry
 from wc_predictor.lab.experiment import generate_variant_predictions, read_variant_predictions
-from wc_predictor.lab.leaderboard import build_standings
+from wc_predictor.lab.leaderboard import build_standings, fixture_keyed_results
 
 
 def _matches():
@@ -75,6 +75,35 @@ def test_generate_predictions_only_after_as_of_and_idempotent(tmp_path):
         as_of="2026-06-21", training_cutoff="2026-06-20", out_root=out,
     )
     assert path.read_bytes() == before  # byte-identical re-write is a no-op
+
+
+def test_fixture_keyed_results_crosswalks_and_orients_scores():
+    # martj42 stores ARG vs CAN, but the openfootball fixture has CAN at home and
+    # a different (string) match_id. The crosswalk must resolve it by (pair, date)
+    # and flip the score to the fixture's orientation.
+    matches = pd.DataFrame([
+        {"match_id": "martj42-1", "date": pd.Timestamp("2026-06-22"),
+         "home_team_id": "ARG", "away_team_id": "CAN", "home_score": 3, "away_score": 1},
+        {"match_id": "martj42-2", "date": pd.Timestamp("2026-06-22"),
+         "home_team_id": "USA", "away_team_id": "MEX", "home_score": 0, "away_score": 0},
+    ])
+    fixtures = pd.DataFrame([
+        # fixture orients CAN as home -> score must flip to 1-3
+        {"fixture_id": "fx1", "home_team_id": "CAN", "away_team_id": "ARG",
+         "match_date": pd.Timestamp("2026-06-22")},
+        # same orientation as martj42 -> 0-0 unchanged
+        {"fixture_id": "fx2", "home_team_id": "USA", "away_team_id": "MEX",
+         "match_date": pd.Timestamp("2026-06-22")},
+        # knockout placeholder (null team ids) cannot resolve
+        {"fixture_id": "fx-pending", "home_team_id": None, "away_team_id": None,
+         "match_date": pd.Timestamp("2026-07-01")},
+        # right teams, wrong date -> no resolution
+        {"fixture_id": "fx-otherday", "home_team_id": "ARG", "away_team_id": "CAN",
+         "match_date": pd.Timestamp("2026-06-23")},
+    ])
+    resolved = fixture_keyed_results(matches, fixtures)
+    by_id = {r["match_id"]: (r["home_score"], r["away_score"]) for r in resolved.to_dict("records")}
+    assert by_id == {"fx1": (1, 3), "fx2": (0, 0)}
 
 
 def test_build_standings_scores_and_ranks_against_baseline(tmp_path):

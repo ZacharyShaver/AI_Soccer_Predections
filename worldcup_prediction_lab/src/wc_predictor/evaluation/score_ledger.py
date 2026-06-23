@@ -72,8 +72,22 @@ def _completed_results(results_df: pd.DataFrame) -> list[dict[str, Any]]:
     ]
 
 
-def _argmax_outcome(row: Mapping[str, Any]) -> str:
+def _normalized_outcome_probs(row: Mapping[str, Any]) -> list[float]:
+    """Home/draw/away probs renormalized to exactly sum to 1.0.
+
+    Guards only against 6-dp rounding drift; a grossly malformed triple still
+    fails the metrics' sum check downstream because each value stays in [0, 1].
+    """
+
     probs = [float(row["prob_home"]), float(row["prob_draw"]), float(row["prob_away"])]
+    total = sum(probs)
+    if total <= 0.0:
+        return probs
+    return [value / total for value in probs]
+
+
+def _argmax_outcome(row: Mapping[str, Any]) -> str:
+    probs = _normalized_outcome_probs(row)
     return OUTCOME_ORDER[max(range(len(probs)), key=lambda index: probs[index])]
 
 
@@ -91,7 +105,16 @@ def _scoreline_probabilities(row: Mapping[str, Any]) -> dict[str, float] | None:
         probabilities = distribution
     if not isinstance(probabilities, Mapping):
         raise TypeError("scoreline probabilities must be a mapping")
-    return dict(probabilities)
+
+    # The stored grid sums to (1 - tail_probability) and each cell is 6-dp
+    # rounded, so it does not sum to exactly 1.0. exact_score_hit only needs key
+    # membership; renormalize so the metrics' sum check passes without touching
+    # the immutable ledger row.
+    cells = {str(key): float(value) for key, value in probabilities.items()}
+    total = sum(cells.values())
+    if total <= 0.0:
+        return cells
+    return {key: value / total for key, value in cells.items()}
 
 
 def _finite_mean(values: Iterable[Any]) -> float | None:
@@ -164,7 +187,11 @@ def score_ledger(
 
     evaluation_rows: list[dict[str, Any]] = []
     for row in scored_rows:
-        probs = [float(row["prob_home"]), float(row["prob_draw"]), float(row["prob_away"])]
+        # Ledger probabilities are stored rounded to 6 dp, so an independently
+        # rounded home/draw/away triple can sum to 1.0 +/- ~1.5e-6 -- just past the
+        # metrics' 1e-6 sum tolerance. Renormalize the rounding artifact here (the
+        # on-disk prediction is untouched; predictions remain immutable labels).
+        probs = _normalized_outcome_probs(row)
         actual_outcome = str(row["actual_outcome"])
         actual_score = (int(row["actual_home_score"]), int(row["actual_away_score"]))
         scoreline_probabilities = _scoreline_probabilities(row)
