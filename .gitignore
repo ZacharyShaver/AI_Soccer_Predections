@@ -31,3 +31,6 @@ worldcup_prediction_lab/runs/*.lock
 worldcup_prediction_lab/runs/.tmp*
 worldcup_prediction_lab/runs/pytest-*
 worldcup_prediction_lab/runs/*.log
+worldcup_prediction_lab/runs/experiments/**
+!worldcup_prediction_lab/runs/experiments/
+!worldcup_prediction_lab/runs/experiments/.gitkeep

@@ -16,3 +16,8 @@ REPORTS_DIR = PROJECT_DIR / "reports"
 RUNS_DIR = PROJECT_DIR / "runs"
 CONFIG_DIR = PROJECT_DIR / "config"
 
+# Daily model-research lab: committed docs/outputs under research/, immutable
+# per-variant prediction ledgers under runs/experiments/ (gitignored).
+RESEARCH_DIR = PROJECT_DIR / "research"
+EXPERIMENTS_DIR = RUNS_DIR / "experiments"
+
