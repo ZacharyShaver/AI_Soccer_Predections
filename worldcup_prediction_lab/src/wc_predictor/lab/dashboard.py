@@ -137,12 +137,12 @@ def build_dashboard(out_path: str | Path = OUT_PATH) -> Path:
         lb_rows.append(
             f'<tr class="{lead}"><td class="rank">{medal or rank}</td>'
             f'<td class="vname">{_esc(s.variant_id)}{crown}</td>'
-            f'<td class="num">{s.n_scored}</td>'
-            f'<td class="num strong">{_fmt(s.mean_rps)}</td>'
-            f'<td class="num">{_fmt(s.mean_log_loss)}</td>'
-            f'<td class="num">{_fmt(s.mean_brier)}</td>'
-            f'<td class="num">{_fmt(s.decisive_accuracy, 2)}</td>'
-            f'<td class="edge">{edge_cell}</td></tr>'
+            f'<td class="num" data-label="n">{s.n_scored}</td>'
+            f'<td class="num strong" data-label="RPS">{_fmt(s.mean_rps)}</td>'
+            f'<td class="num" data-label="log loss">{_fmt(s.mean_log_loss)}</td>'
+            f'<td class="num" data-label="Brier">{_fmt(s.mean_brier)}</td>'
+            f'<td class="num" data-label="dec.acc">{_fmt(s.decisive_accuracy, 2)}</td>'
+            f'<td class="edge" data-label="edge">{edge_cell}</td></tr>'
         )
 
     # ---- Results cards ----
@@ -261,6 +261,31 @@ table{{width:100%;border-collapse:collapse}}
 .legend{{display:flex;gap:16px;color:var(--mut);font-size:12px;margin:10px 2px}}
 .dot{{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}}
 .muted{{color:var(--mut)}} .note{{color:var(--mut);font-size:12px;margin-top:8px}}
+@media (max-width:640px){{
+  .wrap{{padding:18px 12px 48px}}
+  h1{{font-size:20px}}
+  .cards{{grid-template-columns:1fr 1fr;gap:8px}}
+  .stat{{padding:10px 12px}} .stat .v{{font-size:20px;overflow-wrap:anywhere}}
+  .grid{{grid-template-columns:1fr}}
+  /* leaderboard table -> stacked cards */
+  .lb thead{{display:none}}
+  .lb,.lb tbody,.lb tr,.lb td{{display:block;width:100%}}
+  .lb tr{{border:1px solid var(--line);border-radius:10px;margin-bottom:10px;padding:10px 14px 8px;position:relative}}
+  .lb tr.lead{{background:rgba(245,197,24,.08)}}
+  .lb td{{border:none;padding:5px 0;display:flex;justify-content:space-between;align-items:center;text-align:right}}
+  .lb td.rank{{position:absolute;top:10px;right:12px;width:auto;padding:0;font-size:15px}}
+  .lb td.vname{{font-size:17px;justify-content:flex-start;padding-right:36px;border-bottom:1px solid var(--line);margin-bottom:4px;padding-bottom:6px}}
+  .lb td[data-label]::before{{content:attr(data-label);color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.04em}}
+  .lb td.edge{{width:100%}} .edgewrap{{flex:1;justify-content:flex-end}} .edgebar{{max-width:110px}}
+  /* upcoming table -> stacked */
+  .up thead{{display:none}}
+  .up,.up tbody,.up tr,.up td{{display:block;width:100%}}
+  .up tr{{padding:10px 2px}} .up td{{border:none;padding:2px 0}}
+  .up .mt{{font-weight:600}} .up .barcell{{margin-top:6px}}
+  /* result mini-tables */
+  .mini{{font-size:11px}} .barcell{{width:auto}} .bar{{min-width:0}}
+  .legend{{flex-wrap:wrap;gap:6px 14px}}
+}}
 </style></head><body><div class="wrap">
 <h1>⚽ World Cup Model-Research Lab</h1>
 <div class="sub">Claude-orchestrates-Codex daily bake-off · generated {generated}</div>

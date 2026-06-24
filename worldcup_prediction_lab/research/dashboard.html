@@ -42,9 +42,34 @@ table{width:100%;border-collapse:collapse}
 .legend{display:flex;gap:16px;color:var(--mut);font-size:12px;margin:10px 2px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .muted{color:var(--mut)} .note{color:var(--mut);font-size:12px;margin-top:8px}
+@media (max-width:640px){
+  .wrap{padding:18px 12px 48px}
+  h1{font-size:20px}
+  .cards{grid-template-columns:1fr 1fr;gap:8px}
+  .stat{padding:10px 12px} .stat .v{font-size:20px;overflow-wrap:anywhere}
+  .grid{grid-template-columns:1fr}
+  /* leaderboard table -> stacked cards */
+  .lb thead{display:none}
+  .lb,.lb tbody,.lb tr,.lb td{display:block;width:100%}
+  .lb tr{border:1px solid var(--line);border-radius:10px;margin-bottom:10px;padding:10px 14px 8px;position:relative}
+  .lb tr.lead{background:rgba(245,197,24,.08)}
+  .lb td{border:none;padding:5px 0;display:flex;justify-content:space-between;align-items:center;text-align:right}
+  .lb td.rank{position:absolute;top:10px;right:12px;width:auto;padding:0;font-size:15px}
+  .lb td.vname{font-size:17px;justify-content:flex-start;padding-right:36px;border-bottom:1px solid var(--line);margin-bottom:4px;padding-bottom:6px}
+  .lb td[data-label]::before{content:attr(data-label);color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  .lb td.edge{width:100%} .edgewrap{flex:1;justify-content:flex-end} .edgebar{max-width:110px}
+  /* upcoming table -> stacked */
+  .up thead{display:none}
+  .up,.up tbody,.up tr,.up td{display:block;width:100%}
+  .up tr{padding:10px 2px} .up td{border:none;padding:2px 0}
+  .up .mt{font-weight:600} .up .barcell{margin-top:6px}
+  /* result mini-tables */
+  .mini{font-size:11px} .barcell{width:auto} .bar{min-width:0}
+  .legend{flex-wrap:wrap;gap:6px 14px}
+}
 </style></head><body><div class="wrap">
 <h1>⚽ World Cup Model-Research Lab</h1>
-<div class="sub">Claude-orchestrates-Codex daily bake-off · generated 2026-06-23 23:58 UTC</div>
+<div class="sub">Claude-orchestrates-Codex daily bake-off · generated 2026-06-24 00:03 UTC</div>
 
 <div class="cards">
 <div class="stat"><div class="v">2</div><div class="k">Days run</div></div>
@@ -57,7 +82,7 @@ table{width:100%;border-collapse:collapse}
 <h2>Leaderboard</h2>
 <table class="lb"><thead><tr><th>#</th><th>variant</th><th class="num">n</th><th class="num">RPS</th>
 <th class="num">log loss</th><th class="num">Brier</th><th class="num">dec.acc</th><th>edge vs baseline</th></tr></thead>
-<tbody><tr class=" lead"><td class="rank">🥇</td><td class="vname">scoring_form</td><td class="num">4</td><td class="num strong">0.0968</td><td class="num">0.4715</td><td class="num">0.2267</td><td class="num">1.00</td><td class="edge"><div class="edgewrap"><div class="edgebar pos" style="width:100.0%"></div><span class="edgeval">+0.0154</span></div></td></tr><tr class=""><td class="rank">🥈</td><td class="vname">recent_form</td><td class="num">4</td><td class="num strong">0.1021</td><td class="num">0.4899</td><td class="num">0.2386</td><td class="num">1.00</td><td class="edge"><div class="edgewrap"><div class="edgebar pos" style="width:65.5%"></div><span class="edgeval">+0.0101</span></div></td></tr><tr class=""><td class="rank">🥉</td><td class="vname">elo_baseline <span class="tag">baseline</span></td><td class="num">4</td><td class="num strong">0.1122</td><td class="num">0.5230</td><td class="num">0.2612</td><td class="num">1.00</td><td class="edge"><div class="edgewrap"><div class="edgebar zero" style="width:0.0%"></div><span class="edgeval">+0.0000</span></div></td></tr><tr class=""><td class="rank">4</td><td class="vname">rest_days</td><td class="num">4</td><td class="num strong">0.1122</td><td class="num">0.5230</td><td class="num">0.2612</td><td class="num">1.00</td><td class="edge"><div class="edgewrap"><div class="edgebar zero" style="width:0.0%"></div><span class="edgeval">+0.0000</span></div></td></tr></tbody></table>
+<tbody><tr class=" lead"><td class="rank">🥇</td><td class="vname">scoring_form</td><td class="num" data-label="n">4</td><td class="num strong" data-label="RPS">0.0968</td><td class="num" data-label="log loss">0.4715</td><td class="num" data-label="Brier">0.2267</td><td class="num" data-label="dec.acc">1.00</td><td class="edge" data-label="edge"><div class="edgewrap"><div class="edgebar pos" style="width:100.0%"></div><span class="edgeval">+0.0154</span></div></td></tr><tr class=""><td class="rank">🥈</td><td class="vname">recent_form</td><td class="num" data-label="n">4</td><td class="num strong" data-label="RPS">0.1021</td><td class="num" data-label="log loss">0.4899</td><td class="num" data-label="Brier">0.2386</td><td class="num" data-label="dec.acc">1.00</td><td class="edge" data-label="edge"><div class="edgewrap"><div class="edgebar pos" style="width:65.5%"></div><span class="edgeval">+0.0101</span></div></td></tr><tr class=""><td class="rank">🥉</td><td class="vname">elo_baseline <span class="tag">baseline</span></td><td class="num" data-label="n">4</td><td class="num strong" data-label="RPS">0.1122</td><td class="num" data-label="log loss">0.5230</td><td class="num" data-label="Brier">0.2612</td><td class="num" data-label="dec.acc">1.00</td><td class="edge" data-label="edge"><div class="edgewrap"><div class="edgebar zero" style="width:0.0%"></div><span class="edgeval">+0.0000</span></div></td></tr><tr class=""><td class="rank">4</td><td class="vname">rest_days</td><td class="num" data-label="n">4</td><td class="num strong" data-label="RPS">0.1122</td><td class="num" data-label="log loss">0.5230</td><td class="num" data-label="Brier">0.2612</td><td class="num" data-label="dec.acc">1.00</td><td class="edge" data-label="edge"><div class="edgewrap"><div class="edgebar zero" style="width:0.0%"></div><span class="edgeval">+0.0000</span></div></td></tr></tbody></table>
 <div class="note">Lower RPS / log loss / Brier is better. Edge = baseline RPS − variant RPS (green = beats baseline). Small n — read as direction, not verdict.</div>
 
 <h2>Results</h2>
