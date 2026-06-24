@@ -16,6 +16,7 @@ import pandas as pd
 from wc_predictor.config import settings
 from wc_predictor.evaluation.metrics import ranked_probability_score
 from wc_predictor.forecast_live import load_silver_data
+from wc_predictor.lab.backtest import load_cache as load_backtest_cache
 from wc_predictor.lab.leaderboard import (
     BASELINE_VARIANT,
     build_standings,
@@ -145,6 +146,53 @@ def build_dashboard(out_path: str | Path = OUT_PATH) -> Path:
             f'<td class="edge" data-label="edge">{edge_cell}</td></tr>'
         )
 
+    # ---- Walk-forward backtest section (from cache) ----
+    backtest_section = ""
+    bt = load_backtest_cache()
+    if bt and bt.get("standings"):
+        bt_standings = bt["standings"]
+        max_bt_edge = max(
+            [abs(s["edge_vs_baseline_rps"]) for s in bt_standings if s.get("edge_vs_baseline_rps")],
+            default=0.0,
+        ) or 1.0
+        bt_rows = []
+        for rank, s in enumerate(bt_standings, start=1):
+            edge = s.get("edge_vs_baseline_rps")
+            if edge is None:
+                edge_cell = '<span class="muted">—</span>'
+            else:
+                width = abs(edge) / max_bt_edge * 100.0
+                side = "pos" if edge > 0 else ("neg" if edge < 0 else "zero")
+                edge_cell = (
+                    f'<div class="edgewrap"><div class="edgebar {side}" style="width:{width:.1f}%"></div>'
+                    f'<span class="edgeval">{edge:+.4f}</span></div>'
+                )
+            is_base = s["variant_id"] == BASELINE_VARIANT
+            crown = ' <span class="tag">baseline</span>' if is_base else ""
+            medal = {1: "🥇", 2: "🥈", 3: "🥉"}.get(rank, "")
+            bt_rows.append(
+                f'<tr><td class="rank">{medal or rank}</td>'
+                f'<td class="vname">{_esc(s["variant_id"])}{crown}</td>'
+                f'<td class="num" data-label="n">{s["n_scored"]}</td>'
+                f'<td class="num strong" data-label="RPS">{_fmt(s["mean_rps"])}</td>'
+                f'<td class="num" data-label="log loss">{_fmt(s["mean_log_loss"])}</td>'
+                f'<td class="num" data-label="Brier">{_fmt(s["mean_brier"])}</td>'
+                f'<td class="num" data-label="accuracy">{_fmt(s["decisive_accuracy"], 3)}</td>'
+                f'<td class="edge" data-label="edge">{edge_cell}</td></tr>'
+            )
+        rng = bt.get("date_range")
+        sub = f'{bt["n_matches"]} matches' + (f' · {rng[0]} → {rng[1]}' if rng else "")
+        backtest_section = (
+            f'<h2>Walk-forward backtest <span class="h2sub">· {sub}</span></h2>'
+            '<table class="lb"><thead><tr><th>#</th><th>variant</th><th class="num">n</th>'
+            '<th class="num">RPS</th><th class="num">log loss</th><th class="num">Brier</th>'
+            '<th class="num">accuracy</th><th>edge vs baseline</th></tr></thead>'
+            f'<tbody>{"".join(bt_rows)}</tbody></table>'
+            '<div class="note">Leak-free: every model is re-trained on results strictly before each '
+            'match and scored on the actual outcome — a far larger sample than the live recorded '
+            'forecasts above. This is the honest read; the live table is still tiny.</div>'
+        )
+
     # ---- Results cards ----
     result_cards = []
     for mid in scored_match_ids:
@@ -207,6 +255,7 @@ def build_dashboard(out_path: str | Path = OUT_PATH) -> Path:
         leader=(_esc(leader.variant_id) if leader else "—"),
         leader_rps=(_fmt(leader.mean_rps) if leader else "—"),
         lb_rows="".join(lb_rows),
+        backtest_section=backtest_section,
         result_cards=("".join(result_cards) or '<p class="muted">No matches scored yet.</p>'),
         up_rows=("".join(up_rows) or '<tr><td colspan="3" class="muted">No upcoming fixtures.</td></tr>'),
     )
@@ -228,6 +277,7 @@ body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system
 .wrap{{max-width:1040px;margin:0 auto;padding:28px 20px 60px}}
 h1{{font-size:24px;margin:0 0 2px}} .sub{{color:var(--mut);font-size:13px;margin-bottom:22px}}
 h2{{font-size:16px;margin:30px 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}}
+.h2sub{{color:var(--mut);font-size:12px;font-weight:400}}
 .cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:6px}}
 .stat{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}}
 .stat .v{{font-size:26px;font-weight:700}} .stat .k{{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.04em}}
@@ -298,11 +348,13 @@ table{{width:100%;border-collapse:collapse}}
 <div class="stat"><div class="v">{leader}</div><div class="k">Leader · RPS {leader_rps}</div></div>
 </div>
 
-<h2>Leaderboard</h2>
+<h2>Leaderboard <span class="h2sub">· live recorded forecasts</span></h2>
 <table class="lb"><thead><tr><th>#</th><th>variant</th><th class="num">n</th><th class="num">RPS</th>
 <th class="num">log loss</th><th class="num">Brier</th><th class="num">dec.acc</th><th>edge vs baseline</th></tr></thead>
 <tbody>{lb_rows}</tbody></table>
 <div class="note">Lower RPS / log loss / Brier is better. Edge = baseline RPS − variant RPS (green = beats baseline). Small n — read as direction, not verdict.</div>
+
+{backtest_section}
 
 <h2>Results</h2>
 <div class="legend"><span><span class="dot" style="background:var(--h)"></span>Home win</span>

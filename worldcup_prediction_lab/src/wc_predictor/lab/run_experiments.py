@@ -35,8 +35,10 @@ def run(as_of: str | None = None, *, training_cutoff: str | None = None) -> dict
         generated.append(info.variant_id)
 
     standings = refresh()
+    from wc_predictor.lab.backtest import run_backtest
     from wc_predictor.lab.dashboard import build_dashboard
 
+    run_backtest()  # refresh the walk-forward backtest cache before rendering
     build_dashboard()
     return {
         "as_of": as_of_date,
