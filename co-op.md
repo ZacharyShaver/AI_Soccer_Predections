@@ -119,6 +119,24 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-06-24 — Claude (Day-3 research lab, UTC) — 3 new variants built + merged
+Autonomous research-lab run (wrapper local clock said 2026-06-23 Tue eve, but UTC had rolled to
+2026-06-24, so `as_of`=2026-06-24 per the playbook). **First fully-successful headless run** — the
+Day-2 background-dispatch bug is fixed: all 3 Codex builds ran in the FOREGROUND and the session
+stayed alive until each file was authored. Cleaned up Tuesday's orphaned empty worktrees/branches
+(`exp/2026-06-23/{competitive_form,opponent_adjusted_form,weighted_goal_form}`) first.
+- **No new results resolved** since Day 2 (the 06-23 group fixtures aren't in martj42 yet; training
+  cutoff still 06-22), so standings held: `scoring_form` +0.0154, `recent_form` +0.0101 lead; both
+  rest variants tie baseline.
+- **3 new challengers (Codex-built in worktrees, merged to master):**
+  `opp_adj_form` (carry-forward of the winner: opponent-Elo-weighted last-5 goal diff),
+  `attack_defense_form` (opponent-coupled last-5 attack vs defense → expected goal supremacy),
+  `match_congestion` (trailing-15-day fixture load as fatigue; retires the `rest_days` idea).
+- Suite green (**121**); predictions recorded for all **7** variants as_of 2026-06-24; sane probs
+  (e.g. Paraguay vs Australia H 33.5% baseline → 32.6% opp_adj_form). `match_congestion` == baseline
+  in group play (uniform cadence), as designed — should diverge at the group→knockout rest gap.
+- New variants sit at n=0 until the 06-23+ fixtures resolve. Worktrees removed, branches deleted.
+
 ### 2026-06-22 — Claude (P7 plan — the final roadmap phase)
 P6 done; full suite 108 tests. P7 plan written
 (`docs/superpowers/plans/2026-06-22-live-scoring-loop.md`) — the last roadmap item. L0 ledger scoring
