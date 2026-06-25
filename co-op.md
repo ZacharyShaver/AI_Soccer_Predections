@@ -119,6 +119,26 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-06-25 — Claude (Day-4 research lab, UTC) — 3 new variants built + merged
+Autonomous research-lab run (`as_of`=2026-06-25). All 3 Codex builds ran in the FOREGROUND.
+- **Resolved:** the 06-23 group fixtures landed (training cutoff now 06-24), so the four Day-1
+  variants jumped n=4 → **n=14**. With the bigger sample the form edges shrank and the order
+  flipped: `recent_form` (last-5 results) now leads at RPS 0.1537 (+0.0041), `scoring_form` 0.1539
+  (+0.0040); `elo_baseline` and `rest_days` tie at 0.1578. The Day-2 n=4 gap was a small-sample
+  artifact, as flagged. `rest_days` confirmed no-value (exact baseline tie) — **retired** as a
+  build target. The 3 Day-3 variants are still n=0 (their 06-24 predictions haven't resolved).
+- **3 new challengers (Codex-built in worktrees, merged to master):**
+  `weighted_recent_form` (carry-forward winner: recency-weighted last-5 results, oldest×1…newest×N),
+  `competitive_form` (last-5 GD weighted by match importance via the `tournament` field — friendlies
+  ×0.4), `form_trend` (slope of last-5 GD: mean of recent 2 minus mean of earlier ones — momentum,
+  not level). Fixed a NaN edge case in `form_trend` (empty earlier-half when window==2 → trend 0.0).
+- Suite green (**121**); predictions recorded for all **10** variants as_of 2026-06-25; sane probs
+  (sums≈1; e.g. an away-favored match H/D/A baseline .164/.167/.669 → form_trend .186/.177/.637).
+- **Infra note:** Codex on Windows hung/usage-errored when the prompt was passed as a positional
+  arg (embedded double-quotes corrupt native-arg quoting; bare stdin blocks). Reliable form found:
+  `$prompt | codex exec … -` (prompt via stdin, `-` placeholder, no embedded quotes in the prompt).
+- New variants sit at n=0 until 06-24+ fixtures resolve. Worktrees removed, branches deleted.
+
 ### 2026-06-24 — Claude (Day-3 research lab, UTC) — 3 new variants built + merged
 Autonomous research-lab run (wrapper local clock said 2026-06-23 Tue eve, but UTC had rolled to
 2026-06-24, so `as_of`=2026-06-24 per the playbook). **First fully-successful headless run** — the
