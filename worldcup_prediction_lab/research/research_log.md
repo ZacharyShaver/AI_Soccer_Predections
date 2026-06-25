@@ -113,3 +113,52 @@ winner (`scoring_form`) with an opponent-adjusted twist.
   the group→knockout rest gap opens up.
 
 Each must beat `elo_baseline` (the bar). Predictions immutable; no sub-200 recalibration.
+
+---
+
+## Day 4 — 2026-06-25 (Thursday, UTC)
+
+**Resolved since yesterday:** the 2026-06-23 group fixtures landed in martj42 (training
+cutoff now 2026-06-24), so all four Day-1 variants jumped from n=4 to **n=14**. The three
+Day-3 variants (`opp_adj_form`, `attack_defense_form`, `match_congestion`) recorded their
+first predictions on 06-24 for fixtures not yet resolved, so they remain **n=0**.
+
+**Leaderboard (n=14 for Day-1 variants):**
+| variant | n | RPS | edge vs baseline |
+| --- | ---: | ---: | ---: |
+| `recent_form` | 14 | 0.1537 | +0.0041 |
+| `scoring_form` | 14 | 0.1539 | +0.0040 |
+| `elo_baseline` | 14 | 0.1578 | — |
+| `rest_days` | 14 | 0.1578 | +0.0000 |
+| `attack_defense_form` | 0 | n/a | n/a |
+| `match_congestion` | 0 | n/a | n/a |
+| `opp_adj_form` | 0 | n/a | n/a |
+
+**What changed:** with the larger sample the two form challengers stay ahead of the bar but
+their edge **shrank** (scoring_form +0.0154 → +0.0040; recent_form +0.0101 → +0.0041) and the
+order flipped — last-5 *results* (`recent_form`) now narrowly leads last-5 *goal difference*
+(`scoring_form`). The Day-2 gap was a small-sample artifact (n=4), exactly as flagged. Both
+form signals are real but modest. `rest_days` again **exactly ties** the baseline (n=14):
+group-play rest is uniform — confirmed no-value, **retired** as a build target (the fatigue
+idea already lives on as `match_congestion`, awaiting resolution).
+
+**Decisions:** **carry forward** the new leader (`recent_form`, last-5 results) with a recency
+weighting twist; **retire** `rest_days`; **invent** two new feature hypotheses from data we
+have (the `tournament` column enables match-importance weighting; trajectory is untested).
+
+**Today's 3 challengers (built by Codex in `exp/2026-06-25/<id>` worktrees):**
+- `weighted_recent_form` — *carry-forward winner.* Recency-weighted last-5 results: within the
+  5-match window, weight the most recent game highest (linear 5..1) before averaging, then
+  home−away → Elo delta. *Hypothesis:* a win last week predicts more than a win five games ago;
+  weighting recent_form's winning window by recency sharpens the signal.
+- `competitive_form` — *qualifier-vs-friendly weighting (new).* Last-5 goal-difference form, but
+  each match weighted by importance from the `tournament` field — World Cup / continental / Nations
+  League / qualifiers full weight, friendlies down-weighted (~0.4). *Hypothesis:* friendlies use
+  experimental lineups and are noisy; a competition-weighted form is a cleaner predictor than the
+  flat recent/scoring form.
+- `form_trend` — *directional momentum (new).* The slope of last-5 goal difference, not its level:
+  (mean of the 2 most recent GDs) − (mean of the earlier 3), home−away → Elo delta. *Hypothesis:*
+  trajectory predicts beyond level — a team peaking right now beats one with the same average form
+  that is declining.
+
+Each must beat `elo_baseline` (the bar). Predictions immutable; no sub-200 recalibration.
