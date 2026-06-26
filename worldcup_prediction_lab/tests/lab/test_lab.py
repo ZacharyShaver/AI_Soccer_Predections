@@ -62,6 +62,39 @@ def test_registry_discovers_ensemble_top_k():
     assert hasattr(model, "fit") and hasattr(model, "predict_match")
 
 
+def test_registry_discovers_draw_guard():
+    found = registry.discover()
+    assert "draw_guard" in found
+    model = registry.build("draw_guard", generated_at_utc="2026-06-26T00:00:00Z")
+    assert hasattr(model, "fit") and hasattr(model, "predict_match")
+
+
+def test_draw_guard_boosts_draw_probability_without_breaking_normalization():
+    train = _matches()
+    match_row = pd.Series({
+        "match_id": "fx-draw-guard",
+        "home_team_id": "USA",
+        "away_team_id": "ARG",
+        "neutral": True,
+        "tournament": "FIFA World Cup",
+    })
+
+    baseline = registry.build("elo_baseline", generated_at_utc="2026-06-26T00:00:00Z")
+    guarded = registry.build("draw_guard", generated_at_utc="2026-06-26T00:00:00Z")
+    baseline.fit(train)
+    guarded.fit(train)
+
+    baseline_prediction = baseline.predict_match(match_row)
+    guarded_prediction = guarded.predict_match(match_row)
+
+    assert guarded_prediction.prob_draw > baseline_prediction.prob_draw
+    assert (
+        guarded_prediction.prob_home
+        + guarded_prediction.prob_draw
+        + guarded_prediction.prob_away
+    ) == pytest.approx(1.0)
+
+
 def test_ensemble_top_k_averages_component_probabilities():
     train = _matches()
     match_row = pd.Series({

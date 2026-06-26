@@ -100,7 +100,7 @@ def _fmt(value: float | None, digits: int = 4) -> str:
 
 
 def _pct(value: float | None) -> str:
-    return f"{value * 100.0:.0f}%" if value is not None else "â€”"
+    return f"{value * 100.0:.0f}%" if value is not None else "—"
 
 
 def _fixture_day(fixture: object) -> str:
@@ -130,29 +130,54 @@ def _accuracy_timeline(
             continue
 
         actual = _outcome(scores[0], scores[1])
-        bucket = by_day.setdefault(day, {"n": 0, "hits": 0})
+        bucket = by_day.setdefault(
+            day,
+            {"n": 0, "hits": 0, "decisive_n": 0, "decisive_hits": 0},
+        )
+        hit = int(_pick(probs) == actual)
         bucket["n"] += 1
-        bucket["hits"] += int(_pick(probs) == actual)
+        bucket["hits"] += hit
+        if actual != "draw":
+            bucket["decisive_n"] += 1
+            bucket["decisive_hits"] += hit
 
     rows: list[dict] = []
     cumulative_n = 0
     cumulative_hits = 0
+    cumulative_decisive_n = 0
+    cumulative_decisive_hits = 0
     for day in sorted(by_day):
         n = by_day[day]["n"]
         hits = by_day[day]["hits"]
+        decisive_n = by_day[day]["decisive_n"]
+        decisive_hits = by_day[day]["decisive_hits"]
         cumulative_n += n
         cumulative_hits += hits
+        cumulative_decisive_n += decisive_n
+        cumulative_decisive_hits += decisive_hits
         rows.append(
             {
                 "date": day,
                 "n": n,
                 "hits": hits,
                 "daily_accuracy": hits / n if n else None,
+                "decisive_n": decisive_n,
+                "decisive_hits": decisive_hits,
+                "daily_decisive_accuracy": decisive_hits / decisive_n
+                if decisive_n
+                else None,
                 "cumulative_n": cumulative_n,
                 "cumulative_hits": cumulative_hits,
                 "cumulative_accuracy": cumulative_hits / cumulative_n
                 if cumulative_n
                 else None,
+                "cumulative_decisive_n": cumulative_decisive_n,
+                "cumulative_decisive_hits": cumulative_decisive_hits,
+                "cumulative_decisive_accuracy": (
+                    cumulative_decisive_hits / cumulative_decisive_n
+                    if cumulative_decisive_n
+                    else None
+                ),
             }
         )
     return rows
@@ -167,23 +192,36 @@ def _accuracy_timeline_section(rows: list[dict], *, variant_id: str) -> str:
     for row in rows:
         cumulative = row["cumulative_accuracy"]
         width = max(0.0, min(100.0, (cumulative or 0.0) * 100.0))
+        decisive = row.get("cumulative_decisive_accuracy")
+        decisive_width = max(0.0, min(100.0, (decisive or 0.0) * 100.0))
         body_rows.append(
             f'<tr><td class="dt">{_esc(row["date"])}</td>'
             f'<td class="num">{row["hits"]}/{row["n"]}</td>'
             f'<td class="num">{_pct(row["daily_accuracy"])}</td>'
             f'<td class="accbarcell"><div class="accbar"><div class="accfill" style="width:{width:.1f}%"></div>'
             f'<span>{_pct(cumulative)}</span></div></td>'
-            f'<td class="num">{row["cumulative_hits"]}/{row["cumulative_n"]}</td></tr>'
+            f'<td class="num">{row["cumulative_hits"]}/{row["cumulative_n"]}</td>'
+            f'<td class="num">{row.get("decisive_hits", 0)}/{row.get("decisive_n", 0)}</td>'
+            f'<td class="accbarcell"><div class="accbar decisive"><div class="accfill decisive" style="width:{decisive_width:.1f}%"></div>'
+            f'<span>{_pct(decisive)}</span></div></td></tr>'
         )
 
+    latest_decisive_hits = latest.get("cumulative_decisive_hits", 0)
+    latest_decisive_n = latest.get("cumulative_decisive_n", 0)
     return (
         f'<h2>Accuracy over time <span class="h2sub">Â· {_esc(variant_id)} cumulative outcome picks</span></h2>'
         '<div class="accuracy-card">'
-        f'<div class="bigacc">{_pct(latest["cumulative_accuracy"])}</div>'
-        f'<div class="note">Current cumulative accuracy: {latest["cumulative_hits"]}/{latest["cumulative_n"]} '
-        'resolved picks. Daily accuracy shows only matches resolved on that date.</div>'
+        '<div class="accsummary">'
+        f'<div><div class="bigacc">{_pct(latest["cumulative_accuracy"])}</div>'
+        f'<div class="metriclabel">Overall incl. draws · {latest["cumulative_hits"]}/{latest["cumulative_n"]}</div></div>'
+        f'<div><div class="bigacc decisive">{_pct(latest.get("cumulative_decisive_accuracy"))}</div>'
+        f'<div class="metriclabel">Decisive only · {latest_decisive_hits}/{latest_decisive_n}</div></div>'
+        '</div>'
+        '<div class="note">Overall accuracy includes draws; decisive accuracy excludes drawn matches so it aligns with leaderboard dec.acc. '
+        'Daily accuracy shows only matches resolved on that date.</div>'
         '<table class="timeline"><thead><tr><th>date</th><th class="num">daily hits</th>'
-        '<th class="num">daily acc</th><th>cumulative acc</th><th class="num">cum. hits</th></tr></thead>'
+        '<th class="num">daily acc</th><th>overall cumulative</th><th class="num">cum. hits</th>'
+        '<th class="num">decisive hits</th><th>decisive cumulative</th></tr></thead>'
         f'<tbody>{"".join(body_rows)}</tbody></table></div>'
     )
 
@@ -479,13 +517,17 @@ table{{width:100%;border-collapse:collapse}}
 .risk{{display:inline-block;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700;border-radius:999px;padding:1px 5px;background:#30363d;color:var(--ink);font-size:10px}}
 .risk-low{{color:var(--pos)}} .risk-medium{{color:var(--gold)}} .risk-high{{color:var(--neg)}}
 .accuracy-card{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}}
+.accsummary{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:6px}}
 .bigacc{{font-size:34px;font-weight:800;line-height:1;margin-bottom:4px;color:var(--pos)}}
+.bigacc.decisive{{color:var(--gold)}}
+.metriclabel{{color:var(--mut);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}}
 .timeline{{margin-top:12px;font-size:12px}}
 .timeline th,.timeline td{{padding:7px 8px;border-top:1px solid var(--line);text-align:left}}
 .timeline th{{font-size:10px;text-transform:uppercase;color:var(--mut);letter-spacing:.04em}}
 .accbarcell{{width:42%}}
 .accbar{{height:18px;background:#0b0f14;border-radius:999px;position:relative;overflow:hidden}}
 .accfill{{height:100%;background:linear-gradient(90deg,var(--h),var(--pos));border-radius:999px}}
+.accfill.decisive{{background:linear-gradient(90deg,var(--gold),var(--pos))}}
 .accbar span{{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--ink);text-shadow:0 1px 2px #000}}
 .up{{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}}
 .up th,.up td{{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left}} .up tr:last-child td{{border-bottom:none}}

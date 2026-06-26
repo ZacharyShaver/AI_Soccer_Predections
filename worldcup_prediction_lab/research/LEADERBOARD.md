@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-06-26T15:27:48Z`
+Generated: `2026-06-26T16:22:12Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 98
-- Registered variants: 14
+- Registered variants: 15
 
 | Rank | Variant | n | RPS | log loss | Brier | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -18,11 +18,12 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 7 | `attack_defense_form` | 6 | 0.2129 | 1.0726 | 0.6569 | 0.500 | -0.0402 |
 | 8 | `competitive_form` | 0 | n/a | n/a | n/a | n/a | n/a |
 | 9 | `defensive_form` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 10 | `ensemble_top_k` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 11 | `ewma_goal_form` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 12 | `form_trend` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 13 | `opp_adj_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 14 | `weighted_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 10 | `draw_guard` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 11 | `ensemble_top_k` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 12 | `ewma_goal_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 13 | `form_trend` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 14 | `opp_adj_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 15 | `weighted_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -44,6 +45,8 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: Competition-importance-weighted last-5 goal-difference form.
 - `defensive_form` — Elo + last-5 defensive solidity (goals conceded).  
   feature: Average goals conceded over each team last 5 matches; the stingier defense (fewer conceded) gets a positive Elo delta via home-minus-away.
+- `draw_guard` — Host-aware Elo with a small capped draw-probability guardrail.  
+  feature: Move a modest amount of mass from home/away outcomes into draw probability to test whether the live ledger is under-pricing draws.
 - `ensemble_top_k` — Equal-weight ensemble of the strongest walk-forward form variants.  
   feature: Average H/D/A probabilities from ewma_goal_form, form_trend, and opp_adj_form; delegate scoreline shape to ewma_goal_form.
 - `ewma_goal_form` — Elo + EWMA goal-difference form over a 10-match horizon.  

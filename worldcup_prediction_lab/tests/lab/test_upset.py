@@ -115,18 +115,30 @@ def test_accuracy_timeline_groups_daily_and_cumulative_accuracy():
             "n": 2,
             "hits": 1,
             "daily_accuracy": 0.5,
+            "decisive_n": 2,
+            "decisive_hits": 1,
+            "daily_decisive_accuracy": 0.5,
             "cumulative_n": 2,
             "cumulative_hits": 1,
             "cumulative_accuracy": 0.5,
+            "cumulative_decisive_n": 2,
+            "cumulative_decisive_hits": 1,
+            "cumulative_decisive_accuracy": 0.5,
         },
         {
             "date": "2026-06-12",
             "n": 1,
             "hits": 1,
             "daily_accuracy": 1.0,
+            "decisive_n": 0,
+            "decisive_hits": 0,
+            "daily_decisive_accuracy": None,
             "cumulative_n": 3,
             "cumulative_hits": 2,
             "cumulative_accuracy": pytest.approx(2 / 3),
+            "cumulative_decisive_n": 2,
+            "cumulative_decisive_hits": 1,
+            "cumulative_decisive_accuracy": 0.5,
         },
     ]
 
@@ -150,5 +162,7 @@ def test_accuracy_timeline_section_renders_metric_copy():
     )
 
     assert "Accuracy over time" in section
+    assert "Overall incl. draws" in section
+    assert "Decisive only" in section
     assert "2026-06-11" in section
     assert "50%" in section
