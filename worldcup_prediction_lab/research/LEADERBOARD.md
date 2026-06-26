@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-06-26T16:22:12Z`
+Generated: `2026-06-26T21:56:43Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 98
-- Registered variants: 15
+- Registered variants: 16
 
 | Rank | Variant | n | RPS | log loss | Brier | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -22,8 +22,9 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 11 | `ensemble_top_k` | 0 | n/a | n/a | n/a | n/a | n/a |
 | 12 | `ewma_goal_form` | 0 | n/a | n/a | n/a | n/a | n/a |
 | 13 | `form_trend` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 14 | `opp_adj_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 15 | `weighted_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 14 | `group_incentive` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 15 | `opp_adj_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 16 | `weighted_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -53,6 +54,8 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: Exponentially-weighted (geometric decay) goal difference over each team's last 10 matches, then home-minus-away as an Elo delta.
 - `form_trend` — Adjusts Elo home advantage by whether recent goal difference is improving or declining.  
   feature: Slope of last-5 goal difference, computed as recent half minus earlier half.
+- `group_incentive` — Host-aware Elo adjusted for group-stage qualification incentives.  
+  feature: Use measurable pre-kickoff group-table state: final group match, draw utility, favorite safety, and underdog points pressure.
 - `opp_adj_recent_form` — Elo + opponent-adjusted last-5 results form.  
   feature: Last-5 results (win=1, draw=0.5, loss=0), each game weighted by opponent Elo strength, then home-minus-away as an Elo delta.
 - `weighted_recent_form` — Elo with a recency-weighted last-five match form adjustment.  

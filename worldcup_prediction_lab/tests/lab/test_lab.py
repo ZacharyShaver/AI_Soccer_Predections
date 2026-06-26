@@ -69,6 +69,13 @@ def test_registry_discovers_draw_guard():
     assert hasattr(model, "fit") and hasattr(model, "predict_match")
 
 
+def test_registry_discovers_group_incentive():
+    found = registry.discover()
+    assert "group_incentive" in found
+    model = registry.build("group_incentive", generated_at_utc="2026-06-26T00:00:00Z")
+    assert hasattr(model, "fit") and hasattr(model, "predict_match")
+
+
 def test_draw_guard_boosts_draw_probability_without_breaking_normalization():
     train = _matches()
     match_row = pd.Series({
@@ -92,6 +99,56 @@ def test_draw_guard_boosts_draw_probability_without_breaking_normalization():
         guarded_prediction.prob_home
         + guarded_prediction.prob_draw
         + guarded_prediction.prob_away
+    ) == pytest.approx(1.0)
+
+
+def test_group_incentive_boosts_draw_when_final_group_draw_helps_both():
+    from wc_predictor.lab.variants.group_incentive import GroupIncentiveElo
+    from wc_predictor.models.elo import EloModel
+
+    fixtures = pd.DataFrame([
+        {"fixture_id": "a-c", "stage": "group", "group": "A", "home_team_id": "A", "away_team_id": "C", "match_date": pd.Timestamp("2026-06-11")},
+        {"fixture_id": "a-d", "stage": "group", "group": "A", "home_team_id": "A", "away_team_id": "D", "match_date": pd.Timestamp("2026-06-15")},
+        {"fixture_id": "b-c", "stage": "group", "group": "A", "home_team_id": "B", "away_team_id": "C", "match_date": pd.Timestamp("2026-06-12")},
+        {"fixture_id": "b-d", "stage": "group", "group": "A", "home_team_id": "B", "away_team_id": "D", "match_date": pd.Timestamp("2026-06-16")},
+        {"fixture_id": "a-b", "stage": "group", "group": "A", "home_team_id": "A", "away_team_id": "B", "match_date": pd.Timestamp("2026-06-20")},
+        {"fixture_id": "c-d", "stage": "group", "group": "A", "home_team_id": "C", "away_team_id": "D", "match_date": pd.Timestamp("2026-06-20")},
+    ])
+    train = pd.DataFrame([
+        {"match_id": "m1", "date": pd.Timestamp("2026-06-11"), "home_team_id": "A", "away_team_id": "C", "home_score": 2, "away_score": 0, "tournament": "FIFA World Cup", "neutral": True, "occurrence_index": 0},
+        {"match_id": "m2", "date": pd.Timestamp("2026-06-15"), "home_team_id": "A", "away_team_id": "D", "home_score": 1, "away_score": 0, "tournament": "FIFA World Cup", "neutral": True, "occurrence_index": 0},
+        {"match_id": "m3", "date": pd.Timestamp("2026-06-12"), "home_team_id": "B", "away_team_id": "C", "home_score": 1, "away_score": 0, "tournament": "FIFA World Cup", "neutral": True, "occurrence_index": 0},
+        {"match_id": "m4", "date": pd.Timestamp("2026-06-16"), "home_team_id": "B", "away_team_id": "D", "home_score": 1, "away_score": 1, "tournament": "FIFA World Cup", "neutral": True, "occurrence_index": 0},
+    ])
+    match_row = pd.Series({
+        "fixture_id": "a-b",
+        "match_id": "a-b",
+        "stage": "group",
+        "group": "A",
+        "home_team_id": "A",
+        "away_team_id": "B",
+        "match_date": pd.Timestamp("2026-06-20"),
+        "neutral": True,
+        "tournament": "FIFA World Cup",
+    })
+
+    baseline = EloModel(k_factor=20.0, generated_at_utc="2026-06-20T00:00:00Z")
+    incentive = GroupIncentiveElo(
+        k_factor=20.0,
+        generated_at_utc="2026-06-20T00:00:00Z",
+        fixture_schedule_df=fixtures,
+    )
+    baseline.fit(train)
+    incentive.fit(train)
+
+    baseline_prediction = baseline.predict_match(match_row)
+    incentive_prediction = incentive.predict_match(match_row)
+
+    assert incentive_prediction.prob_draw > baseline_prediction.prob_draw
+    assert (
+        incentive_prediction.prob_home
+        + incentive_prediction.prob_draw
+        + incentive_prediction.prob_away
     ) == pytest.approx(1.0)
 
 

@@ -382,14 +382,19 @@ def build_dashboard(
             'forecasts above. This is the honest read; the live table is still tiny.</div>'
         )
 
-    # ---- Results cards ----
+    # ---- Results cards (chronological by match date) ----
     result_cards = []
-    for mid in scored_match_ids:
+    scored_by_date = sorted(
+        scored_match_ids,
+        key=lambda m: (_fixture_day(fixture_info.get(m, {})), m),
+    )
+    for mid in scored_by_date:
         fx = fixture_info.get(mid, {})
         home = names.get(str(fx.get("home_team_id")), str(fx.get("home_team_id")))
         away = names.get(str(fx.get("away_team_id")), str(fx.get("away_team_id")))
         hs, a = results[mid]
         actual = _outcome(hs, a)
+        match_day = _fixture_day(fx)
         rows = []
         for vid in variant_ids:
             probs = pred_lookup.get((vid, mid))
@@ -408,7 +413,7 @@ def build_dashboard(
         result_cards.append(
             f'<div class="card"><div class="score"><span class="t">{_esc(home)}</span>'
             f'<span class="sc">{hs}–{a}</span><span class="t">{_esc(away)}</span></div>'
-            f'<div class="resline">result: <b>{actual.upper()}</b></div>'
+            f'<div class="resline">{f"<span class=\"dt\">{_esc(match_day)}</span> · " if match_day else ""}result: <b>{actual.upper()}</b></div>'
             f'<table class="mini"><thead><tr><th>variant</th><th>H / D / A</th><th>pick</th><th>upset risk</th><th>RPS</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div>'
         )
