@@ -1,6 +1,7 @@
 # Daily World Cup forecast refresh — invoked by the "WorldCupDailyForecast" scheduled task.
-# Runs the L1 daily loop (ingest -> retrain -> re-forecast -> refresh odds) and then the
-# L2 scorecard, appending all output to runs/daily_update.log. Safe to run manually too.
+# Runs the L1 daily loop (ingest -> retrain -> re-forecast -> refresh odds -> bake HTML
+# dashboard/GitHub Pages copy) and then the L2 scorecard, appending all output to
+# runs/daily_update.log. Safe to run manually too.
 
 $ErrorActionPreference = "Stop"
 $project = "C:\Users\ztsha\OneDrive\Documents\AI_Soccer_Predections\worldcup_prediction_lab"

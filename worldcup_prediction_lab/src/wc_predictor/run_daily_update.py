@@ -21,6 +21,8 @@ class DailyUpdateSummary:
     forecast_count: int
     ledger_path: Path
     report_path: Path
+    dashboard_path: Path
+    pages_path: Path
     refreshed_results: bool
     refreshed_odds: bool
 
@@ -47,6 +49,19 @@ def _derive_training_cutoff(matches_df: pd.DataFrame, *, as_of: str) -> str:
     return pd.Timestamp(eligible_dates.max()).strftime("%Y-%m-%d")
 
 
+def refresh_compiled_reports() -> tuple[Path, Path]:
+    """Refresh all derived research reports after data/predictions are compiled."""
+
+    from wc_predictor.lab.backtest import run_backtest
+    from wc_predictor.lab.dashboard import PAGES_OUT_PATH, build_dashboard
+    from wc_predictor.lab.leaderboard import refresh
+
+    refresh()
+    run_backtest()
+    dashboard_path = build_dashboard()
+    return dashboard_path, PAGES_OUT_PATH
+
+
 def run_daily_update(
     as_of: str | None = None,
     *,
@@ -56,6 +71,7 @@ def run_daily_update(
     reports_dir: str | Path = settings.REPORTS_DIR,
     refresh_results: bool = True,
     refresh_odds: bool = True,
+    refresh_reports: bool = True,
     n_sims: int = 20000,
     seed: int = 0,
 ) -> DailyUpdateSummary:
@@ -93,12 +109,19 @@ def run_daily_update(
             seed=seed,
         )
 
+    if refresh_reports:
+        dashboard_path, pages_path = refresh_compiled_reports()
+    else:
+        dashboard_path, pages_path = Path(), Path()
+
     return DailyUpdateSummary(
         as_of=as_of_date,
         training_cutoff=effective_training_cutoff,
         forecast_count=live_summary.forecast_count,
         ledger_path=live_summary.ledger_path,
         report_path=live_summary.report_path,
+        dashboard_path=dashboard_path,
+        pages_path=pages_path,
         refreshed_results=refresh_results,
         refreshed_odds=refresh_odds,
     )

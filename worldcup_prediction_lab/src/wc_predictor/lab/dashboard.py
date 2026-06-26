@@ -23,9 +23,12 @@ from wc_predictor.lab.leaderboard import (
     collect_predictions,
     load_results,
 )
+from wc_predictor.lab.upset import assess_upset_risk, format_upset_risk
 
 OUT_PATH = settings.RESEARCH_DIR / "dashboard.html"
+PAGES_OUT_PATH = settings.PROJECT_DIR.parent / "docs" / "index.html"
 _OUTCOMES = ("home", "draw", "away")
+PREFERRED_FORECAST_VARIANT = "ensemble_top_k"
 
 
 def _outcome(home_score: int, away_score: int) -> str:
@@ -68,11 +71,44 @@ def _bar(probs: tuple[float, float, float], actual: str | None = None) -> str:
     return f'<div class="bar">{"".join(cells)}</div>'
 
 
+def _upset_cell(probs: tuple[float, float, float]) -> str:
+    risk = assess_upset_risk(probs)
+    title = f"underdog: {risk.underdog}; favorite: {risk.favorite}"
+    return (
+        f'<span class="risk risk-{risk.label.lower()}" title="{_esc(title)}">'
+        f"{_esc(format_upset_risk(risk))}</span>"
+    )
+
+
 def _fmt(value: float | None, digits: int = 4) -> str:
     return f"{value:.{digits}f}" if value is not None else "—"
 
 
-def build_dashboard(out_path: str | Path = OUT_PATH) -> Path:
+def _write_dashboard_outputs(
+    html_doc: str,
+    *,
+    out_path: str | Path = OUT_PATH,
+    publish_pages: bool = True,
+    pages_path: str | Path = PAGES_OUT_PATH,
+) -> Path:
+    target = Path(out_path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(html_doc, encoding="utf-8")
+
+    if publish_pages:
+        pages_target = Path(pages_path)
+        pages_target.parent.mkdir(parents=True, exist_ok=True)
+        pages_target.write_text(html_doc, encoding="utf-8")
+
+    return target
+
+
+def build_dashboard(
+    out_path: str | Path = OUT_PATH,
+    *,
+    publish_pages: bool = True,
+    pages_path: str | Path = PAGES_OUT_PATH,
+) -> Path:
     standings = build_standings()
     results_df = load_results()
     predictions = collect_predictions()
@@ -213,17 +249,18 @@ def build_dashboard(out_path: str | Path = OUT_PATH) -> Path:
             badge = '<span class="hit">✓</span>' if hit else '<span class="miss">✗</span>'
             rows.append(
                 f'<tr><td class="vn">{_esc(vid)}</td><td class="barcell">{_bar(probs, actual)}</td>'
-                f'<td class="pk">{badge} {pick.upper()}</td><td class="num">{rps:.3f}</td></tr>'
+                f'<td class="pk">{badge} {pick.upper()}</td><td>{_upset_cell(probs)}</td>'
+                f'<td class="num">{rps:.3f}</td></tr>'
             )
         result_cards.append(
             f'<div class="card"><div class="score"><span class="t">{_esc(home)}</span>'
             f'<span class="sc">{hs}–{a}</span><span class="t">{_esc(away)}</span></div>'
             f'<div class="resline">result: <b>{actual.upper()}</b></div>'
-            f'<table class="mini"><thead><tr><th>variant</th><th>H / D / A</th><th>pick</th><th>RPS</th></tr></thead>'
+            f'<table class="mini"><thead><tr><th>variant</th><th>H / D / A</th><th>pick</th><th>upset risk</th><th>RPS</th></tr></thead>'
             f'<tbody>{"".join(rows)}</tbody></table></div>'
         )
 
-    # ---- Upcoming (baseline view) ----
+    # ---- Upcoming (ensemble preferred, baseline fallback) ----
     def _fixture_date(mid: str) -> str:
         fx = fixture_info.get(mid, {})
         try:
@@ -234,7 +271,12 @@ def build_dashboard(out_path: str | Path = OUT_PATH) -> Path:
     upcoming_sorted = sorted(upcoming_match_ids, key=lambda m: (_fixture_date(m), m))[:14]
     up_rows = []
     for mid in upcoming_sorted:
-        probs = pred_lookup.get((BASELINE_VARIANT, mid)) or pred_lookup.get((variant_ids[0], mid))
+        preferred_variant = (
+            PREFERRED_FORECAST_VARIANT
+            if pred_lookup.get((PREFERRED_FORECAST_VARIANT, mid)) is not None
+            else BASELINE_VARIANT
+        )
+        probs = pred_lookup.get((preferred_variant, mid)) or pred_lookup.get((variant_ids[0], mid))
         if probs is None:
             continue
         fx = fixture_info.get(mid, {})
@@ -243,7 +285,8 @@ def build_dashboard(out_path: str | Path = OUT_PATH) -> Path:
         up_rows.append(
             f'<tr><td class="dt">{_fixture_date(mid)}</td>'
             f'<td class="mt">{_esc(home)} <span class="vs">v</span> {_esc(away)}</td>'
-            f'<td class="barcell">{_bar(probs)}</td></tr>'
+            f'<td class="barcell">{_bar(probs)}</td>'
+            f'<td>{_upset_cell(probs)} <span class="muted">({_esc(preferred_variant)})</span></td></tr>'
         )
 
     html_doc = _TEMPLATE.format(
@@ -257,13 +300,15 @@ def build_dashboard(out_path: str | Path = OUT_PATH) -> Path:
         lb_rows="".join(lb_rows),
         backtest_section=backtest_section,
         result_cards=("".join(result_cards) or '<p class="muted">No matches scored yet.</p>'),
-        up_rows=("".join(up_rows) or '<tr><td colspan="3" class="muted">No upcoming fixtures.</td></tr>'),
+        up_rows=("".join(up_rows) or '<tr><td colspan="4" class="muted">No upcoming fixtures.</td></tr>'),
     )
 
-    target = Path(out_path)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(html_doc, encoding="utf-8")
-    return target
+    return _write_dashboard_outputs(
+        html_doc,
+        out_path=out_path,
+        publish_pages=publish_pages,
+        pages_path=pages_path,
+    )
 
 
 _TEMPLATE = """<!doctype html>
@@ -293,18 +338,25 @@ table{{width:100%;border-collapse:collapse}}
 .edge{{width:180px}} .edgewrap{{position:relative;display:flex;align-items:center;justify-content:flex-end;gap:8px}}
 .edgebar{{height:8px;border-radius:4px}} .edgebar.pos{{background:var(--pos)}} .edgebar.neg{{background:var(--neg)}} .edgebar.zero{{background:#30363d}}
 .edgeval{{font-variant-numeric:tabular-nums;font-size:13px;min-width:60px;text-align:right}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:14px}}
 .card{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}}
 .score{{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:600}}
 .score .t{{flex:1}} .score .t:last-child{{text-align:right}} .score .sc{{font-size:20px;font-weight:800;background:#21262d;padding:2px 10px;border-radius:6px}}
 .resline{{color:var(--mut);font-size:12px;margin:6px 0 10px}}
-.mini{{font-size:12px}} .mini th{{color:var(--mut);font-weight:500;text-align:left;padding:4px 6px;font-size:10px;text-transform:uppercase}}
-.mini td{{padding:4px 6px;border-top:1px solid var(--line)}} .mini .vn{{white-space:nowrap}}
-.bar{{display:flex;height:18px;border-radius:4px;overflow:hidden;background:#0b0f14;min-width:140px}}
+.mini{{font-size:11px;table-layout:fixed}} .mini th{{color:var(--mut);font-weight:500;text-align:left;padding:4px 5px;font-size:9px;text-transform:uppercase}}
+.mini td{{padding:4px 5px;border-top:1px solid var(--line);vertical-align:middle}} .mini .vn{{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+.mini th:nth-child(1),.mini td:nth-child(1){{width:24%}}
+.mini th:nth-child(2),.mini td:nth-child(2){{width:39%}}
+.mini th:nth-child(3),.mini td:nth-child(3){{width:14%}}
+.mini th:nth-child(4),.mini td:nth-child(4){{width:15%}}
+.mini th:nth-child(5),.mini td:nth-child(5){{width:8%}}
+.bar{{display:flex;height:18px;border-radius:4px;overflow:hidden;background:#0b0f14;min-width:0}}
 .seg{{display:flex;align-items:center;justify-content:center;font-size:10px;color:#0b0f14;font-weight:700;overflow:hidden}}
 .seg-h{{background:var(--h)}} .seg-d{{background:var(--d)}} .seg-a{{background:var(--a)}}
 .seg-actual{{outline:2px solid #fff;outline-offset:-2px}}
-.barcell{{width:55%}} .pk{{white-space:nowrap}} .hit{{color:var(--pos);font-weight:800}} .miss{{color:var(--neg);font-weight:800}}
+.barcell{{width:auto}} .pk{{white-space:nowrap;font-size:10px}} .hit{{color:var(--pos);font-weight:800}} .miss{{color:var(--neg);font-weight:800}}
+.risk{{display:inline-block;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700;border-radius:999px;padding:1px 5px;background:#30363d;color:var(--ink);font-size:10px}}
+.risk-low{{color:var(--pos)}} .risk-medium{{color:var(--gold)}} .risk-high{{color:var(--neg)}}
 .up{{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}}
 .up th,.up td{{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left}} .up tr:last-child td{{border-bottom:none}}
 .up th{{font-size:11px;text-transform:uppercase;color:var(--mut)}} .dt{{color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}} .vs{{color:var(--mut)}}
@@ -333,7 +385,7 @@ table{{width:100%;border-collapse:collapse}}
   .up tr{{padding:10px 2px}} .up td{{border:none;padding:2px 0}}
   .up .mt{{font-weight:600}} .up .barcell{{margin-top:6px}}
   /* result mini-tables */
-  .mini{{font-size:11px}} .barcell{{width:auto}} .bar{{min-width:0}}
+  .mini{{font-size:10px}} .barcell{{width:auto}} .bar{{min-width:0}}
   .legend{{flex-wrap:wrap;gap:6px 14px}}
 }}
 </style></head><body><div class="wrap">
@@ -363,8 +415,8 @@ table{{width:100%;border-collapse:collapse}}
 <span>white outline = actual outcome · ✓ called it</span></div>
 <div class="grid">{result_cards}</div>
 
-<h2>Upcoming forecasts (baseline)</h2>
-<table class="up"><thead><tr><th>date</th><th>match</th><th>H / D / A</th></tr></thead>
+<h2>Upcoming forecasts <span class="h2sub">Â· ensemble preferred, baseline fallback</span></h2>
+<table class="up"><thead><tr><th>date</th><th>match</th><th>H / D / A</th><th>upset risk</th></tr></thead>
 <tbody>{up_rows}</tbody></table>
 
 </div></body></html>"""

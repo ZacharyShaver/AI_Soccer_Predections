@@ -55,6 +55,48 @@ def test_registry_discovers_baseline():
         registry.build("does_not_exist", generated_at_utc="2026-06-21T00:00:00Z")
 
 
+def test_registry_discovers_ensemble_top_k():
+    found = registry.discover()
+    assert "ensemble_top_k" in found
+    model = registry.build("ensemble_top_k", generated_at_utc="2026-06-26T00:00:00Z")
+    assert hasattr(model, "fit") and hasattr(model, "predict_match")
+
+
+def test_ensemble_top_k_averages_component_probabilities():
+    train = _matches()
+    match_row = pd.Series({
+        "match_id": "fx-ensemble",
+        "home_team_id": "USA",
+        "away_team_id": "ARG",
+        "neutral": True,
+        "tournament": "FIFA World Cup",
+    })
+
+    ensemble = registry.build("ensemble_top_k", generated_at_utc="2026-06-26T00:00:00Z")
+    ensemble.fit(train)
+    ensemble_prediction = ensemble.predict_match(match_row)
+
+    component_ids = ("ewma_goal_form", "form_trend", "opp_adj_form")
+    component_predictions = []
+    for variant_id in component_ids:
+        component = registry.build(variant_id, generated_at_utc="2026-06-26T00:00:00Z")
+        component.fit(train)
+        component_predictions.append(component.predict_match(match_row))
+
+    expected_home = sum(p.prob_home for p in component_predictions) / len(component_predictions)
+    expected_draw = sum(p.prob_draw for p in component_predictions) / len(component_predictions)
+    expected_away = sum(p.prob_away for p in component_predictions) / len(component_predictions)
+
+    assert ensemble_prediction.prob_home == pytest.approx(expected_home)
+    assert ensemble_prediction.prob_draw == pytest.approx(expected_draw)
+    assert ensemble_prediction.prob_away == pytest.approx(expected_away)
+    assert (
+        ensemble_prediction.prob_home
+        + ensemble_prediction.prob_draw
+        + ensemble_prediction.prob_away
+    ) == pytest.approx(1.0)
+
+
 def test_generate_predictions_only_after_as_of_and_idempotent(tmp_path):
     out = tmp_path / "experiments"
     path = generate_variant_predictions(

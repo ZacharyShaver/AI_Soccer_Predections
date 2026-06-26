@@ -6,9 +6,28 @@
 1. Ingests the latest international results (martj42), retrains host-aware Elo, re-forecasts all
    upcoming fixtures into a new immutable ledger partition, and refreshes championship odds
    (`wc_predictor.run_daily_update`).
-2. Refreshes the running scorecard (`wc_predictor.evaluation.scorecard`).
+2. Rebuilds the model-research leaderboard, walk-forward backtest cache, HTML dashboard, and
+   GitHub Pages copy (`docs/index.html`).
+3. Refreshes the running scorecard (`wc_predictor.evaluation.scorecard`).
 
 Output is appended to `runs/daily_update.log` (gitignored).
+
+## HTML report / GitHub Pages
+
+Every daily update now writes the same self-contained dashboard to:
+
+- `worldcup_prediction_lab/research/dashboard.html` for local viewing.
+- `docs/index.html` for GitHub Pages.
+
+To view it online after pushing, enable GitHub Pages for this repository with:
+
+- Source: **Deploy from a branch**
+- Branch: **main**
+- Folder: **/docs**
+
+The report URL will be:
+
+`https://zacharyshaver.github.io/AI_Soccer_Predections/`
 
 ## Schedule
 
@@ -80,4 +99,3 @@ Get-Content "..\runs\research_lab.log" -Tail 40           # see what it did
 
 To run a lab day manually instead of waiting for the trigger, just open Claude Code and say
 "do today's research lab day" (it follows `research/DAILY_PLAYBOOK.md`).
-

@@ -112,6 +112,7 @@ def test_run_daily_update_is_idempotent_and_preserves_prior_as_of_partitions(tmp
         reports_dir=reports_dir,
         refresh_results=False,
         refresh_odds=False,
+        refresh_reports=False,
     )
     first_partition = runs_dir / "predictions" / "date=2026-06-21" / "predictions.jsonl"
     first_bytes = first_partition.read_bytes()
@@ -124,6 +125,7 @@ def test_run_daily_update_is_idempotent_and_preserves_prior_as_of_partitions(tmp
         reports_dir=reports_dir,
         refresh_results=False,
         refresh_odds=False,
+        refresh_reports=False,
     )
     second_rows = _read_jsonl(first_partition)
 
@@ -148,6 +150,7 @@ def test_run_daily_update_is_idempotent_and_preserves_prior_as_of_partitions(tmp
         reports_dir=reports_dir,
         refresh_results=False,
         refresh_odds=False,
+        refresh_reports=False,
     )
     next_partition = runs_dir / "predictions" / "date=2026-06-22" / "predictions.jsonl"
 
@@ -157,6 +160,41 @@ def test_run_daily_update_is_idempotent_and_preserves_prior_as_of_partitions(tmp
     assert first_partition.read_bytes() == first_bytes
     assert next_partition.exists()
     assert [row["match_id"] for row in _read_jsonl(next_partition)] == ["forecast-2"]
+
+
+def test_run_daily_update_bakes_html_report_after_data_compile(tmp_path, monkeypatch):
+    silver_dir = tmp_path / "silver"
+    runs_dir = tmp_path / "runs"
+    reports_dir = tmp_path / "reports"
+    _write_silver_inputs(
+        silver_dir,
+        fixtures=[
+            _fixture("forecast-1", "USA", "MEX", "2026-06-22", venue="Seattle"),
+        ],
+    )
+    calls = []
+
+    def fake_refresh_compiled_reports():
+        calls.append("baked")
+        return tmp_path / "research" / "dashboard.html", tmp_path / "docs" / "index.html"
+
+    monkeypatch.setattr(
+        "wc_predictor.run_daily_update.refresh_compiled_reports",
+        fake_refresh_compiled_reports,
+    )
+
+    summary = run_daily_update(
+        as_of="2026-06-21",
+        silver_dir=silver_dir,
+        runs_dir=runs_dir,
+        reports_dir=reports_dir,
+        refresh_results=False,
+        refresh_odds=False,
+    )
+
+    assert calls == ["baked"]
+    assert summary.dashboard_path == tmp_path / "research" / "dashboard.html"
+    assert summary.pages_path == tmp_path / "docs" / "index.html"
 
 
 def test_run_daily_update_skips_gracefully_when_no_fixtures_are_after_as_of(tmp_path):
@@ -178,6 +216,7 @@ def test_run_daily_update_skips_gracefully_when_no_fixtures_are_after_as_of(tmp_
         reports_dir=reports_dir,
         refresh_results=False,
         refresh_odds=False,
+        refresh_reports=False,
     )
     partition = runs_dir / "predictions" / "date=2026-06-22" / "predictions.jsonl"
 
