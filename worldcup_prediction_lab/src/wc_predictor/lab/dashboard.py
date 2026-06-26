@@ -71,6 +71,21 @@ def _bar(probs: tuple[float, float, float], actual: str | None = None) -> str:
     return f'<div class="bar">{"".join(cells)}</div>'
 
 
+def _upcoming_bar(probs: tuple[float, float, float]) -> str:
+    """Readable H/D/A probability display for the wider upcoming forecast table."""
+    labels = ("H", "D", "A")
+    classes = ("h", "d", "a")
+    label_cells = "".join(
+        f'<span class="plabel plabel-{cls}">{label} {prob * 100.0:.0f}</span>'
+        for label, cls, prob in zip(labels, classes, probs)
+    )
+    segments = "".join(
+        f'<div class="seg seg-{cls}" style="width:{prob * 100.0:.3f}%" title="{label} {prob * 100.0:.1f}%"></div>'
+        for label, cls, prob in zip(labels, classes, probs)
+    )
+    return f'<div class="probwrap"><div class="problabels">{label_cells}</div><div class="bar">{"".join(segments)}</div></div>'
+
+
 def _upset_cell(probs: tuple[float, float, float]) -> str:
     risk = assess_upset_risk(probs)
     title = f"underdog: {risk.underdog}; favorite: {risk.favorite}"
@@ -82,6 +97,95 @@ def _upset_cell(probs: tuple[float, float, float]) -> str:
 
 def _fmt(value: float | None, digits: int = 4) -> str:
     return f"{value:.{digits}f}" if value is not None else "—"
+
+
+def _pct(value: float | None) -> str:
+    return f"{value * 100.0:.0f}%" if value is not None else "â€”"
+
+
+def _fixture_day(fixture: object) -> str:
+    try:
+        value = fixture.get("match_date") if isinstance(fixture, dict) else fixture["match_date"]
+        return pd.to_datetime(value).strftime("%Y-%m-%d")
+    except Exception:
+        return ""
+
+
+def _accuracy_timeline(
+    scored_match_ids: list[str],
+    *,
+    fixture_info: dict[str, object],
+    results: dict[str, tuple[int, int]],
+    pred_lookup: dict[tuple[str, str], tuple[float, float, float]],
+    variant_id: str = BASELINE_VARIANT,
+) -> list[dict]:
+    by_day: dict[str, dict[str, int]] = {}
+    for mid in scored_match_ids:
+        probs = pred_lookup.get((variant_id, mid))
+        scores = results.get(mid)
+        if probs is None or scores is None:
+            continue
+        day = _fixture_day(fixture_info.get(mid, {}))
+        if not day:
+            continue
+
+        actual = _outcome(scores[0], scores[1])
+        bucket = by_day.setdefault(day, {"n": 0, "hits": 0})
+        bucket["n"] += 1
+        bucket["hits"] += int(_pick(probs) == actual)
+
+    rows: list[dict] = []
+    cumulative_n = 0
+    cumulative_hits = 0
+    for day in sorted(by_day):
+        n = by_day[day]["n"]
+        hits = by_day[day]["hits"]
+        cumulative_n += n
+        cumulative_hits += hits
+        rows.append(
+            {
+                "date": day,
+                "n": n,
+                "hits": hits,
+                "daily_accuracy": hits / n if n else None,
+                "cumulative_n": cumulative_n,
+                "cumulative_hits": cumulative_hits,
+                "cumulative_accuracy": cumulative_hits / cumulative_n
+                if cumulative_n
+                else None,
+            }
+        )
+    return rows
+
+
+def _accuracy_timeline_section(rows: list[dict], *, variant_id: str) -> str:
+    if not rows:
+        return ""
+
+    latest = rows[-1]
+    body_rows = []
+    for row in rows:
+        cumulative = row["cumulative_accuracy"]
+        width = max(0.0, min(100.0, (cumulative or 0.0) * 100.0))
+        body_rows.append(
+            f'<tr><td class="dt">{_esc(row["date"])}</td>'
+            f'<td class="num">{row["hits"]}/{row["n"]}</td>'
+            f'<td class="num">{_pct(row["daily_accuracy"])}</td>'
+            f'<td class="accbarcell"><div class="accbar"><div class="accfill" style="width:{width:.1f}%"></div>'
+            f'<span>{_pct(cumulative)}</span></div></td>'
+            f'<td class="num">{row["cumulative_hits"]}/{row["cumulative_n"]}</td></tr>'
+        )
+
+    return (
+        f'<h2>Accuracy over time <span class="h2sub">Â· {_esc(variant_id)} cumulative outcome picks</span></h2>'
+        '<div class="accuracy-card">'
+        f'<div class="bigacc">{_pct(latest["cumulative_accuracy"])}</div>'
+        f'<div class="note">Current cumulative accuracy: {latest["cumulative_hits"]}/{latest["cumulative_n"]} '
+        'resolved picks. Daily accuracy shows only matches resolved on that date.</div>'
+        '<table class="timeline"><thead><tr><th>date</th><th class="num">daily hits</th>'
+        '<th class="num">daily acc</th><th>cumulative acc</th><th class="num">cum. hits</th></tr></thead>'
+        f'<tbody>{"".join(body_rows)}</tbody></table></div>'
+    )
 
 
 def _write_dashboard_outputs(
@@ -145,6 +249,17 @@ def build_dashboard(
             baseline_hits += 1
     n_scored = len(scored_match_ids)
     accuracy = (baseline_hits / n_scored * 100.0) if n_scored else None
+    accuracy_rows = _accuracy_timeline(
+        scored_match_ids,
+        fixture_info=fixture_info,
+        results=results,
+        pred_lookup=pred_lookup,
+        variant_id=BASELINE_VARIANT,
+    )
+    accuracy_section = _accuracy_timeline_section(
+        accuracy_rows,
+        variant_id=BASELINE_VARIANT,
+    )
     days = sorted({d.name.split("=", 1)[1] for d in (settings.EXPERIMENTS_DIR).glob("date=*")}) \
         if settings.EXPERIMENTS_DIR.exists() else []
     leader = next((s for s in standings if s.n_scored > 0), None)
@@ -285,7 +400,7 @@ def build_dashboard(
         up_rows.append(
             f'<tr><td class="dt">{_fixture_date(mid)}</td>'
             f'<td class="mt">{_esc(home)} <span class="vs">v</span> {_esc(away)}</td>'
-            f'<td class="barcell">{_bar(probs)}</td>'
+            f'<td class="barcell">{_upcoming_bar(probs)}</td>'
             f'<td>{_upset_cell(probs)} <span class="muted">({_esc(preferred_variant)})</span></td></tr>'
         )
 
@@ -297,6 +412,7 @@ def build_dashboard(
         n_variants=len(standings),
         leader=(_esc(leader.variant_id) if leader else "—"),
         leader_rps=(_fmt(leader.mean_rps) if leader else "—"),
+        accuracy_section=accuracy_section,
         lb_rows="".join(lb_rows),
         backtest_section=backtest_section,
         result_cards=("".join(result_cards) or '<p class="muted">No matches scored yet.</p>'),
@@ -355,8 +471,22 @@ table{{width:100%;border-collapse:collapse}}
 .seg-h{{background:var(--h)}} .seg-d{{background:var(--d)}} .seg-a{{background:var(--a)}}
 .seg-actual{{outline:2px solid #fff;outline-offset:-2px}}
 .barcell{{width:auto}} .pk{{white-space:nowrap;font-size:10px}} .hit{{color:var(--pos);font-weight:800}} .miss{{color:var(--neg);font-weight:800}}
+.probwrap{{display:flex;flex-direction:column;gap:4px;min-width:190px}}
+.probwrap .bar{{height:18px}}
+.problabels{{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;font-weight:800;letter-spacing:.02em;line-height:1}}
+.plabel{{white-space:nowrap;font-variant-numeric:tabular-nums}}
+.plabel-h{{color:var(--h)}} .plabel-d{{color:var(--d)}} .plabel-a{{color:var(--a)}}
 .risk{{display:inline-block;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:700;border-radius:999px;padding:1px 5px;background:#30363d;color:var(--ink);font-size:10px}}
 .risk-low{{color:var(--pos)}} .risk-medium{{color:var(--gold)}} .risk-high{{color:var(--neg)}}
+.accuracy-card{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}}
+.bigacc{{font-size:34px;font-weight:800;line-height:1;margin-bottom:4px;color:var(--pos)}}
+.timeline{{margin-top:12px;font-size:12px}}
+.timeline th,.timeline td{{padding:7px 8px;border-top:1px solid var(--line);text-align:left}}
+.timeline th{{font-size:10px;text-transform:uppercase;color:var(--mut);letter-spacing:.04em}}
+.accbarcell{{width:42%}}
+.accbar{{height:18px;background:#0b0f14;border-radius:999px;position:relative;overflow:hidden}}
+.accfill{{height:100%;background:linear-gradient(90deg,var(--h),var(--pos));border-radius:999px}}
+.accbar span{{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--ink);text-shadow:0 1px 2px #000}}
 .up{{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}}
 .up th,.up td{{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left}} .up tr:last-child td{{border-bottom:none}}
 .up th{{font-size:11px;text-transform:uppercase;color:var(--mut)}} .dt{{color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}} .vs{{color:var(--mut)}}
@@ -399,6 +529,8 @@ table{{width:100%;border-collapse:collapse}}
 <div class="stat"><div class="v">{n_variants}</div><div class="k">Models</div></div>
 <div class="stat"><div class="v">{leader}</div><div class="k">Leader · RPS {leader_rps}</div></div>
 </div>
+
+{accuracy_section}
 
 <h2>Leaderboard <span class="h2sub">· live recorded forecasts</span></h2>
 <table class="lb"><thead><tr><th>#</th><th>variant</th><th class="num">n</th><th class="num">RPS</th>

@@ -68,3 +68,87 @@ def test_dashboard_css_keeps_result_cards_wide_enough_for_mini_table():
 
     assert "minmax(440px,1fr)" in _TEMPLATE
     assert ".mini{{font-size:11px;table-layout:fixed}}" in _TEMPLATE
+
+
+def test_upcoming_probability_bar_renders_readable_labels_above_bar():
+    from wc_predictor.lab.dashboard import _upcoming_bar
+
+    html = _upcoming_bar((0.16, 0.17, 0.67))
+
+    assert 'class="problabels"' in html
+    assert "H 16" in html
+    assert "D 17" in html
+    assert "A 67" in html
+    assert html.index('class="problabels"') < html.index('class="bar"')
+
+
+def test_accuracy_timeline_groups_daily_and_cumulative_accuracy():
+    from wc_predictor.lab.dashboard import _accuracy_timeline
+
+    fixture_info = {
+        "m1": {"match_date": "2026-06-11"},
+        "m2": {"match_date": "2026-06-11"},
+        "m3": {"match_date": "2026-06-12"},
+    }
+    results = {
+        "m1": (1, 0),
+        "m2": (0, 2),
+        "m3": (1, 1),
+    }
+    pred_lookup = {
+        ("elo_baseline", "m1"): (0.55, 0.25, 0.20),  # hit home
+        ("elo_baseline", "m2"): (0.60, 0.20, 0.20),  # miss away
+        ("elo_baseline", "m3"): (0.20, 0.45, 0.35),  # hit draw
+    }
+
+    rows = _accuracy_timeline(
+        ["m1", "m2", "m3"],
+        fixture_info=fixture_info,
+        results=results,
+        pred_lookup=pred_lookup,
+        variant_id="elo_baseline",
+    )
+
+    assert rows == [
+        {
+            "date": "2026-06-11",
+            "n": 2,
+            "hits": 1,
+            "daily_accuracy": 0.5,
+            "cumulative_n": 2,
+            "cumulative_hits": 1,
+            "cumulative_accuracy": 0.5,
+        },
+        {
+            "date": "2026-06-12",
+            "n": 1,
+            "hits": 1,
+            "daily_accuracy": 1.0,
+            "cumulative_n": 3,
+            "cumulative_hits": 2,
+            "cumulative_accuracy": pytest.approx(2 / 3),
+        },
+    ]
+
+
+def test_accuracy_timeline_section_renders_metric_copy():
+    from wc_predictor.lab.dashboard import _accuracy_timeline_section
+
+    section = _accuracy_timeline_section(
+        [
+            {
+                "date": "2026-06-11",
+                "n": 2,
+                "hits": 1,
+                "daily_accuracy": 0.5,
+                "cumulative_n": 2,
+                "cumulative_hits": 1,
+                "cumulative_accuracy": 0.5,
+            }
+        ],
+        variant_id="elo_baseline",
+    )
+
+    assert "Accuracy over time" in section
+    assert "2026-06-11" in section
+    assert "50%" in section
