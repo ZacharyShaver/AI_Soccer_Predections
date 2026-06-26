@@ -162,3 +162,55 @@ have (the `tournament` column enables match-importance weighting; trajectory is 
   that is declining.
 
 Each must beat `elo_baseline` (the bar). Predictions immutable; no sub-200 recalibration.
+
+---
+
+## Day 5 — 2026-06-26 (Friday, UTC)
+
+**Date note:** `run_daily_update` keyed the ledger to `date=2026-06-26` (training cutoff
+`2026-06-24`). Per the playbook (`as_of` = UTC date) this run uses **as_of `2026-06-26`** for
+branches, predictions, and this entry.
+
+**Resolved since yesterday:** nothing new. The 2026-06-24 and 2026-06-25 fixtures have **not
+yet landed in martj42** (training cutoff is still `2026-06-24`, same as Day 4), so no variant
+predictions resolved. Standings carry over unchanged (n=14 for the Day-1 variants); the six
+Day-3/Day-4 challengers remain **n=0** — their 06-24/06-25 predictions await resolution.
+
+**Leaderboard (carried over from Day 4, n=14):**
+| variant | n | RPS | edge vs baseline |
+| --- | ---: | ---: | ---: |
+| `recent_form` | 14 | 0.1537 | +0.0041 |
+| `scoring_form` | 14 | 0.1539 | +0.0040 |
+| `elo_baseline` | 14 | 0.1578 | — |
+| `rest_days` | 14 | 0.1578 | +0.0000 |
+| `attack_defense_form`, `competitive_form`, `form_trend`, `match_congestion`, `opp_adj_form`, `weighted_recent_form` | 0 | n/a | n/a |
+
+**What we know:** `recent_form` (last-5 results) remains the narrow bar-leader, edging
+`scoring_form` (last-5 goal diff); both beat the baseline only modestly (~+0.004) and only by
+leaning harder into correct favorites. The two trajectory/recency carry-forwards built Days 3–4
+(`weighted_recent_form`, `opp_adj_form`, `form_trend`, etc.) haven't resolved, so today's
+choices extend the *winning* signal along axes not yet tested, rather than chasing unresolved bets.
+
+**Decisions:** **carry forward** the leader `recent_form` with an opponent-adjustment twist (the
+adjustment we've only applied to goal-diff so far); **retire** the flat-fatigue idea (`rest_days`
+ties the baseline at n=14 — confirmed no-value, not rebuilt; cumulative fatigue already lives on
+as `match_congestion`); **invent** two new feature hypotheses (smooth recency decay; pure
+defensive form) from data we have (results, goal diff, goals conceded, opponent Elo).
+
+**Today's 3 challengers (built by Codex in `exp/2026-06-26/<id>` worktrees):**
+- `opp_adj_recent_form` — *carry-forward winner.* Last-5 **results** form (win=1/draw=0.5/loss=0),
+  but each game weighted by opponent Elo strength `(opp_elo − 1500)/100` (clamped) before
+  averaging; home−away → Elo delta. *Hypothesis:* a win over a strong side predicts more than a
+  win over a minnow — opponent-adjusting `recent_form`'s leading signal (we've only opponent-
+  adjusted goal-diff via `opp_adj_form`) should sharpen it.
+- `ewma_goal_form` — *smooth recency (new).* Exponentially-weighted goal difference over a longer
+  ~10-match horizon (geometric decay, most recent weighted highest) instead of a flat last-5
+  window; home−away → Elo delta. *Hypothesis:* a smooth decay uses more history without over-
+  weighting stale matches, beating the hard last-5 cutoff of `scoring_form`.
+- `defensive_form` — *defensive solidity (new).* Each team's average goals **conceded** over the
+  last 5 matches; the stingier side (fewer conceded) gets a positive Elo delta (home−away of the
+  negated concede rate). *Hypothesis:* net goal-diff hides whether margin comes from attack or
+  defense; defense is more stable in tournaments, so recent defensive record is undervalued by
+  the flat GD form.
+
+Each must beat `elo_baseline` (the bar). Predictions immutable; no sub-200 recalibration.

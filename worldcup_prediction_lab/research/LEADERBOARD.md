@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-06-25T13:31:07Z`
+Generated: `2026-06-26T04:06:54Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 56
-- Registered variants: 10
+- Registered variants: 13
 
 | Rank | Variant | n | RPS | log loss | Brier | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -15,10 +15,13 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 4 | `rest_days` | 14 | 0.1578 | 0.7209 | 0.4034 | 0.846 | +0.0000 |
 | 5 | `attack_defense_form` | 0 | n/a | n/a | n/a | n/a | n/a |
 | 6 | `competitive_form` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 7 | `form_trend` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 8 | `match_congestion` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 9 | `opp_adj_form` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 10 | `weighted_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 7 | `defensive_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 8 | `ewma_goal_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 9 | `form_trend` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 10 | `match_congestion` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 11 | `opp_adj_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 12 | `opp_adj_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 13 | `weighted_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -34,12 +37,18 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: expected goal supremacy from each side last-5 attack (goals scored) coupled with the opponent last-5 defense (goals conceded).
 - `competitive_form` — Elo with last-5 goal-difference form that down-weights friendlies.  
   feature: Competition-importance-weighted last-5 goal-difference form.
+- `defensive_form` — Elo + last-5 defensive solidity (goals conceded).  
+  feature: Average goals conceded over each team last 5 matches; the stingier defense (fewer conceded) gets a positive Elo delta via home-minus-away.
+- `ewma_goal_form` — Elo + EWMA goal-difference form over a 10-match horizon.  
+  feature: Exponentially-weighted (geometric decay) goal difference over each team's last 10 matches, then home-minus-away as an Elo delta.
 - `form_trend` — Adjusts Elo home advantage by whether recent goal difference is improving or declining.  
   feature: Slope of last-5 goal difference, computed as recent half minus earlier half.
 - `match_congestion` — Elo + fixture congestion: matches played in the trailing 15 days = fatigue.  
   feature: count each team matches in the 15 days before kickoff; the more-rested side (fewer recent matches) gets a small Elo bump.
 - `opp_adj_form` — Elo + opponent-adjusted last-5 goal difference.  
   feature: last-5 goal difference, each game weighted by opponent Elo strength, then home-minus-away as an Elo delta.
+- `opp_adj_recent_form` — Elo + opponent-adjusted last-5 results form.  
+  feature: Last-5 results (win=1, draw=0.5, loss=0), each game weighted by opponent Elo strength, then home-minus-away as an Elo delta.
 - `weighted_recent_form` — Elo with a recency-weighted last-five match form adjustment.  
   feature: Use weighted recent team results to nudge effective home advantage.
 
