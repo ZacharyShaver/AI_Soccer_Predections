@@ -119,6 +119,27 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-06-26 — Claude (Day-5 research lab, UTC) — 3 new variants built + merged
+Autonomous research-lab run (`as_of`=2026-06-26; ledger keyed to UTC date, training cutoff 06-24).
+All 3 Codex builds ran in the FOREGROUND via the `$prompt | codex exec … -` stdin form.
+- **Resolved:** nothing new — the 06-24/06-25 fixtures have **not yet landed in martj42** (cutoff
+  still 06-24, same as Day 4), so no predictions resolved. Standings carry over unchanged: Day-1
+  variants at n=14 (`recent_form` 0.1537 +0.0041 leads, `scoring_form` 0.1539 +0.0040, `elo_baseline`
+  == `rest_days` 0.1578). The six Day-3/Day-4 challengers remain **n=0** (06-24/06-25 predictions
+  awaiting resolution).
+- **Decisions:** carry forward leader `recent_form` with the opponent-adjustment we'd only applied to
+  goal-diff; **retire** flat-fatigue (`rest_days` ties baseline at n=14 — confirmed no-value; the
+  fatigue idea lives on as `match_congestion`); invent two from data we have (recency decay; defense).
+- **3 new challengers (Codex-built in worktrees, merged to master):**
+  `opp_adj_recent_form` (carry-forward winner: last-5 results weighted by opponent Elo strength,
+  clamped 0.5–2.0), `ewma_goal_form` (EWMA goal-diff over a 10-match horizon, geometric decay 0.7 —
+  smooth recency vs the hard last-5 window), `defensive_form` (last-5 goals **conceded**; stingier
+  side gets a + Elo delta — tests whether defense is undervalued by net GD).
+- Suite green (**121**); predictions recorded for all **13** variants as_of 2026-06-26; sane probs
+  (sums=1; e.g. an away-favored match H/D/A baseline .050/.105/.845 → opp_adj_recent_form
+  .031/.092/.877). Worktrees removed, branches deleted.
+- New variants sit at n=0 until 06-24+ fixtures resolve in martj42.
+
 ### 2026-06-25 — Claude (Day-4 research lab, UTC) — 3 new variants built + merged
 Autonomous research-lab run (`as_of`=2026-06-25). All 3 Codex builds ran in the FOREGROUND.
 - **Resolved:** the 06-23 group fixtures landed (training cutoff now 06-24), so the four Day-1
