@@ -9,9 +9,8 @@ def _dates(mapping):
     return lambda mid: mapping.get(mid, "")
 
 
-def test_upcoming_excludes_already_played_and_same_day_fixtures():
-    # m_past (lagging result) and m_today (may have already kicked off) must NOT
-    # appear as upcoming; only strictly-future fixtures do.
+def test_upcoming_excludes_past_but_keeps_today_and_future():
+    # m_past (played, result lagging) must NOT show; today's and future games do.
     dates = _dates(
         {
             "m_past": "2026-06-26",
@@ -25,7 +24,7 @@ def test_upcoming_excludes_already_played_and_same_day_fixtures():
         fixture_date=dates,
         today="2026-06-27",
     )
-    assert selected == ["m_future"]
+    assert selected == ["m_today", "m_future"]
 
 
 def test_upcoming_sorted_soonest_first_and_limited():

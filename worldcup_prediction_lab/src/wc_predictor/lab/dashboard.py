@@ -110,17 +110,17 @@ def _select_upcoming_match_ids(
     today: str,
     limit: int = 14,
 ) -> list[str]:
-    """Strictly-future fixtures only, soonest first.
+    """Today's and future fixtures, soonest first.
 
-    A predicted match with no result yet is not necessarily upcoming -- it may be
-    already played and just awaiting result ingestion (martj42 lags a day or
-    two). We mirror the live forecast, which treats a match as forecastable only
-    when ``match_date > as_of``, so same-day matches (which may have already
-    kicked off) are excluded too. String dates compare correctly as YYYY-MM-DD.
+    A predicted match with no result yet is either genuinely upcoming (incl.
+    today's slate) or already played and just awaiting result ingestion (martj42
+    lags a day or two). We keep today and the future and drop only strictly-past
+    dates, so today's games still show as forecasts while stale already-played
+    matches are removed. String dates compare correctly as YYYY-MM-DD.
     """
 
-    future = [m for m in match_ids if fixture_date(m) and fixture_date(m) > today]
-    return sorted(future, key=lambda m: (fixture_date(m), m))[:limit]
+    upcoming = [m for m in match_ids if fixture_date(m) and fixture_date(m) >= today]
+    return sorted(upcoming, key=lambda m: (fixture_date(m), m))[:limit]
 
 
 def _fixture_day(fixture: object) -> str:
