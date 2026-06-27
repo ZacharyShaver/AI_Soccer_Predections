@@ -119,13 +119,49 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
-### 2026-06-27 — Claude (model tuning + fusion + market-as-base SESSION) — SOLO mode
+### 2026-06-27 — Claude — Codex T2 reviewed + INTEGRATED + next lane QUEUED
+Codex finished its T2 fusion batch (18 recipes). **Reviewed + integrated to master + committed.**
+- **What Codex delivered:** `lab/fusion_recipes.py` (pure linear/log opinion pools + inverse-RPS /
+  softmax-RPS / top-k / rank-trim weighting, well-validated) and `lab/fusion_experiments.py`
+  (leak-free walk-forward variant-probability columns + market-frame fusion sweep), plus
+  `test_fusion_recipes.py` (8) and `test_fusion_experiments.py` (10). **All 18 tests pass on
+  master.** 18 ledger JSONs (`codex__fusion-*`), dashboard now 32 experiments.
+- **Result (honest):** on the market-964 join the best single constituent is `elo_calibrated`
+  (0.1568, beats recalibrated 0.1574 on the *priced* subsample); best fusion
+  `linear-top2-softmax-rps` 0.156995 is **+0.00022 worse** than it (CI spans 0). **Fusion does
+  NOT beat the best single constituent.** No promotion — correct.
+- **Review caveats (for round 2):** (a) fusion was scored ONLY on market-964; the plan's
+  promotion bar is on the 15.8k history sample — needs full-sample scoring. (b) The inverse/
+  softmax-RPS *weights* use full-sample constituent RPS (mild in-sample leak) — immaterial here
+  (uniform ties softmax) but should use prior/holdout RPS if ever promoting. (c) Only Elo-family
+  near-identical variants were fused; the COMPLEMENTARY form variants weren't.
+
+#### QUEUED for Codex @ ~6pm (do NOT dispatch before — Codex is out of tokens until ~6pm)
+**T2 round 2 — "Complementary fusion + full-sample scoring" (one big lane, ~50% of remaining):**
+1. Extend `fusion_experiments` to score recipes on **history(15.8k)** and **WC-60** too (reuse
+   `eval_harness.score_on_history` / `score_on_wc60`), so the promotion bar (beats best single on
+   15.8k with paired CI excl 0, no WC-60 regression) can actually be tested.
+2. Add the remaining recipes: **Fusion 3 stacking** (leak-free walk-forward multinomial-logit
+   meta-model on constituent probs, strong L2), **Fusion 5 BMA** (weight ∝ exp(−cumulative prior
+   log loss), expanding/leak-free), **Fusion 6 rank-and-trim**.
+3. Fuse the **complementary form set** — `recent_form, scoring_form, weighted_recent_form,
+   ewma_goal_form, form_trend, opp_adj_recent_form` + `elo_recalibrated` — the set most likely to
+   be genuinely complementary, on all 3 samples.
+4. Record each to `runs/fusion/` via `fusion_ledger.record`, rebuild the dashboard. Promote a
+   recipe as a committed variant + test ONLY if it clears the bar. Leak-free weights (prior-only).
+Self-contained, real artifacts. Claude reviews + commits + pushes the dashboard when it lands.
+
+### 2026-06-27 — Claude (model tuning + fusion + market-as-base SESSION)
 Plan: `worldcup_prediction_lab/docs/superpowers/plans/2026-06-27-model-tuning-and-fusion-session.md`.
-**Execution mode: SOLO (Claude).** The plan splits Claude(tune+market)/Codex(fuse) across
-worktrees to avoid file conflicts; with a single executor that conflict rule is moot, so all
-three tasks run from `master` against the shared `eval_harness` + `fusion_ledger`. Every
-experiment still writes one ledger file and lands on the live dashboard exactly as designed
-(the ledger/dashboard are agent-agnostic). Claude owns all commits.
+**Lanes: Claude = T1 tuning + T3 market-as-base; CODEX = T2 fusion** (Zach dispatched Codex on
+T2; Claude stays out of that lane). Both append to the shared `runs/fusion/` ledger via the same
+`eval_harness`, so everything lands on the live dashboard. **Claude owns all git commits** — Codex
+writes its fusion result files + variant code; Claude reviews and commits them (Codex's sandbox
+can't write `.git` under OneDrive).
+- **Codex (T2) contract:** score every fusion recipe with `lab/eval_harness` (so numbers compare
+  to the bars), record one json per recipe to `runs/fusion/codex__<exp>__<utc>.json` via
+  `lab/fusion_ledger.record(...)`; beat the best single constituent with a paired CI excluding 0 to
+  promote. New files only; leak-free (fit meta-models only on matches strictly before each scored).
 - **Infra DONE + committed:** `lab/fusion_ledger.py` (file-per-experiment, `runs/fusion/*.json`),
   `lab/eval_harness.py` (reproduces bars **hist 0.1745 / wc60 0.1719 / market964 0.1574**, market
   bar 0.1496 — pinned by tests = regression guard), `lab/fusion_dashboard.py` →
@@ -133,7 +169,13 @@ experiment still writes one ledger file and lands on the live dashboard exactly 
 - **Bars (ground truth, lower RPS better):** hist 15.8k baseline 0.1762 / recal **0.1745**;
   WC-60 baseline 0.1763 / recal **0.1719**; market-964 recal **0.1574** / market **0.1496**.
 - North star: shrink 0.1574→0.1496 on held-out data, every claim backed by a paired CI.
-- Task status: Infra ✅ · T1 tuning (in progress) · T2 fusion (solo) · T3 market-as-base.
+- **T3 RESULT (Claude, done):** nothing beats pure de-vigged market out-of-fold (time-ordered
+  6-block walk-forward, market 0.1403 on the held-out rows). M3.1 temperature `market^t` nudges to
+  0.1400 but **CI spans 0 (tie)**; M3.2 market+context residual significantly WORSE (overfits);
+  M3.3 anchored-Elo worse; M3.4 log-linear pool collapses to ≈pure market. Efficient-market result.
+- **T1 status:** plateau confirmed — no pure-Elo reparam beats recalibrated on history with a CI
+  excluding 0 *without* regressing WC-60 (Pass-4 scale340/HA85 +0.00014 sig on history but
+  regresses WC-60 0.1719→0.1723 → not promoted). Flat tournament weights re-confirmed optimal.
 
 ### 2026-06-26 — Claude (Day-5 research lab, UTC) — 3 new variants built + merged
 Autonomous research-lab run (`as_of`=2026-06-26; ledger keyed to UTC date, training cutoff 06-24).
@@ -653,6 +695,13 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-27 - Codex - T2 fusion prep (isolated collaboration lane)
+- What I did: Zach/dev says **COLLABORATE**. Codex created an isolated worktree at `C:\Users\ztsha\wc_worktrees\codex-fusion-prep` on branch `codex/fusion-prep` and is taking the non-conflicting T2 fusion lane. I am not editing Claude's active `master` experiment scripts, dashboard files, tuning passes, or market-as-base work.
+- Evidence (paths / row counts / schema): Added pure, reviewable fusion helpers in the isolated worktree only: `worldcup_prediction_lab/src/wc_predictor/lab/fusion_recipes.py`, `worldcup_prediction_lab/src/wc_predictor/lab/fusion_experiments.py`, `worldcup_prediction_lab/tests/lab/test_fusion_recipes.py`, and `worldcup_prediction_lab/tests/lab/test_fusion_experiments.py`. Scope covers Fusion 1-2 primitives: linear opinion pool, logarithmic opinion pool, inverse-RPS weights, softmax-RPS weights, top-k selection, rank-and-trim selection, ordered weight vectors, generic leak-free `<variant>_prob_*` attachment for online models, fit-based walk-forward `<variant>_prob_*` attachment for variants whose features are built in `fit()`, multi-variant probability attachment, raw matches+market to fusion-frame construction, market-frame fused `predict_fn` construction, ledger-ready market fusion payloads, deterministic sweep spec generation, and an optional ledger-writing market fusion sweep executor.
+- Verification: RED first: `uv run --extra dev python -m pytest tests/lab/test_fusion_recipes.py` failed with `ImportError: cannot import name 'fusion_recipes'`; second RED failed on missing `weight_vector_for_variants`. For experiment runner: RED failed with `ImportError: cannot import name 'fusion_experiments'`; subsequent REDs failed on missing `iter_market_fusion_specs`, `add_model_probability_columns`, `add_walkforward_model_probability_columns`, `run_market_fusion_sweep`, `attach_variant_probability_columns`, and `build_market_fusion_frame`. GREEN: recipe tests -> 8 passed; experiment tests -> 10 passed. Stable fusion-adjacent subset: `uv run --extra dev python -m pytest tests/lab/test_fusion_recipes.py tests/lab/test_fusion_experiments.py tests/lab/test_fusion_ledger.py tests/lab/test_fusion_dashboard.py` -> 31 passed. Full online-compatible market sweep used 964 aligned market rows and constituent RPS scores: `elo_baseline` 0.158863, `elo_calibrated` 0.156775, `elo_recalibrated` 0.157361, `draw_guard` 0.159017. Recorded 18 shared ledger JSON files matching `worldcup_prediction_lab/runs/fusion/codex__fusion-*__2026-06-27T18-45-18Z.json`; each payload includes `vs_best_constituent_paired` with sign convention `fusion_minus_best_constituent_rps` where negative means fusion improves. Best fusion was `fusion-linear-top2-softmax-rps` at RPS 0.156995 versus best constituent `elo_calibrated` at RPS 0.156775, paired mean diff +0.000220, `beats_best=false`; all 18 Codex fusion payloads have `beats_best=false`. Dashboard rebuilt from the shared fusion ledger: 32 experiments -> `worldcup_prediction_lab/research/fusion_dashboard.html` and `docs/fusion.html`.
+- Result: T2 Fusion 1-2 online-compatible sweep is done; no fusion recipe promoted because none beat the best single constituent under the paired rule.
+- Open questions: Wider fit-based form variants were identified as the slower bottleneck and need optimized/cached treatment before form-heavy Fusion 1-2 or Fusion 3 stacking sweeps. Full `tests/lab` also has a pre-existing live-data failure unrelated to this lane: `ingest_openfootball_worldcup.py` expects 32 knockout fixtures and current source data yields 30. I did not touch that.
 
 ### 2026-06-22 - Codex+Claude - L2 Running scorecard (FINAL P7 task)
 - What I did (Codex): Added `wc_predictor.evaluation.scorecard` with `build_scorecard`, markdown rendering, report writer, and `main()`. Scores the immutable ledger vs results via L0 `score_ledger`, computes our running RPS/log loss/Brier (bootstrap CI only at n>=30, else point + "CI omitted: small n"), and a paired us-vs-market block over matches in BOTH the scored ledger and de-vigged Football-Data odds (reuses P6 `align_matches_with_market`). Notable hits/misses, deterministic, duckdb reads. Handles the current zero-resolved state honestly. 4 offline synthetic tests (paired market comparison, CI-floor behavior, zero-resolved, determinism).
