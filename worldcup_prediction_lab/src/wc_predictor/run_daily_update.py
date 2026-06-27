@@ -72,6 +72,7 @@ def run_daily_update(
     refresh_results: bool = True,
     refresh_odds: bool = True,
     refresh_reports: bool = True,
+    refresh_overlay: bool = False,
     n_sims: int = 20000,
     seed: int = 0,
 ) -> DailyUpdateSummary:
@@ -108,6 +109,23 @@ def run_daily_update(
             n_sims=n_sims,
             seed=seed,
         )
+
+    if refresh_overlay:
+        # Market overlay needs a live Polymarket fetch; never let a network or
+        # parsing failure break the daily Elo pipeline. Predictions are immutable,
+        # so the overlay ledger accumulates and is scored as results resolve.
+        try:
+            from wc_predictor import forecast_overlay
+
+            forecast_overlay.run(
+                as_of=as_of_date,
+                training_cutoff=effective_training_cutoff,
+                generated_at_utc=generated_at_utc,
+                reports_dir=reports_dir,
+            )
+            forecast_overlay.score(as_of=as_of_date, reports_dir=reports_dir)
+        except Exception as error:  # noqa: BLE001 - resilience over strictness here
+            print(f"[run_daily_update] overlay skipped: {error}", flush=True)
 
     if refresh_reports:
         dashboard_path, pages_path = refresh_compiled_reports()

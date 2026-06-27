@@ -5,7 +5,12 @@ from __future__ import annotations
 import pandas as pd
 
 from wc_predictor.forecast_live import ForecastRow
-from wc_predictor.forecast_overlay import overlay_forecasts, write_overlay_report
+from wc_predictor.forecast_overlay import (
+    overlay_forecasts,
+    overlay_prediction_payloads,
+    score_overlay,
+    write_overlay_report,
+)
 
 
 def _forecast_row(fixture_id, home_id, away_id, home_name, away_name, probs, group="A"):
@@ -115,3 +120,63 @@ def test_mixed_overlay_and_report(tmp_path):
     assert "Using Elo fallback: 1" in text
     assert "| market |" in text
     assert "| elo |" in text
+
+
+def _results(rows):
+    return pd.DataFrame(
+        rows,
+        columns=["date", "home_team_id", "away_team_id", "home_score", "away_score"],
+    )
+
+
+def _payloads():
+    forecasts = [
+        _forecast_row("f1", "ARG", "AUT", "Argentina", "Austria", (0.67, 0.21, 0.11)),
+        _forecast_row("f2", "GHA", "PAN", "Ghana", "Panama", (0.5, 0.25, 0.25)),
+    ]
+    market = _market([("ARG", "AUT", 0.67, 0.21, 0.11, "Argentina vs. Austria")])
+    rows, _ = overlay_forecasts(forecasts, market)
+    return overlay_prediction_payloads(
+        rows, as_of="2026-06-24", training_cutoff="2026-06-23",
+        generated_at_utc="2026-06-24T00:00:00Z",
+    )
+
+
+def test_overlay_prediction_payloads_carry_ids_and_source():
+    payloads = _payloads()
+    p1 = next(p for p in payloads if p["home_team_id"] == "ARG")
+    assert p1["model_id"] == "elo_market_overlay_v1"
+    assert p1["source"] == "market"
+    assert p1["match_date"] == "2026-06-25"
+    assert abs(p1["prob_home"] + p1["prob_draw"] + p1["prob_away"] - 1.0) < 1e-9
+
+
+def test_score_overlay_joins_on_date_and_team_pair_direct():
+    payloads = _payloads()
+    # Date in the payloads is the forecast match_date 2026-06-25.
+    results = _results([("2026-06-25", "ARG", "AUT", 2, 0)])  # Argentina win = home
+    evaluation, aggregate = score_overlay(payloads, results)
+    assert aggregate["n_scored"] == 1
+    row = evaluation.iloc[0]
+    assert row["actual_outcome"] == "home"
+    assert row["called_it"]  # market favored Argentina
+    assert "market" in aggregate["by_source"]
+
+
+def test_score_overlay_handles_reversed_result_orientation():
+    payloads = [p for p in _payloads() if p["home_team_id"] == "ARG"]
+    # Result lists the pair reversed: Austria at home, lost 0-2 to Argentina.
+    results = _results([("2026-06-25", "AUT", "ARG", 0, 2)])
+    evaluation, aggregate = score_overlay(payloads, results)
+    assert aggregate["n_scored"] == 1
+    # From the prediction orientation (Argentina home), Argentina won => home.
+    assert evaluation.iloc[0]["actual_outcome"] == "home"
+    assert evaluation.iloc[0]["called_it"]
+
+
+def test_score_overlay_skips_unresolved_fixtures():
+    payloads = _payloads()
+    results = _results([("2026-06-25", "BRA", "ESP", 1, 0)])  # unrelated match
+    _, aggregate = score_overlay(payloads, results)
+    assert aggregate["n_scored"] == 0
+    assert aggregate["mean_rps"] is None

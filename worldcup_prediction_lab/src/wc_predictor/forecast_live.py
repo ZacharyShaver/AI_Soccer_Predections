@@ -154,6 +154,14 @@ def build_world_cup_host_advantage_fn():
     return host_advantage_fn
 
 
+def default_elo_model_factory(*, generated_at_utc: str, host_advantage_fn):
+    """Build the baseline host-aware Elo used by the live forecast."""
+
+    return elo_model(
+        generated_at_utc=generated_at_utc, host_advantage_fn=host_advantage_fn
+    )
+
+
 def split_live_fixtures(
     fixtures_df: pd.DataFrame,
     *,
@@ -382,11 +390,12 @@ def run_live_forecast(
     as_of: str = AS_OF,
     training_cutoff: str = TRAINING_CUTOFF,
     generated_at_utc: str = GENERATED_AT_UTC,
+    model_factory=default_elo_model_factory,
 ) -> LiveForecastSummary:
     train_matches = _training_matches(matches_df, training_cutoff=training_cutoff)
     split = split_live_fixtures(fixtures_df, as_of=as_of)
     team_names_by_id = _team_names(teams_df)
-    model = elo_model(
+    model = model_factory(
         generated_at_utc=generated_at_utc,
         host_advantage_fn=build_world_cup_host_advantage_fn(),
     ).fit(train_matches)
