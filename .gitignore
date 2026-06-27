@@ -38,3 +38,6 @@ worldcup_prediction_lab/runs/experiments/**
 worldcup_prediction_lab/runs/overlay/**
 !worldcup_prediction_lab/runs/overlay/
 !worldcup_prediction_lab/runs/overlay/.gitkeep
+worldcup_prediction_lab/runs/fusion/**
+!worldcup_prediction_lab/runs/fusion/
+!worldcup_prediction_lab/runs/fusion/.gitkeep

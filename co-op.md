@@ -119,6 +119,22 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-06-27 — Claude (model tuning + fusion + market-as-base SESSION) — SOLO mode
+Plan: `worldcup_prediction_lab/docs/superpowers/plans/2026-06-27-model-tuning-and-fusion-session.md`.
+**Execution mode: SOLO (Claude).** The plan splits Claude(tune+market)/Codex(fuse) across
+worktrees to avoid file conflicts; with a single executor that conflict rule is moot, so all
+three tasks run from `master` against the shared `eval_harness` + `fusion_ledger`. Every
+experiment still writes one ledger file and lands on the live dashboard exactly as designed
+(the ledger/dashboard are agent-agnostic). Claude owns all commits.
+- **Infra DONE + committed:** `lab/fusion_ledger.py` (file-per-experiment, `runs/fusion/*.json`),
+  `lab/eval_harness.py` (reproduces bars **hist 0.1745 / wc60 0.1719 / market964 0.1574**, market
+  bar 0.1496 — pinned by tests = regression guard), `lab/fusion_dashboard.py` →
+  `research/fusion_dashboard.html` + `docs/fusion.html`. `runs/fusion/` gitignored. Suite 180 green.
+- **Bars (ground truth, lower RPS better):** hist 15.8k baseline 0.1762 / recal **0.1745**;
+  WC-60 baseline 0.1763 / recal **0.1719**; market-964 recal **0.1574** / market **0.1496**.
+- North star: shrink 0.1574→0.1496 on held-out data, every claim backed by a paired CI.
+- Task status: Infra ✅ · T1 tuning (in progress) · T2 fusion (solo) · T3 market-as-base.
+
 ### 2026-06-26 — Claude (Day-5 research lab, UTC) — 3 new variants built + merged
 Autonomous research-lab run (`as_of`=2026-06-26; ledger keyed to UTC date, training cutoff 06-24).
 All 3 Codex builds ran in the FOREGROUND via the `$prompt | codex exec … -` stdin form.

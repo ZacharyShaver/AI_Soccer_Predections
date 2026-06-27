@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset='utf-8'>
+<title>Fusion / tuning experiment dashboard</title><style>
+    body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:24px;color:#1a1a1a;background:#fafafa}
+    h1{margin:0 0 4px} .sub{color:#666;font-size:13px;margin-bottom:16px}
+    .bars{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0 20px}
+    .bar{background:#fff;border:1px solid #e2e2e2;border-radius:8px;padding:10px 14px;min-width:150px}
+    .bar .k{font-size:12px;color:#777} .bar .v{font-size:20px;font-weight:700}
+    table{border-collapse:collapse;width:100%;background:#fff;font-size:13px}
+    th,td{border:1px solid #e6e6e6;padding:5px 8px;text-align:right;white-space:nowrap}
+    th{background:#f0f0f0;cursor:pointer;position:sticky;top:0}
+    td.left,th.left{text-align:left} td.cfg{max-width:280px;overflow:hidden;text-overflow:ellipsis}
+    td.note{max-width:340px;white-space:normal;color:#555;font-size:12px}
+    .good{background:#d8f5d8} .gold{background:#ffeeba;font-weight:600} .bad{background:#faddd6}
+    .mid{background:#fff} .na{background:#f3f3f3;color:#aaa}
+    code{background:#f0f0f0;padding:1px 4px;border-radius:3px}
+    ul{line-height:1.6}
+    </style></head>
+<body>
+<h1>Tuning · Fusion · Market-as-base — live experiments</h1>
+<div class='sub'>Generated 2026-06-27T18:13:16Z · 1 experiments · lower RPS is better ·
+green beats recalibrated, gold closes &gt;50% of the Elo→market gap, red worse than baseline Elo</div>
+<div class='bars'>
+  <div class='bar'><div class='k'>market bar (964 join)</div><div class='v'>0.1496</div></div>
+  <div class='bar'><div class='k'>recalibrated · market964</div><div class='v'>0.1574</div></div>
+  <div class='bar'><div class='k'>recalibrated · hist 15.8k</div><div class='v'>0.1745</div></div>
+  <div class='bar'><div class='k'>recalibrated · WC-60</div><div class='v'>0.1719</div></div>
+  <div class='bar'><div class='k'>best market964 so far</div><div class='v'>0.1574</div></div>
+</div>
+<h3>Best so far per task</h3>
+<ul><li><b>tune</b>: <code>ref-recalibrated</code> hist 0.1745 · market 0.1574 · dist +0.0078</li><li><b>fuse</b>: —</li><li><b>market_base</b>: —</li></ul>
+<table><thead><tr><th class='left' onclick='sortTable(this)'>exp_id</th><th class='left' onclick='sortTable(this)'>agent</th><th class='left' onclick='sortTable(this)'>task</th><th class='left' onclick='sortTable(this)'>config</th><th onclick='sortTable(this)'>hist 15.8k</th><th onclick='sortTable(this)'>WC-60</th><th onclick='sortTable(this)'>market 964</th><th onclick='sortTable(this)'>dist→mkt</th><th onclick='sortTable(this)'>sig</th><th onclick='sortTable(this)'>promo</th><th class='left' onclick='sortTable(this)'>notes</th></tr></thead><tbody>
+<tr><td class='left'>ref-recalibrated</td><td>claude</td><td>tune</td><td class='left cfg'>draw_base=0.33, draw_scale=600, home_adv=75, k_factor=30, tournament_weights=flat, variant=elo_recalibrated</td><td class='good' data-v='0.174462'>0.1745</td><td class='mid' data-v='0.1719'>0.1719</td><td class='good' data-v='0.157361'>0.1574</td><td class='good' data-v='0.00776099999999999'>+0.0078</td><td>✓</td><td></td><td class='left note'>Reference champion (the bar to beat). Bars reproduced by eval_harness.</td></tr>
+</tbody></table>
+<script>
+    function sortTable(th){var t=th.closest('table'),tb=t.tBodies[0],
+      i=Array.prototype.indexOf.call(th.parentNode.children,th),
+      asc=!(th._asc);th._asc=asc;
+      var rows=Array.prototype.slice.call(tb.rows);
+      rows.sort(function(a,b){var x=a.cells[i],y=b.cells[i];
+        var xv=x.dataset.v!==undefined?parseFloat(x.dataset.v):x.textContent.trim();
+        var yv=y.dataset.v!==undefined?parseFloat(y.dataset.v):y.textContent.trim();
+        if(xv<yv)return asc?-1:1;if(xv>yv)return asc?1:-1;return 0;});
+      rows.forEach(function(r){tb.appendChild(r);});}
+    </script>
+</body></html>
