@@ -54,21 +54,28 @@ def test_split_routes_completed_rows_to_matches_and_blank_scores_to_fixtures():
 
 
 def test_martj42_unknown_names_are_identity_canonicalized():
-    bronze = parse_bronze(FIXTURE_CSV.encode("utf-8"), write=False)
+    # A genuinely unknown team (not in the alias table) must still be retained
+    # via an identity slug rather than dropped. Known names resolve to codes.
+    unknown_csv = (
+        "date,home_team,away_team,home_score,away_score,tournament,city,country,neutral\n"
+        "2025-03-22,United States,Atlantis FC,2,1,Friendly,Austin,United States,FALSE\n"
+        "2025-06-01,Mexico,Atlantis FC,3,0,Friendly,Mexico City,Mexico,FALSE\n"
+    )
+    bronze = parse_bronze(unknown_csv.encode("utf-8"), write=False)
 
     matches, fixtures = split_and_normalize(bronze, write=False)
 
     team_pairs = {
         row.home_team: row.home_team_id for row in pd.concat([matches, fixtures]).itertuples()
     }
+    away_pairs = {
+        row.away_team: row.away_team_id for row in pd.concat([matches, fixtures]).itertuples()
+    }
     assert team_pairs["United States"] == "USA"
-    assert team_pairs["Wales"] == "wales"
     assert team_pairs["Mexico"] == "MEX"
-    assert matches.attrs["auto_registered_team_count"] == 2
-    assert matches.attrs["auto_registered_team_names"] == [
-        "Northern Ireland",
-        "Wales",
-    ]
+    assert away_pairs["Atlantis FC"] == "atlantis-fc"  # identity slug
+    assert matches.attrs["auto_registered_team_count"] == 1
+    assert matches.attrs["auto_registered_team_names"] == ["Atlantis FC"]
 
 
 def test_same_day_double_headers_survive_with_distinct_match_ids():
