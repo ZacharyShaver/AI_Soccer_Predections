@@ -103,6 +103,26 @@ def _pct(value: float | None) -> str:
     return f"{value * 100.0:.0f}%" if value is not None else "—"
 
 
+def _select_upcoming_match_ids(
+    match_ids: list[str],
+    *,
+    fixture_date,
+    today: str,
+    limit: int = 14,
+) -> list[str]:
+    """Strictly-future fixtures only, soonest first.
+
+    A predicted match with no result yet is not necessarily upcoming -- it may be
+    already played and just awaiting result ingestion (martj42 lags a day or
+    two). We mirror the live forecast, which treats a match as forecastable only
+    when ``match_date > as_of``, so same-day matches (which may have already
+    kicked off) are excluded too. String dates compare correctly as YYYY-MM-DD.
+    """
+
+    future = [m for m in match_ids if fixture_date(m) and fixture_date(m) > today]
+    return sorted(future, key=lambda m: (fixture_date(m), m))[:limit]
+
+
 def _fixture_day(fixture: object) -> str:
     try:
         value = fixture.get("match_date") if isinstance(fixture, dict) else fixture["match_date"]
@@ -426,7 +446,10 @@ def build_dashboard(
         except Exception:
             return ""
 
-    upcoming_sorted = sorted(upcoming_match_ids, key=lambda m: (_fixture_date(m), m))[:14]
+    today_utc = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    upcoming_sorted = _select_upcoming_match_ids(
+        upcoming_match_ids, fixture_date=_fixture_date, today=today_utc
+    )
     up_rows = []
     for mid in upcoming_sorted:
         preferred_variant = (
