@@ -84,6 +84,13 @@ def run_daily_update(
 
         ingest_international_results.ingest(silver_dir=silver_dir)
 
+        # Resolve knockout bracket placeholders (group winners/runners-up and
+        # match-winner propagation) into real team ids from the freshly ingested
+        # results, so the now-determined knockout games become forecastable.
+        from wc_predictor.bracket_resolver import resolve_and_persist_fixtures
+
+        resolve_and_persist_fixtures(silver_dir=silver_dir)
+
     matches_df, fixtures_df, teams_df = load_silver_data(silver_dir)
     effective_training_cutoff = training_cutoff or _derive_training_cutoff(
         matches_df,
