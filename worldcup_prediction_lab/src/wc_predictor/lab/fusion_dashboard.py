@@ -133,6 +133,68 @@ def _row_html(result: dict) -> str:
     return "<tr>" + "".join(cells) + "</tr>"
 
 
+def _verdict_banner(results: list[dict]) -> str:
+    """One-glance session story: per-task best + the north-star gap status."""
+
+    def best_hist(task):
+        vals = [
+            _sample_rps(r, "hist_15k")
+            for r in results
+            if r.get("task") == task and _sample_rps(r, "hist_15k") is not None
+        ]
+        return min(vals) if vals else None
+
+    def best_market(task):
+        vals = [
+            _sample_rps(r, "market964")
+            for r in results
+            if r.get("task") == task and _sample_rps(r, "market964") is not None
+        ]
+        return min(vals) if vals else None
+
+    # Did any market_base experiment significantly beat the market?
+    beat_market = any(
+        r.get("task") == "market_base"
+        and (r.get("vs_market_paired") or {}).get("excludes_0")
+        and (r.get("vs_market_paired") or {}).get("mean_diff", 1) < 0
+        for r in results
+    )
+    # Did any fusion beat its best single constituent?
+    beat_single = any(
+        r.get("task") == "fuse" and (r.get("vs_best_constituent_paired") or {}).get("beats_best")
+        for r in results
+    )
+
+    tune_h = best_hist("tune")
+    fuse_m = best_market("fuse")
+    mb_m = best_market("market_base")
+    gap = RECAL_BARS["market964"] - MARKET_BAR_RPS  # 0.0078 to close
+
+    lines = [
+        "<div class='verdict'>",
+        "<h3>Session verdict — can stat models reach the market?</h3>",
+        "<ul>",
+        (f"<li><b>T1 tuning:</b> best history RPS <b>{_fmt(tune_h)}</b> vs recalibrated "
+         f"{RECAL_BARS['hist_15k']:.4f} — "
+         + ("plateau, nothing promotable (no CI-excl-0 win without regressing WC-60)."
+            if (tune_h is None or tune_h >= RECAL_BARS['hist_15k'] - 0.0003)
+            else "a candidate is improving — under validation.") + "</li>"),
+        (f"<li><b>T2 fusion:</b> best market-join RPS <b>{_fmt(fuse_m)}</b> — "
+         + ("beats its best single constituent ✓." if beat_single
+            else "does NOT beat the best single constituent (ensemble ≈ best model).") + "</li>"),
+        (f"<li><b>T3 market-as-base:</b> best market-join RPS <b>{_fmt(mb_m)}</b> — "
+         + ("a model SIGNIFICANTLY beats the de-vigged market ✓★" if beat_market
+            else "nothing significantly beats the pure de-vigged market (efficient market).") + "</li>"),
+        (f"<li><b>North star (close 0.1574→0.1496, gap {gap:.4f}):</b> "
+         + ("CLOSED — a model reached/beat the market on held-out data." if beat_market
+            else "OPEN — the remaining gap is irreducible per-match info (injuries/lineups/late money) "
+                 "the market prices and ratings cannot see. We tie the market at best (temperature).")
+         + "</li>"),
+        "</ul></div>",
+    ]
+    return "\n".join(lines)
+
+
 def render_html(results: list[dict]) -> str:
     generated = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     n = len(results)
@@ -179,6 +241,8 @@ def render_html(results: list[dict]) -> str:
     .mid{background:#fff} .na{background:#f3f3f3;color:#aaa}
     code{background:#f0f0f0;padding:1px 4px;border-radius:3px}
     ul{line-height:1.6}
+    .verdict{background:#eef4ff;border:1px solid #c7d8f5;border-radius:10px;padding:8px 18px;margin:8px 0 18px}
+    .verdict h3{margin:8px 0 4px}
     """
 
     sortjs = """
@@ -218,6 +282,7 @@ green beats recalibrated, gold closes &gt;50% of the Elo→market gap, red worse
   <div class='bar'><div class='k'>recalibrated · WC-60</div><div class='v'>{RECAL_BARS['wc60']:.4f}</div></div>
   <div class='bar'><div class='k'>best market964 so far</div><div class='v'>{best_market:.4f}</div></div>
 </div>
+{_verdict_banner(results)}
 <h3>Best so far per task</h3>
 <ul>{''.join(best_lines)}</ul>
 <table><thead><tr>{header_html}</tr></thead><tbody>

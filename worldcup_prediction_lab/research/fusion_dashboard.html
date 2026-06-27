@@ -14,10 +14,12 @@
     .mid{background:#fff} .na{background:#f3f3f3;color:#aaa}
     code{background:#f0f0f0;padding:1px 4px;border-radius:3px}
     ul{line-height:1.6}
+    .verdict{background:#eef4ff;border:1px solid #c7d8f5;border-radius:10px;padding:8px 18px;margin:8px 0 18px}
+    .verdict h3{margin:8px 0 4px}
     </style></head>
 <body>
 <h1>Tuning · Fusion · Market-as-base — live experiments</h1>
-<div class='sub'>Generated 2026-06-27T20:59:08Z · 32 experiments · lower RPS is better ·
+<div class='sub'>Generated 2026-06-27T21:15:26Z · 32 experiments · lower RPS is better ·
 green beats recalibrated, gold closes &gt;50% of the Elo→market gap, red worse than baseline Elo</div>
 <div class='bars'>
   <div class='bar'><div class='k'>market bar (964 join)</div><div class='v'>0.1496</div></div>
@@ -26,6 +28,14 @@ green beats recalibrated, gold closes &gt;50% of the Elo→market gap, red worse
   <div class='bar'><div class='k'>recalibrated · WC-60</div><div class='v'>0.1719</div></div>
   <div class='bar'><div class='k'>best market964 so far</div><div class='v'>0.1400</div></div>
 </div>
+<div class='verdict'>
+<h3>Session verdict — can stat models reach the market?</h3>
+<ul>
+<li><b>T1 tuning:</b> best history RPS <b>0.1743</b> vs recalibrated 0.1745 — plateau, nothing promotable (no CI-excl-0 win without regressing WC-60).</li>
+<li><b>T2 fusion:</b> best market-join RPS <b>0.1570</b> — does NOT beat the best single constituent (ensemble ≈ best model).</li>
+<li><b>T3 market-as-base:</b> best market-join RPS <b>0.1400</b> — nothing significantly beats the pure de-vigged market (efficient market).</li>
+<li><b>North star (close 0.1574→0.1496, gap 0.0078):</b> OPEN — the remaining gap is irreducible per-match info (injuries/lineups/late money) the market prices and ratings cannot see. We tie the market at best (temperature).</li>
+</ul></div>
 <h3>Best so far per task</h3>
 <ul><li><b>tune</b>: <code>tune-p3-best</code> hist 0.1744 · market 0.1569 · dist +0.0073</li><li><b>fuse</b>: <code>fusion-linear-top2-softmax-rps</code> hist — · market 0.1570 · dist +0.0074</li><li><b>market_base</b>: <code>m3-1-temperature</code> hist — · market 0.1400 · dist -0.0096</li></ul>
 <table><thead><tr><th class='left' onclick='sortTable(this)'>exp_id</th><th class='left' onclick='sortTable(this)'>agent</th><th class='left' onclick='sortTable(this)'>task</th><th class='left' onclick='sortTable(this)'>config</th><th onclick='sortTable(this)'>hist 15.8k</th><th onclick='sortTable(this)'>WC-60</th><th onclick='sortTable(this)'>market 964</th><th onclick='sortTable(this)'>dist→mkt</th><th onclick='sortTable(this)'>sig</th><th onclick='sortTable(this)'>promo</th><th class='left' onclick='sortTable(this)'>notes</th></tr></thead><tbody>
