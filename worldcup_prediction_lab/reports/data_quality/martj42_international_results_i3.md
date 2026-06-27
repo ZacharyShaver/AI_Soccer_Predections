@@ -1,7 +1,7 @@
 # I3 martj42 international results data quality
 
 - Source: `https://raw.githubusercontent.com/martj42/international_results/master/results.csv`
-- Ingest UTC: `2026-06-27T15:17:22Z`
+- Ingest UTC: `2026-06-27T21:06:00Z`
 - Raw SHA-256: `a2efa2b9e280a40d58e7d9272bd6e34a181436efda718022cc2c2e9430727106`
 - Total source rows: 49,477
 - Exact-identical duplicate rows dropped: 0
