@@ -1,6 +1,6 @@
 # Overlay scorecard (market-where-available vs results)
 
-As of: 2026-06-21. Overlay predictions are scored against completed results by
+As of: 2026-06-27. Overlay predictions are scored against completed results by
 joining on match date and canonical team pair (live fixture ids do not match
 result ids, but team ids do). Lower RPS/log loss/Brier is better.
 

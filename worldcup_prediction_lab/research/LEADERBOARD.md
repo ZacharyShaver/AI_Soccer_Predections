@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-06-26T21:56:43Z`
+Generated: `2026-06-27T15:20:15Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 98
-- Registered variants: 16
+- Registered variants: 18
 
 | Rank | Variant | n | RPS | log loss | Brier | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -25,6 +25,8 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 14 | `group_incentive` | 0 | n/a | n/a | n/a | n/a | n/a |
 | 15 | `opp_adj_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
 | 16 | `weighted_recent_form` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 17 | `elo_calibrated` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 18 | `elo_recalibrated` | 0 | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -60,6 +62,10 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: Last-5 results (win=1, draw=0.5, loss=0), each game weighted by opponent Elo strength, then home-minus-away as an Elo delta.
 - `weighted_recent_form` — Elo with a recency-weighted last-five match form adjustment.  
   feature: Use weighted recent team results to nudge effective home advantage.
+- `elo_calibrated` — Host-aware Elo with faster K and recalibrated draw mass (no new feature).  
+  feature: none (reparameterization): k_factor 30, draw_base 0.33, draw_rating_scale 600.
+- `elo_recalibrated` — Calibrated Elo plus flat tournament weights (sweep-validated, significant).  
+  feature: flat tournament_weights=1.0 on top of K30 / draw_base 0.33 / draw_scale 600.
 
 ## Caveats
 
