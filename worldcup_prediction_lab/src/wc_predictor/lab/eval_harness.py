@@ -12,8 +12,8 @@ traced back to the same three samples and the same scoring code:
 
 The harness is the regression guard for the whole session: with the recalibrated
 config it must reproduce the established bars
-(history 0.1745 / wc60 0.1719 / market964 0.1574). Every later number depends on
-this, so the bars are pinned by tests.
+(history 0.1744 / current WC sample 0.1606 / market964 0.1574). Every later
+number depends on this, so the bars are pinned by tests.
 
 Model / prediction contracts (deliberately three, because the three samples need
 different things):
@@ -169,7 +169,7 @@ def score_on_history(
 
 
 # ---------------------------------------------------------------------------
-# Sample 2: WC-60 leak-free walk-forward backtest
+# Sample 2: current played-WC leak-free walk-forward backtest
 # ---------------------------------------------------------------------------
 def score_on_wc60(build_model_fn: Callable[..., object]) -> dict:
     """Score one model config on the played-WC matches via the lab backtest.

@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-06-28T14:09:49Z`
+Generated: `2026-06-28T15:08:39Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 254
-- Registered variants: 18
+- Registered variants: 19
 
 | Rank | Variant | n | RPS | log loss | Brier | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -25,8 +25,9 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 14 | `recent_form` | 32 | 0.1483 | 0.7975 | 0.4551 | 0.800 | +0.0028 |
 | 15 | `elo_baseline` (baseline) | 32 | 0.1510 | 0.8084 | 0.4611 | 0.800 | +0.0000 |
 | 16 | `rest_days` | 32 | 0.1510 | 0.8084 | 0.4611 | 0.800 | +0.0000 |
-| 17 | `elo_calibrated` | 0 | n/a | n/a | n/a | n/a | n/a |
-| 18 | `elo_recalibrated` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 17 | `accuracy_pick_tuned` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 18 | `elo_calibrated` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 19 | `elo_recalibrated` | 0 | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -62,6 +63,8 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: none (control)
 - `rest_days` — Elo + rest/fatigue: more days since last match = small Elo bump.  
   feature: rest days since each team's previous match (cap 14d); short rest penalized.
+- `accuracy_pick_tuned` — Accuracy-first pick layer on top of recalibrated Elo.
+  feature: Static pick-tuning knobs: small H/D/A offsets, high-draw close-match override, and already-safe favorite override toward the other side.
 - `elo_calibrated` — Host-aware Elo with faster K and recalibrated draw mass (no new feature).  
   feature: none (reparameterization): k_factor 30, draw_base 0.33, draw_rating_scale 600.
 - `elo_recalibrated` — Calibrated Elo plus flat tournament weights (sweep-validated, significant).  

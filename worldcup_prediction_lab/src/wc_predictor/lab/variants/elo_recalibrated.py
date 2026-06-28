@@ -44,17 +44,25 @@ _FLAT_TOURNAMENT_WEIGHTS = {
 }
 
 
+def recalibrated_elo_kwargs() -> dict:
+    """Shared kwargs for variants that build on the recalibrated Elo foundation."""
+
+    return {
+        "k_factor": 30.0,
+        "home_advantage": 75.0,
+        "draw_base_probability": 0.33,
+        "draw_rating_scale": 600.0,
+        "tournament_weights": _FLAT_TOURNAMENT_WEIGHTS,
+        "default_tournament_weight": 1.0,
+    }
+
+
 def build_model(*, generated_at_utc: str):
     from wc_predictor.forecast_live import build_world_cup_host_advantage_fn
     from wc_predictor.models.elo import EloModel
 
     return EloModel(
-        k_factor=30.0,
-        home_advantage=75.0,
-        draw_base_probability=0.33,
-        draw_rating_scale=600.0,
-        tournament_weights=_FLAT_TOURNAMENT_WEIGHTS,
-        default_tournament_weight=1.0,
+        **recalibrated_elo_kwargs(),
         generated_at_utc=generated_at_utc,
         host_advantage_fn=build_world_cup_host_advantage_fn(),
     )

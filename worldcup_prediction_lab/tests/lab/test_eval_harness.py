@@ -1,7 +1,7 @@
 """Regression guard: the harness must reproduce the established bars.
 
 Every tuning/fusion/market number this session is scored by this harness, so the
-recalibrated config reproducing history 0.1745 / wc60 0.1719 / market964 0.1574
+recalibrated config reproducing history 0.1744 / wc72 0.1606 / market964 0.1574
 is the foundation the rest of the session stands on. These run against the real
 silver data (skipped if it is absent).
 """
@@ -27,8 +27,8 @@ needs_market = pytest.mark.skipif(
 @needs_matches
 def test_history_bar_recalibrated():
     result = eh.score_on_history(eh.recalibrated_elo())
-    assert result["n"] == 15877
-    assert result["rps"] == pytest.approx(0.1745, abs=0.0005)
+    assert result["n"] == 15889
+    assert result["rps"] == pytest.approx(0.1744, abs=0.0005)
 
 
 @needs_market
@@ -49,10 +49,10 @@ def test_market964_bar_recalibrated():
 
 
 @needs_matches
-def test_wc60_bar_recalibrated():
+def test_wc72_bar_recalibrated():
     result = eh.score_on_wc60(lambda **kw: registry.build("elo_recalibrated", **kw))
-    assert result["n"] == 60
-    assert result["rps"] == pytest.approx(0.1719, abs=0.0005)
+    assert result["n"] == 72
+    assert result["rps"] == pytest.approx(0.1606, abs=0.0005)
 
 
 @needs_market

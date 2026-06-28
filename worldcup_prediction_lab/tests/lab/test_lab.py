@@ -76,6 +76,42 @@ def test_registry_discovers_group_incentive():
     assert hasattr(model, "fit") and hasattr(model, "predict_match")
 
 
+def test_registry_discovers_accuracy_pick_tuned(monkeypatch):
+    found = registry.discover()
+    assert "accuracy_pick_tuned" in found
+    fixtures = pd.DataFrame([
+        {
+            "fixture_id": "a-b",
+            "stage": "group",
+            "group": "A",
+            "home_team_id": "A",
+            "away_team_id": "B",
+            "match_date": pd.Timestamp("2026-06-20"),
+        }
+    ])
+    monkeypatch.setattr(
+        "wc_predictor.forecast_live.load_silver_data",
+        lambda: (pd.DataFrame(), fixtures, pd.DataFrame()),
+    )
+    monkeypatch.setattr(
+        "wc_predictor.forecast_live.build_world_cup_host_advantage_fn",
+        lambda: (lambda _match_row: 0.0),
+    )
+    model = registry.build("accuracy_pick_tuned", generated_at_utc="2026-06-26T00:00:00Z")
+    assert hasattr(model, "fit") and hasattr(model, "predict_match")
+    assert model.k_factor == 30.0
+    assert model.draw_base_probability == 0.33
+    assert model.draw_rating_scale == 600.0
+
+
+def test_accuracy_pick_tuned_forces_close_high_draw_pick():
+    from wc_predictor.lab.variants.accuracy_pick_tuned import _force_pick
+
+    probs = _force_pick([0.35, 0.34, 0.31], forced=1)
+    assert probs.index(max(probs)) == 1
+    assert sum(probs) == pytest.approx(1.0)
+
+
 def test_draw_guard_boosts_draw_probability_without_breaking_normalization():
     train = _matches()
     match_row = pd.Series({
