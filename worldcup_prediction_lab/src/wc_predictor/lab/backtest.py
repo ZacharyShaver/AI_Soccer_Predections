@@ -160,6 +160,7 @@ def run_backtest(
                 mean_rps=agg["rps"],
                 mean_log_loss=agg["log_loss"],
                 mean_brier=agg["brier"],
+                overall_accuracy=agg["accuracy"],
                 decisive_accuracy=agg["accuracy"],  # here: overall outcome accuracy
                 edge_vs_baseline_rps=edge,
             )

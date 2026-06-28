@@ -288,5 +288,6 @@ def test_build_standings_scores_and_ranks_against_baseline(tmp_path):
     assert "elo_baseline" in by_id
     base = by_id["elo_baseline"]
     assert base.n_scored == 1
+    assert base.overall_accuracy is not None
     assert base.mean_rps is not None
     assert base.edge_vs_baseline_rps == 0.0  # baseline vs itself

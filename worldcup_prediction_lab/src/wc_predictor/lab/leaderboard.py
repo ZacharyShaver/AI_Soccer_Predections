@@ -144,6 +144,7 @@ class VariantStanding:
     mean_rps: float | None
     mean_log_loss: float | None
     mean_brier: float | None
+    overall_accuracy: float | None
     decisive_accuracy: float | None
     edge_vs_baseline_rps: float | None  # baseline_rps - variant_rps (positive = better)
 
@@ -188,6 +189,7 @@ def build_standings(
             mean_rps=agg["mean_rps"],
             mean_log_loss=agg["mean_log_loss"],
             mean_brier=agg["mean_brier"],
+            overall_accuracy=agg["overall_accuracy"],
             decisive_accuracy=agg["decisive_accuracy"],
             edge_vs_baseline_rps=edge,
         )
@@ -224,15 +226,16 @@ def format_leaderboard(standings: list[VariantStanding]) -> str:
         f"- Total scored predictions across variants: {total_scored}",
         f"- Registered variants: {len(standings)}",
         "",
-        "| Rank | Variant | n | RPS | log loss | Brier | Decisive acc | Edge vs baseline |",
-        "| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Rank | Variant | n | RPS | log loss | Brier | Overall acc | Decisive acc | Edge vs baseline |",
+        "| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
     for rank, s in enumerate(standings, start=1):
         tag = " (baseline)" if s.variant_id == BASELINE_VARIANT else ""
         lines.append(
             f"| {rank} | `{s.variant_id}`{tag} | {s.n_scored} | {_fmt(s.mean_rps)} | "
             f"{_fmt(s.mean_log_loss)} | {_fmt(s.mean_brier)} | "
-            f"{_fmt(s.decisive_accuracy, 3)} | {_fmt_signed(s.edge_vs_baseline_rps)} |"
+            f"{_fmt(s.overall_accuracy, 3)} | {_fmt(s.decisive_accuracy, 3)} | "
+            f"{_fmt_signed(s.edge_vs_baseline_rps)} |"
         )
 
     lines += ["", "## Variants", ""]

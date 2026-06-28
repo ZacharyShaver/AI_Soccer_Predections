@@ -478,6 +478,7 @@ def build_dashboard(
             f'<td class="num strong" data-label="RPS" data-sort="{s.mean_rps if s.mean_rps is not None else 9}">{_fmt(s.mean_rps)}</td>'
             f'<td class="num" data-label="log loss" data-sort="{s.mean_log_loss if s.mean_log_loss is not None else 9}">{_fmt(s.mean_log_loss)}</td>'
             f'<td class="num" data-label="Brier" data-sort="{s.mean_brier if s.mean_brier is not None else 9}">{_fmt(s.mean_brier)}</td>'
+            f'<td class="num" data-label="acc" data-sort="{s.overall_accuracy if s.overall_accuracy is not None else -1}">{_fmt(s.overall_accuracy, 2)}</td>'
             f'<td class="num" data-label="dec.acc" data-sort="{s.decisive_accuracy if s.decisive_accuracy is not None else -1}">{_fmt(s.decisive_accuracy, 2)}</td>'
             f'<td class="edge" data-label="edge" data-sort="{edge if (edge is not None and s.n_scored) else -9}">{edge_cell}</td></tr>'
         )
@@ -823,7 +824,7 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 <details class="sec" open><summary>Leaderboard <span class="h2sub">· live recorded forecasts · click a column to sort</span></summary>
 <div class="secbody">
 <table class="lb sortable"><thead><tr><th>#</th><th>variant</th><th class="num">n</th><th class="num">RPS</th>
-<th class="num">log loss</th><th class="num">Brier</th><th class="num">dec.acc</th><th>edge vs baseline</th></tr></thead>
+<th class="num">log loss</th><th class="num">Brier</th><th class="num">acc</th><th class="num">dec.acc</th><th>edge vs baseline</th></tr></thead>
 <tbody>{lb_rows}</tbody></table>
 <div class="note">Lower RPS / log loss / Brier is better. Edge = baseline RPS − variant RPS (green = beats baseline). Small n — read as direction, not verdict.</div>
 </div></details>
