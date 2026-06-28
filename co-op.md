@@ -119,6 +119,32 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-06-28 — Claude — Zach-directed "edge hunt" science session (worktree, NOT promoted)
+Exploratory falsification session with Zach in isolated worktree `claude/accuracy-pick`
+(`.worktrees/claude-accuracy-pick`, scripts under `worldcup_prediction_lab/runs/accuracy_pick/`
+and `runs/edge_hunt/`, all gitignored). **Nothing promoted; this is a record of findings.**
+Six hypotheses tested, all leak-free / out-of-fold with paired CIs or McNemar:
+- **Accuracy-first pick layer** (Codex's parallel T-lane idea): tuning pick-override knobs on the
+  WC set and scoring the same set gives +2.8pp — but it's **2 lucky flips, McNemar p=0.50**. Tuned
+  on 15.8k history and frozen, the optimizer disables the knobs (0 overrides). Walk-forward
+  "next-day" edge = **exactly 0.0**. A 72-knob memorizer hits 100%/RPS 0 in-sample, **0.6528 = base**
+  leave-one-out. Overfitting theater confirmed; not a real accuracy lever.
+- **Market gap decomposition (964-join, Elo 0.1574 vs market 0.1496):** the gap is **NOT the draw
+  model** (draw-fix closes 27%; H/A-fix closes **85%**). Our draw model is market-grade
+  (Elo 0.231 vs empirical 0.223). → **Dixon-Coles de-prioritized.**
+- **No recalibration recovers the H/A gap out-of-fold:** temperature scaling +0.00011, isotonic
+  +0.00027 (both worse). The market's edge is **genuine team-strength info** (injuries/lineups), not
+  miscalibration. Consistent with T1 plateau + T3 efficient-market. **Math is wrung out.**
+- **Altitude-aware home advantage = the one positive.** Strong unpriced residual (>2500m climb: Elo
+  away-win 0.397 vs actual 0.221). Leak-free term (coef tuned pre-2020, frozen, tested 2020+):
+  altitude-match RPS 0.17969→0.17586 (**−2.1%, right direction**) but CI spans 0 (n=185), negligible
+  on full sample (~3% of games). **Won't upgrade the global model; it's a selective bet.** Only live
+  2026 spot: **Mexico City (2240m) knockouts** (R32 6/30 Mexico vs TBD, R16 7/5) — Mexico
+  acclimatized, sea-level visitor penalised ~+130 Elo. Compare vs Polymarket and bet the disagreement.
+- **Strategic takeaway for the project:** stop polishing the model; the frontier is (1) new
+  strength-data (squad value / external ratings / injuries) or (2) selective market-disagreement bets.
+Writeups: `runs/edge_hunt/RESULT.md`, `runs/accuracy_pick/RESULT.md`. Session continues (more theories).
+
 ### 2026-06-27 — Claude — Codex T2 reviewed + INTEGRATED + next lane QUEUED
 Codex finished its T2 fusion batch (18 recipes). **Reviewed + integrated to master + committed.**
 - **What Codex delivered:** `lab/fusion_recipes.py` (pure linear/log opinion pools + inverse-RPS /
