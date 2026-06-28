@@ -163,6 +163,7 @@ def run_betting(
     events: list[dict] | None = None,
     reports_dir: str | Path = settings.REPORTS_DIR,
     write_report: bool = True,
+    record: bool = True,
 ) -> list[BetSignal]:
     """Fetch live Polymarket (or use `events`), compare to our model, rank signals."""
 
@@ -240,6 +241,9 @@ def run_betting(
         ))
 
     signals = rank_signals(signals)
+    if record:
+        from wc_predictor.lab.betting_ledger import record_signals
+        record_signals(signals, as_of=as_of)
     if write_report:
         write_betting_report(signals, as_of=as_of, coef=coef, reports_dir=reports_dir)
     return signals

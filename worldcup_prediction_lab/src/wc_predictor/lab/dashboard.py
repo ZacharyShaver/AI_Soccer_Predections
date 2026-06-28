@@ -278,6 +278,47 @@ def _betting_section() -> str:
     bets = [s for s in signals if s.recommendation == "BET"]
     watch = [s for s in signals if s.recommendation == "WATCH"]
 
+    def _track_record_block() -> str:
+        try:
+            from wc_predictor.lab.betting_ledger import (
+                load_ledger,
+                resolve_signals,
+                track_record,
+            )
+
+            results_df = load_results()
+            results = {
+                str(r["match_id"]): (int(r["home_score"]), int(r["away_score"]))
+                for _, r in results_df.iterrows()
+            } if not results_df.empty else {}
+            tr = track_record(resolve_signals(load_ledger(), results))
+        except Exception:
+            return ""
+        if not any(tr[g]["n"] or tr[g]["pending"] for g in ("BET", "WATCH")):
+            return ""
+        rows = ""
+        for g in ("BET", "WATCH"):
+            t = tr[g]
+            hit = _pct(t["hit_rate"]) if t["hit_rate"] is not None else "—"
+            roi = f'{t["roi_flat"] * 100:+.1f}%' if t["roi_flat"] is not None else "—"
+            roi_cls = "" if t["roi_flat"] is None else (" hit" if t["roi_flat"] > 0 else " miss")
+            rows += (
+                f'<tr><td class="vname">{g}</td><td class="num">{t["n"]}</td>'
+                f'<td class="num">{hit}</td>'
+                f'<td class="num{roi_cls}">{roi}</td>'
+                f'<td class="num">{t["pnl_flat"]:+.2f}</td>'
+                f'<td class="num">{t["pending"]}</td></tr>'
+            )
+        return (
+            '<h3 class="subh">📒 Track record <span class="h2sub">· resolved signals, flat 1u at fair odds</span></h3>'
+            '<table class="lb"><thead><tr><th>segment</th><th class="num">resolved</th>'
+            '<th class="num">hit %</th><th class="num">ROI</th><th class="num">P&L (u)</th>'
+            '<th class="num">pending</th></tr></thead>'
+            f'<tbody>{rows}</tbody></table>'
+            '<div class="note">Backtest read: WATCH is −EV historically (don\'t bet it); altitude BETs '
+            'are rare and thin. This live record extends that tab forward.</div>'
+        )
+
     def _sig_row(s, *, with_extra: bool) -> str:
         extra = (
             f'<td class="num">{_pct(s.kelly_stake)}</td>'
@@ -322,6 +363,7 @@ def _betting_section() -> str:
         'a disagreement usually means <b>we</b> are wrong. Only altitude-backed rows are <b>BET</b>; '
         'the rest are <b>WATCH</b> (market probably right). EV uses real offered prices; stakes are '
         'quarter-Kelly capped at 5%.</div>'
+        f"{_track_record_block()}"
         '<h3 class="subh">✅ Recommended bets <span class="h2sub">· structural edge</span></h3>'
         f"{bet_block}"
         '<h3 class="subh">👀 Watch <span class="h2sub">· no validated edge</span></h3>'
