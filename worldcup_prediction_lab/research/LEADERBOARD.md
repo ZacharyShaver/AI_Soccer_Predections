@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-06-28T15:08:39Z`
+Generated: `2026-06-28T16:11:30Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 254
-- Registered variants: 19
+- Registered variants: 20
 
 | Rank | Variant | n | RPS | log loss | Brier | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -28,6 +28,7 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 17 | `accuracy_pick_tuned` | 0 | n/a | n/a | n/a | n/a | n/a |
 | 18 | `elo_calibrated` | 0 | n/a | n/a | n/a | n/a | n/a |
 | 19 | `elo_recalibrated` | 0 | n/a | n/a | n/a | n/a | n/a |
+| 20 | `ml_elo_correction` | 0 | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -69,6 +70,8 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: none (reparameterization): k_factor 30, draw_base 0.33, draw_rating_scale 600.
 - `elo_recalibrated` — Calibrated Elo plus flat tournament weights (sweep-validated, significant).  
   feature: flat tournament_weights=1.0 on top of K30 / draw_base 0.33 / draw_scale 600.
+- `ml_elo_correction` — Trained softmax correction layer blended with recalibrated Elo.
+  feature: Train on pre-match recalibrated Elo probabilities, rating spread, draw mass, neutral/host context, and tournament class; blend learned probabilities with Elo.
 
 ## Caveats
 
