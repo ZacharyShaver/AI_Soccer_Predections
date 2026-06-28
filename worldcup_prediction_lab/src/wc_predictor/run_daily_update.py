@@ -154,8 +154,12 @@ def run_daily_update(
 
 def _summary_payload(summary: DailyUpdateSummary) -> dict[str, Any]:
     payload = asdict(summary)
-    payload["ledger_path"] = str(summary.ledger_path)
-    payload["report_path"] = str(summary.report_path)
+    # Stringify every Path field so the summary is JSON-serializable. asdict()
+    # leaves Path values intact (e.g. dashboard_path/pages_path), which json
+    # cannot encode.
+    for key, value in payload.items():
+        if isinstance(value, Path):
+            payload[key] = str(value)
     return payload
 
 

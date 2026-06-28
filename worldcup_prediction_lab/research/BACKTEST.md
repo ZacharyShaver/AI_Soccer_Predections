@@ -1,30 +1,30 @@
 # Walk-forward backtest — played WC 2026 matches
 
-Generated: `2026-06-27 21:12 UTC`
+Generated: `2026-06-28 14:19 UTC`
 
 Leak-free walk-forward: each variant is trained only on results strictly before each match's date, then scored on the actual outcome. Lower RPS/log loss/Brier is better; accuracy = share of matches whose argmax pick was correct.
 
-- Matches backtested: **60** (2026-06-11 → 2026-06-25)
+- Matches backtested: **72** (2026-06-11 → 2026-06-27)
 
 | Variant | n | RPS | log loss | Brier | accuracy | edge vs baseline |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `elo_recalibrated` | 60 | 0.1719 | 0.8918 | 0.5469 | 0.600 | +0.0044 |
-| `elo_calibrated` | 60 | 0.1739 | 0.9012 | 0.5499 | 0.600 | +0.0024 |
-| `group_incentive` | 60 | 0.1752 | 0.9470 | 0.5618 | 0.617 | +0.0010 |
-| `draw_guard` | 60 | 0.1753 | 0.9176 | 0.5532 | 0.600 | +0.0010 |
-| `rest_days` | 60 | 0.1756 | 0.9420 | 0.5601 | 0.600 | +0.0007 |
-| `defensive_form` | 60 | 0.1758 | 0.9421 | 0.5607 | 0.583 | +0.0005 |
-| `opp_adj_form` | 60 | 0.1759 | 0.9418 | 0.5616 | 0.600 | +0.0004 |
-| `ewma_goal_form` | 60 | 0.1760 | 0.9419 | 0.5616 | 0.600 | +0.0003 |
-| `ensemble_top_k` | 60 | 0.1761 | 0.9424 | 0.5617 | 0.600 | +0.0001 |
-| `match_congestion` | 60 | 0.1762 | 0.9437 | 0.5613 | 0.600 | +0.0000 |
-| `elo_baseline` (baseline) | 60 | 0.1763 | 0.9441 | 0.5613 | 0.600 | +0.0000 |
-| `opp_adj_recent_form` | 60 | 0.1764 | 0.9428 | 0.5623 | 0.600 | -0.0002 |
-| `attack_defense_form` | 60 | 0.1766 | 0.9443 | 0.5631 | 0.600 | -0.0004 |
-| `scoring_form` | 60 | 0.1766 | 0.9443 | 0.5631 | 0.600 | -0.0004 |
-| `recent_form` | 60 | 0.1769 | 0.9443 | 0.5631 | 0.600 | -0.0007 |
-| `weighted_recent_form` | 60 | 0.1769 | 0.9437 | 0.5629 | 0.600 | -0.0007 |
-| `competitive_form` | 60 | 0.1771 | 0.9455 | 0.5641 | 0.600 | -0.0008 |
-| `form_trend` | 60 | 0.1772 | 0.9454 | 0.5633 | 0.600 | -0.0009 |
+| `elo_recalibrated` | 72 | 0.1606 | 0.8628 | 0.5224 | 0.597 | +0.0054 |
+| `elo_calibrated` | 72 | 0.1625 | 0.8715 | 0.5254 | 0.597 | +0.0035 |
+| `ewma_goal_form` | 72 | 0.1642 | 0.9103 | 0.5373 | 0.597 | +0.0019 |
+| `opp_adj_form` | 72 | 0.1643 | 0.9108 | 0.5378 | 0.597 | +0.0017 |
+| `defensive_form` | 72 | 0.1645 | 0.9120 | 0.5376 | 0.583 | +0.0016 |
+| `ensemble_top_k` | 72 | 0.1647 | 0.9117 | 0.5380 | 0.597 | +0.0014 |
+| `attack_defense_form` | 72 | 0.1650 | 0.9135 | 0.5394 | 0.597 | +0.0010 |
+| `scoring_form` | 72 | 0.1650 | 0.9135 | 0.5394 | 0.597 | +0.0010 |
+| `opp_adj_recent_form` | 72 | 0.1652 | 0.9127 | 0.5391 | 0.597 | +0.0008 |
+| `competitive_form` | 72 | 0.1653 | 0.9138 | 0.5398 | 0.597 | +0.0008 |
+| `draw_guard` | 72 | 0.1654 | 0.8916 | 0.5320 | 0.597 | +0.0006 |
+| `rest_days` | 72 | 0.1654 | 0.9155 | 0.5395 | 0.597 | +0.0006 |
+| `weighted_recent_form` | 72 | 0.1657 | 0.9138 | 0.5400 | 0.597 | +0.0003 |
+| `recent_form` | 72 | 0.1657 | 0.9146 | 0.5403 | 0.597 | +0.0003 |
+| `match_congestion` | 72 | 0.1660 | 0.9169 | 0.5404 | 0.597 | +0.0000 |
+| `elo_baseline` (baseline) | 72 | 0.1660 | 0.9172 | 0.5405 | 0.597 | +0.0000 |
+| `form_trend` | 72 | 0.1662 | 0.9159 | 0.5403 | 0.597 | -0.0001 |
+| `group_incentive` | 72 | 0.1669 | 0.9171 | 0.5404 | 0.639 | -0.0009 |
 
 Note: the backtest is analytical (not the immutable live forecast ledger). It re-fits each variant per match date, so it grows automatically as more WC matches are played.
