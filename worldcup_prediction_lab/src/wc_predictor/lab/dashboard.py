@@ -249,6 +249,87 @@ def _accuracy_timeline_section(rows: list[dict], *, variant_id: str) -> str:
     )
 
 
+def _betting_section() -> str:
+    """Best-effort 'betting edges vs Polymarket' section.
+
+    Fetches the live market and runs the disagreement engine. Network/market
+    failures must never break the dashboard, so the whole thing is guarded and
+    degrades to a muted note.
+    """
+
+    try:
+        from wc_predictor.lab.betting import run_betting
+
+        as_of = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        signals = run_betting(
+            as_of=as_of,
+            training_cutoff=as_of,
+            generated_at_utc=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            write_report=False,
+        )
+    except Exception as exc:  # pragma: no cover - live/network dependent
+        return (
+            '<details class="sec"><summary>Betting edges vs Polymarket '
+            '<span class="h2sub">· live market disagreements</span></summary>'
+            f'<div class="secbody"><p class="muted">Live market unavailable right now '
+            f'({_esc(type(exc).__name__)}). Re-runs on the next refresh.</p></div></details>'
+        )
+
+    bets = [s for s in signals if s.recommendation == "BET"]
+    watch = [s for s in signals if s.recommendation == "WATCH"]
+
+    def _sig_row(s, *, with_extra: bool) -> str:
+        extra = (
+            f'<td class="num">{_pct(s.kelly_stake)}</td>'
+            f'<td>altitude +{s.altitude_delta_elo:.0f} Elo</td>'
+            if with_extra
+            else ""
+        )
+        return (
+            f'<tr><td class="vname">{_esc(s.home_team_name)} v {_esc(s.away_team_name)}</td>'
+            f'<td class="dt">{_esc(s.match_date)}</td>'
+            f'<td>{_esc(s.selection)}</td>'
+            f'<td class="num" data-sort="{s.our_prob}">{_pct(s.our_prob)}</td>'
+            f'<td class="num" data-sort="{s.market_prob}">{_pct(s.market_prob)}</td>'
+            f'<td class="num" data-sort="{s.offered_price}">{_pct(s.offered_price)}</td>'
+            f'<td class="num" data-sort="{s.edge}">{s.edge * 100:+.1f}pp</td>'
+            f'<td class="num strong" data-sort="{s.ev}">{s.ev * 100:+.1f}%</td>'
+            f"{extra}</tr>"
+        )
+
+    bet_block = (
+        '<table class="lb sortable"><thead><tr><th>match</th><th>date</th><th>pick</th>'
+        '<th class="num">our p</th><th class="num">mkt fair</th><th class="num">offered</th>'
+        '<th class="num">edge</th><th class="num">EV</th><th class="num">Kelly</th><th>why</th></tr></thead>'
+        f'<tbody>{"".join(_sig_row(s, with_extra=True) for s in bets)}</tbody></table>'
+        if bets
+        else '<p class="muted">No structural-edge bets in the current slate.</p>'
+    )
+    watch_block = (
+        '<table class="lb sortable"><thead><tr><th>match</th><th>date</th><th>pick</th>'
+        '<th class="num">our p</th><th class="num">mkt fair</th><th class="num">offered</th>'
+        '<th class="num">edge</th><th class="num">EV</th></tr></thead>'
+        f'<tbody>{"".join(_sig_row(s, with_extra=False) for s in watch)}</tbody></table>'
+        if watch
+        else '<p class="muted">No disagreements above threshold.</p>'
+    )
+
+    return (
+        '<details class="sec"><summary>Betting edges vs Polymarket '
+        f'<span class="h2sub">· {len(bets)} bet · {len(watch)} watch · click a column to sort</span></summary>'
+        '<div class="secbody">'
+        '<div class="note">Default stance: the de-vigged market out-predicts our model on average — '
+        'a disagreement usually means <b>we</b> are wrong. Only altitude-backed rows are <b>BET</b>; '
+        'the rest are <b>WATCH</b> (market probably right). EV uses real offered prices; stakes are '
+        'quarter-Kelly capped at 5%.</div>'
+        '<h3 class="subh">✅ Recommended bets <span class="h2sub">· structural edge</span></h3>'
+        f"{bet_block}"
+        '<h3 class="subh">👀 Watch <span class="h2sub">· no validated edge</span></h3>'
+        f"{watch_block}"
+        "</div></details>"
+    )
+
+
 def _write_dashboard_outputs(
     html_doc: str,
     *,
@@ -513,6 +594,7 @@ def build_dashboard(
         result_cards=("".join(result_cards) or '<p class="muted">No matches scored yet.</p>'),
         n_upcoming=len(upcoming_payload),
         upcoming_json=upcoming_json,
+        betting_section=_betting_section(),
         script=_SCRIPT,
     )
 
@@ -602,6 +684,7 @@ details.sec>summary::before{{content:"\\25B8";color:var(--mut);font-size:13px;tr
 details.sec[open]>summary::before{{transform:rotate(90deg)}}
 details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 .secbody{{padding:2px 16px 16px}}
+.subh{{font-size:13px;margin:16px 0 8px;color:var(--ink);font-weight:700}}
 .controls{{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:4px 0 14px}}
 .controls label{{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px}}
 .controls select{{background:#0b0f14;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 9px;font-size:13px;text-transform:none;letter-spacing:0}}
@@ -689,6 +772,8 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 <noscript><p class="muted">Enable JavaScript to browse per-model forecasts.</p></noscript>
 <div class="note">Each row shows the selected model's H/D/A. <b>Consensus</b> averages every model. <b>Model disagreement</b> ranks matches by how much the models differ on the home-win probability — the fixtures worth a closer look. Expand a match to see every model side by side.</div>
 </div></details>
+
+{betting_section}
 
 {accuracy_section}
 
