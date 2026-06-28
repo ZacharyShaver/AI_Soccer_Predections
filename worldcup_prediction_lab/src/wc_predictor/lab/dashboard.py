@@ -320,6 +320,7 @@ def _betting_section() -> str:
         )
 
     def _sig_row(s, *, with_extra: bool) -> str:
+        date_sort = "".join(ch for ch in str(s.match_date) if ch.isdigit())
         extra = (
             f'<td class="num">{_pct(s.kelly_stake)}</td>'
             f'<td>altitude +{s.altitude_delta_elo:.0f} Elo</td>'
@@ -328,7 +329,7 @@ def _betting_section() -> str:
         )
         return (
             f'<tr><td class="vname">{_esc(s.home_team_name)} v {_esc(s.away_team_name)}</td>'
-            f'<td class="dt">{_esc(s.match_date)}</td>'
+            f'<td class="dt" data-sort="{_esc(date_sort)}">{_esc(s.match_date)}</td>'
             f'<td>{_esc(s.selection)}</td>'
             f'<td class="num" data-sort="{s.our_prob}">{_pct(s.our_prob)}</td>'
             f'<td class="num" data-sort="{s.market_prob}">{_pct(s.market_prob)}</td>'

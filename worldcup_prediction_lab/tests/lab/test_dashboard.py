@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from wc_predictor.lab import dashboard
+from wc_predictor.lab.betting import BetSignal
 from wc_predictor.lab.dashboard import _select_upcoming_match_ids
 
 
@@ -43,3 +45,52 @@ def test_upcoming_empty_when_all_past():
     assert _select_upcoming_match_ids(
         ["a", "b"], fixture_date=dates, today="2026-06-27"
     ) == []
+
+
+def test_betting_date_cells_have_numeric_sort_keys(monkeypatch):
+    def fake_run_betting(**_kwargs):
+        return [
+            BetSignal(
+                "fixture-a",
+                "2026-07-03",
+                "Venue",
+                "Australia",
+                "Egypt",
+                "home",
+                "Australia",
+                0.40,
+                0.28,
+                0.28,
+                0.12,
+                0.389,
+                0.0,
+                0.0,
+                None,
+                "WATCH",
+            ),
+            BetSignal(
+                "fixture-b",
+                "2026-06-29",
+                "Venue",
+                "Brazil",
+                "Japan",
+                "away",
+                "Japan",
+                0.24,
+                0.18,
+                0.18,
+                0.06,
+                0.308,
+                0.0,
+                0.0,
+                None,
+                "WATCH",
+            ),
+        ]
+
+    monkeypatch.setattr("wc_predictor.lab.betting.run_betting", fake_run_betting)
+
+    html = dashboard._betting_section()
+
+    assert '<td class="dt" data-sort="20260703">2026-07-03</td>' in html
+    assert '<td class="dt" data-sort="20260629">2026-06-29</td>' in html
