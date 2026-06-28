@@ -8,6 +8,7 @@ Regenerate any time; it reflects whatever has been scored so far.
 from __future__ import annotations
 
 import html
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -229,7 +230,8 @@ def _accuracy_timeline_section(rows: list[dict], *, variant_id: str) -> str:
     latest_decisive_hits = latest.get("cumulative_decisive_hits", 0)
     latest_decisive_n = latest.get("cumulative_decisive_n", 0)
     return (
-        f'<h2>Accuracy over time <span class="h2sub">Â· {_esc(variant_id)} cumulative outcome picks</span></h2>'
+        f'<details class="sec"><summary>Accuracy over time <span class="h2sub">· {_esc(variant_id)} cumulative outcome picks</span></summary>'
+        '<div class="secbody">'
         '<div class="accuracy-card">'
         '<div class="accsummary">'
         f'<div><div class="bigacc">{_pct(latest["cumulative_accuracy"])}</div>'
@@ -243,6 +245,7 @@ def _accuracy_timeline_section(rows: list[dict], *, variant_id: str) -> str:
         '<th class="num">daily acc</th><th>overall cumulative</th><th class="num">cum. hits</th>'
         '<th class="num">decisive hits</th><th>decisive cumulative</th></tr></thead>'
         f'<tbody>{"".join(body_rows)}</tbody></table></div>'
+        '</div></details>'
     )
 
 
@@ -345,14 +348,14 @@ def build_dashboard(
         crown = ' <span class="tag">baseline</span>' if is_base else ""
         lead = " lead" if (leader and s.variant_id == leader.variant_id) else ""
         lb_rows.append(
-            f'<tr class="{lead}"><td class="rank">{medal or rank}</td>'
+            f'<tr class="{lead}"><td class="rank" data-sort="{rank}">{medal or rank}</td>'
             f'<td class="vname">{_esc(s.variant_id)}{crown}</td>'
-            f'<td class="num" data-label="n">{s.n_scored}</td>'
-            f'<td class="num strong" data-label="RPS">{_fmt(s.mean_rps)}</td>'
-            f'<td class="num" data-label="log loss">{_fmt(s.mean_log_loss)}</td>'
-            f'<td class="num" data-label="Brier">{_fmt(s.mean_brier)}</td>'
-            f'<td class="num" data-label="dec.acc">{_fmt(s.decisive_accuracy, 2)}</td>'
-            f'<td class="edge" data-label="edge">{edge_cell}</td></tr>'
+            f'<td class="num" data-label="n" data-sort="{s.n_scored}">{s.n_scored}</td>'
+            f'<td class="num strong" data-label="RPS" data-sort="{s.mean_rps if s.mean_rps is not None else 9}">{_fmt(s.mean_rps)}</td>'
+            f'<td class="num" data-label="log loss" data-sort="{s.mean_log_loss if s.mean_log_loss is not None else 9}">{_fmt(s.mean_log_loss)}</td>'
+            f'<td class="num" data-label="Brier" data-sort="{s.mean_brier if s.mean_brier is not None else 9}">{_fmt(s.mean_brier)}</td>'
+            f'<td class="num" data-label="dec.acc" data-sort="{s.decisive_accuracy if s.decisive_accuracy is not None else -1}">{_fmt(s.decisive_accuracy, 2)}</td>'
+            f'<td class="edge" data-label="edge" data-sort="{edge if (edge is not None and s.n_scored) else -9}">{edge_cell}</td></tr>'
         )
 
     # ---- Walk-forward backtest section (from cache) ----
@@ -380,26 +383,28 @@ def build_dashboard(
             crown = ' <span class="tag">baseline</span>' if is_base else ""
             medal = {1: "🥇", 2: "🥈", 3: "🥉"}.get(rank, "")
             bt_rows.append(
-                f'<tr><td class="rank">{medal or rank}</td>'
+                f'<tr><td class="rank" data-sort="{rank}">{medal or rank}</td>'
                 f'<td class="vname">{_esc(s["variant_id"])}{crown}</td>'
-                f'<td class="num" data-label="n">{s["n_scored"]}</td>'
-                f'<td class="num strong" data-label="RPS">{_fmt(s["mean_rps"])}</td>'
-                f'<td class="num" data-label="log loss">{_fmt(s["mean_log_loss"])}</td>'
-                f'<td class="num" data-label="Brier">{_fmt(s["mean_brier"])}</td>'
-                f'<td class="num" data-label="accuracy">{_fmt(s["decisive_accuracy"], 3)}</td>'
-                f'<td class="edge" data-label="edge">{edge_cell}</td></tr>'
+                f'<td class="num" data-label="n" data-sort="{s["n_scored"]}">{s["n_scored"]}</td>'
+                f'<td class="num strong" data-label="RPS" data-sort="{s["mean_rps"] if s["mean_rps"] is not None else 9}">{_fmt(s["mean_rps"])}</td>'
+                f'<td class="num" data-label="log loss" data-sort="{s["mean_log_loss"] if s["mean_log_loss"] is not None else 9}">{_fmt(s["mean_log_loss"])}</td>'
+                f'<td class="num" data-label="Brier" data-sort="{s["mean_brier"] if s["mean_brier"] is not None else 9}">{_fmt(s["mean_brier"])}</td>'
+                f'<td class="num" data-label="accuracy" data-sort="{s["decisive_accuracy"] if s["decisive_accuracy"] is not None else -1}">{_fmt(s["decisive_accuracy"], 3)}</td>'
+                f'<td class="edge" data-label="edge" data-sort="{edge if edge is not None else -9}">{edge_cell}</td></tr>'
             )
         rng = bt.get("date_range")
         sub = f'{bt["n_matches"]} matches' + (f' · {rng[0]} → {rng[1]}' if rng else "")
         backtest_section = (
-            f'<h2>Walk-forward backtest <span class="h2sub">· {sub}</span></h2>'
-            '<table class="lb"><thead><tr><th>#</th><th>variant</th><th class="num">n</th>'
+            f'<details class="sec"><summary>Walk-forward backtest <span class="h2sub">· {sub}</span></summary>'
+            '<div class="secbody">'
+            '<table class="lb sortable"><thead><tr><th>#</th><th>variant</th><th class="num">n</th>'
             '<th class="num">RPS</th><th class="num">log loss</th><th class="num">Brier</th>'
             '<th class="num">accuracy</th><th>edge vs baseline</th></tr></thead>'
             f'<tbody>{"".join(bt_rows)}</tbody></table>'
             '<div class="note">Leak-free: every model is re-trained on results strictly before each '
             'match and scored on the actual outcome — a far larger sample than the live recorded '
             'forecasts above. This is the honest read; the live table is still tiny.</div>'
+            '</div></details>'
         )
 
     # ---- Results cards (chronological by match date) ----
@@ -438,7 +443,7 @@ def build_dashboard(
             f'<tbody>{"".join(rows)}</tbody></table></div>'
         )
 
-    # ---- Upcoming (ensemble preferred, baseline fallback) ----
+    # ---- Upcoming (interactive by-model view) ----
     def _fixture_date(mid: str) -> str:
         fx = fixture_info.get(mid, {})
         try:
@@ -448,27 +453,51 @@ def build_dashboard(
 
     today_utc = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     upcoming_sorted = _select_upcoming_match_ids(
-        upcoming_match_ids, fixture_date=_fixture_date, today=today_utc
+        upcoming_match_ids, fixture_date=_fixture_date, today=today_utc, limit=60
     )
-    up_rows = []
+    # One record per upcoming match carrying *every* model's prediction, so the
+    # browser can re-render the table by model / consensus and sort it client-side.
+    upcoming_payload = []
     for mid in upcoming_sorted:
-        preferred_variant = (
-            PREFERRED_FORECAST_VARIANT
-            if pred_lookup.get((PREFERRED_FORECAST_VARIANT, mid)) is not None
-            else BASELINE_VARIANT
-        )
-        probs = pred_lookup.get((preferred_variant, mid)) or pred_lookup.get((variant_ids[0], mid))
-        if probs is None:
+        picks = {
+            vid: [round(p, 6) for p in pred_lookup[(vid, mid)]]
+            for vid in variant_ids
+            if pred_lookup.get((vid, mid)) is not None
+        }
+        if not picks:
             continue
         fx = fixture_info.get(mid, {})
         home = names.get(str(fx.get("home_team_id")), str(fx.get("home_team_id")))
         away = names.get(str(fx.get("away_team_id")), str(fx.get("away_team_id")))
-        up_rows.append(
-            f'<tr><td class="dt">{_fixture_date(mid)}</td>'
-            f'<td class="mt">{_esc(home)} <span class="vs">v</span> {_esc(away)}</td>'
-            f'<td class="barcell">{_upcoming_bar(probs)}</td>'
-            f'<td>{_upset_cell(probs)} <span class="muted">({_esc(preferred_variant)})</span></td></tr>'
+        upcoming_payload.append(
+            {
+                "id": mid,
+                "date": _fixture_date(mid),
+                "home": home,
+                "away": away,
+                "picks": picks,
+            }
         )
+
+    # Models actually present in the upcoming slate, leader/standings order preserved.
+    upcoming_models = [
+        vid for vid in variant_ids if any(vid in m["picks"] for m in upcoming_payload)
+    ]
+    default_model = (
+        PREFERRED_FORECAST_VARIANT
+        if PREFERRED_FORECAST_VARIANT in upcoming_models
+        else (BASELINE_VARIANT if BASELINE_VARIANT in upcoming_models else "__consensus__")
+    )
+    upcoming_json = json.dumps(
+        {
+            "matches": upcoming_payload,
+            "models": upcoming_models,
+            "default": default_model,
+            "baseline": BASELINE_VARIANT,
+            "leader": leader.variant_id if leader else None,
+        },
+        separators=(",", ":"),
+    )
 
     html_doc = _TEMPLATE.format(
         generated=generated,
@@ -482,7 +511,9 @@ def build_dashboard(
         lb_rows="".join(lb_rows),
         backtest_section=backtest_section,
         result_cards=("".join(result_cards) or '<p class="muted">No matches scored yet.</p>'),
-        up_rows=("".join(up_rows) or '<tr><td colspan="4" class="muted">No upcoming fixtures.</td></tr>'),
+        n_upcoming=len(upcoming_payload),
+        upcoming_json=upcoming_json,
+        script=_SCRIPT,
     )
 
     return _write_dashboard_outputs(
@@ -563,7 +594,47 @@ table{{width:100%;border-collapse:collapse}}
 .legend{{display:flex;gap:16px;color:var(--mut);font-size:12px;margin:10px 2px}}
 .dot{{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}}
 .muted{{color:var(--mut)}} .note{{color:var(--mut);font-size:12px;margin-top:8px}}
+/* collapsible sections */
+details.sec{{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin:14px 0;overflow:hidden}}
+details.sec>summary{{list-style:none;cursor:pointer;padding:13px 16px;font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px;user-select:none}}
+details.sec>summary::-webkit-details-marker{{display:none}}
+details.sec>summary::before{{content:"\\25B8";color:var(--mut);font-size:13px;transition:transform .15s}}
+details.sec[open]>summary::before{{transform:rotate(90deg)}}
+details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
+.secbody{{padding:2px 16px 16px}}
+.controls{{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:4px 0 14px}}
+.controls label{{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px}}
+.controls select{{background:#0b0f14;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 9px;font-size:13px;text-transform:none;letter-spacing:0}}
+.ghostbtn{{background:#0b0f14;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:6px 11px;font-size:12px;cursor:pointer}}
+.ghostbtn:hover{{border-color:var(--mut)}}
+/* sortable headers */
+.sortable th{{cursor:pointer;user-select:none;white-space:nowrap}}
+.sortable th:hover{{color:var(--ink)}}
+.sortable th.sorted-asc::after{{content:" \\25B2";color:var(--mut);font-size:9px}}
+.sortable th.sorted-desc::after{{content:" \\25BC";color:var(--mut);font-size:9px}}
+/* upcoming by-model */
+.umatch{{border:1px solid var(--line);border-radius:9px;margin-bottom:8px;background:#0b0f14}}
+.urow{{display:grid;grid-template-columns:84px 1fr 210px 92px 24px;gap:12px;align-items:center;padding:10px 12px;cursor:pointer}}
+.urow:hover{{background:rgba(255,255,255,.025)}}
+.umeta{{min-width:0}} .umeta .mt{{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+.umeta .uspread{{font-size:11px;color:var(--mut)}}
+.uchev{{color:var(--mut);text-align:center;transition:transform .15s}}
+.umatch.open .uchev{{transform:rotate(90deg)}}
+.umodels{{display:none;border-top:1px solid var(--line);padding:6px 12px 10px}}
+.umatch.open .umodels{{display:block}}
+.umodels table{{font-size:11px;table-layout:fixed}}
+.umodels th{{color:var(--mut);font-weight:500;text-align:left;padding:3px 6px;font-size:9px;text-transform:uppercase}}
+.umodels td{{padding:3px 6px;border-top:1px solid var(--line);vertical-align:middle}}
+.umodels tr.sel td{{background:rgba(245,197,24,.07)}}
+.umodels .vn{{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+.umodels th:nth-child(1),.umodels td:nth-child(1){{width:30%}}
+.umodels th:nth-child(2),.umodels td:nth-child(2){{width:50%}}
+.umodels th:nth-child(3),.umodels td:nth-child(3){{width:20%}}
+.uempty{{color:var(--mut);padding:12px 2px}}
 @media (max-width:640px){{
+  .urow{{grid-template-columns:1fr 64px 22px;row-gap:6px}}
+  .urow .barcell{{grid-column:1 / -1}}
+  .controls{{gap:8px}} .controls label{{flex:1}}
   .wrap{{padding:18px 12px 48px}}
   h1{{font-size:20px}}
   .cards{{grid-template-columns:1fr 1fr;gap:8px}}
@@ -600,28 +671,239 @@ table{{width:100%;border-collapse:collapse}}
 <div class="stat"><div class="v">{leader}</div><div class="k">Leader · RPS {leader_rps}</div></div>
 </div>
 
+<details class="sec" open><summary>Upcoming forecasts — by model <span class="h2sub">· {n_upcoming} fixtures · pick a model, sort, or expand a match for all models</span></summary>
+<div class="secbody">
+<div class="controls">
+<label>Model <select id="upModel"></select></label>
+<label>Sort <select id="upSort">
+<option value="date">Date (soonest)</option>
+<option value="home">Home win %</option>
+<option value="away">Away win %</option>
+<option value="draw">Draw %</option>
+<option value="upset">Upset risk</option>
+<option value="spread">Model disagreement</option>
+</select></label>
+<button type="button" id="upExpandAll" class="ghostbtn">Expand all</button>
+</div>
+<div id="upcoming"></div>
+<noscript><p class="muted">Enable JavaScript to browse per-model forecasts.</p></noscript>
+<div class="note">Each row shows the selected model's H/D/A. <b>Consensus</b> averages every model. <b>Model disagreement</b> ranks matches by how much the models differ on the home-win probability — the fixtures worth a closer look. Expand a match to see every model side by side.</div>
+</div></details>
+
 {accuracy_section}
 
-<h2>Leaderboard <span class="h2sub">· live recorded forecasts</span></h2>
-<table class="lb"><thead><tr><th>#</th><th>variant</th><th class="num">n</th><th class="num">RPS</th>
+<details class="sec" open><summary>Leaderboard <span class="h2sub">· live recorded forecasts · click a column to sort</span></summary>
+<div class="secbody">
+<table class="lb sortable"><thead><tr><th>#</th><th>variant</th><th class="num">n</th><th class="num">RPS</th>
 <th class="num">log loss</th><th class="num">Brier</th><th class="num">dec.acc</th><th>edge vs baseline</th></tr></thead>
 <tbody>{lb_rows}</tbody></table>
 <div class="note">Lower RPS / log loss / Brier is better. Edge = baseline RPS − variant RPS (green = beats baseline). Small n — read as direction, not verdict.</div>
+</div></details>
 
 {backtest_section}
 
-<h2>Results</h2>
+<details class="sec"><summary>Results <span class="h2sub">· scored matches, every model</span></summary>
+<div class="secbody">
 <div class="legend"><span><span class="dot" style="background:var(--h)"></span>Home win</span>
 <span><span class="dot" style="background:var(--d)"></span>Draw</span>
 <span><span class="dot" style="background:var(--a)"></span>Away win</span>
 <span>white outline = actual outcome · ✓ called it</span></div>
 <div class="grid">{result_cards}</div>
+</div></details>
 
-<h2>Upcoming forecasts <span class="h2sub">Â· ensemble preferred, baseline fallback</span></h2>
-<table class="up"><thead><tr><th>date</th><th>match</th><th>H / D / A</th><th>upset risk</th></tr></thead>
-<tbody>{up_rows}</tbody></table>
+</div>
+<script>
+window.__UPCOMING__ = {upcoming_json};
+</script>
+<script>
+{script}
+</script>
+</body></html>"""
 
-</div></body></html>"""
+
+_SCRIPT = r"""
+(function () {
+  "use strict";
+
+  // ---- generic click-to-sort for any table.sortable ----
+  function cellValue(row, i) {
+    var c = row.cells[i];
+    if (!c) return "";
+    var d = c.getAttribute("data-sort");
+    return d !== null ? d : c.textContent.trim();
+  }
+  function sortTable(table, col, dir) {
+    var tb = table.tBodies[0];
+    var rows = Array.prototype.slice.call(tb.rows);
+    rows.sort(function (a, b) {
+      var x = cellValue(a, col), y = cellValue(b, col);
+      var nx = parseFloat(x), ny = parseFloat(y);
+      var numeric = !isNaN(nx) && !isNaN(ny) && /[0-9]/.test(x) && /[0-9]/.test(y);
+      var cmp = numeric ? (nx - ny) : x.toLowerCase().localeCompare(y.toLowerCase());
+      return dir === "asc" ? cmp : -cmp;
+    });
+    rows.forEach(function (r) { tb.appendChild(r); });
+  }
+  function makeSortable(table) {
+    var ths = table.tHead.rows[0].cells;
+    Array.prototype.forEach.call(ths, function (th, i) {
+      th.addEventListener("click", function () {
+        var asc = !th.classList.contains("sorted-asc");
+        Array.prototype.forEach.call(ths, function (o) {
+          o.classList.remove("sorted-asc", "sorted-desc");
+        });
+        th.classList.add(asc ? "sorted-asc" : "sorted-desc");
+        sortTable(table, i, asc ? "asc" : "desc");
+      });
+    });
+  }
+  document.querySelectorAll("table.sortable").forEach(makeSortable);
+
+  // ---- interactive by-model upcoming forecasts ----
+  var DATA = window.__UPCOMING__ || { matches: [], models: [], default: "__consensus__" };
+  var host = document.getElementById("upcoming");
+  var modelSel = document.getElementById("upModel");
+  var sortSel = document.getElementById("upSort");
+  var expandAllBtn = document.getElementById("upExpandAll");
+  if (!host || !modelSel) return;
+
+  var CONSENSUS = "__consensus__";
+  var open = {};        // match id -> expanded?
+  var allOpen = false;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function consensus(picks) {
+    var v = Object.keys(picks).map(function (k) { return picks[k]; });
+    var n = v.length || 1, s = [0, 0, 0];
+    v.forEach(function (p) { s[0] += p[0]; s[1] += p[1]; s[2] += p[2]; });
+    return [s[0] / n, s[1] / n, s[2] / n];
+  }
+  function spread(picks) {
+    var hs = Object.keys(picks).map(function (k) { return picks[k][0]; });
+    var n = hs.length || 1;
+    var m = hs.reduce(function (a, b) { return a + b; }, 0) / n;
+    var va = hs.reduce(function (a, b) { return a + (b - m) * (b - m); }, 0) / n;
+    return Math.sqrt(va);
+  }
+  function displayProbs(m, model) {
+    if (model === CONSENSUS) return consensus(m.picks);
+    return m.picks[model] || null;
+  }
+  function upset(p) {
+    var t = p[0] + p[1] + p[2] || 1, h = p[0] / t, d = p[1] / t, a = p[2] / t;
+    var avoid = h >= a ? d + a : d + h;
+    var pct = Math.max(0, Math.min(100, avoid * 100));
+    var label = pct < 30 ? "Low" : pct < 45 ? "Medium" : "High";
+    return { pct: pct, label: label };
+  }
+  function upsetCell(p) {
+    var u = upset(p);
+    return '<span class="risk risk-' + u.label.toLowerCase() + '">' +
+      Math.round(u.pct) + "% " + u.label + "</span>";
+  }
+  function bar(p) {
+    var labs = ["H", "D", "A"], cls = ["h", "d", "a"], labels = "", segs = "";
+    for (var i = 0; i < 3; i++) {
+      var pct = p[i] * 100;
+      labels += '<span class="plabel plabel-' + cls[i] + '">' + labs[i] + " " + Math.round(pct) + "</span>";
+      segs += '<div class="seg seg-' + cls[i] + '" style="width:' + pct.toFixed(3) +
+        '%" title="' + labs[i] + " " + pct.toFixed(1) + '%"></div>';
+    }
+    return '<div class="probwrap"><div class="problabels">' + labels +
+      '</div><div class="bar">' + segs + "</div></div>";
+  }
+
+  function populateModels() {
+    var opts = '<option value="' + CONSENSUS + '">Consensus (all models)</option>';
+    DATA.models.forEach(function (m) {
+      var tag = m === DATA.leader ? " — leader" : (m === DATA.baseline ? " — baseline" : "");
+      opts += '<option value="' + esc(m) + '">' + esc(m) + tag + "</option>";
+    });
+    modelSel.innerHTML = opts;
+    modelSel.value = DATA.default || CONSENSUS;
+  }
+
+  function modelsTable(m, selected) {
+    var rows = "";
+    DATA.models.forEach(function (vid) {
+      var p = m.picks[vid];
+      if (!p) return;
+      var sel = vid === selected ? ' class="sel"' : "";
+      rows += "<tr" + sel + '><td class="vn">' + esc(vid) + "</td>" +
+        '<td class="barcell">' + bar(p) + "</td>" +
+        "<td>" + upsetCell(p) + "</td></tr>";
+    });
+    return '<table><thead><tr><th>model</th><th>H / D / A</th><th>upset risk</th></tr></thead><tbody>' +
+      rows + "</tbody></table>";
+  }
+
+  function render() {
+    var model = modelSel.value;
+    var sort = sortSel.value;
+    var list = DATA.matches.slice();
+    var idx = { home: 0, draw: 1, away: 2 };
+
+    list.sort(function (a, b) {
+      if (sort === "date") return (a.date + a.id).localeCompare(b.date + b.id);
+      if (sort === "spread") return spread(b.picks) - spread(a.picks);
+      var pa = displayProbs(a, model), pb = displayProbs(b, model);
+      if (!pa) return 1; if (!pb) return -1;
+      if (sort === "upset") return upset(pb).pct - upset(pa).pct;
+      return pb[idx[sort]] - pa[idx[sort]];
+    });
+
+    if (!list.length) {
+      host.innerHTML = '<div class="uempty">No upcoming fixtures.</div>';
+      return;
+    }
+    var out = "";
+    list.forEach(function (m) {
+      var p = displayProbs(m, model);
+      var isOpen = open[m.id];
+      var barCell = p ? bar(p) : '<span class="muted">no forecast for this model</span>';
+      var upCell = p ? upsetCell(p) : "";
+      var sp = (spread(m.picks) * 100).toFixed(1);
+      out += '<div class="umatch' + (isOpen ? " open" : "") + '" data-id="' + esc(m.id) + '">' +
+        '<div class="urow">' +
+          '<span class="dt">' + esc(m.date) + "</span>" +
+          '<span class="umeta"><div class="mt">' + esc(m.home) + ' <span class="vs">v</span> ' +
+            esc(m.away) + '</div><div class="uspread">disagreement ' + sp + " pts</div></span>" +
+          '<span class="barcell">' + barCell + "</span>" +
+          "<span>" + upCell + "</span>" +
+          '<span class="uchev">▸</span>' +
+        "</div>" +
+        '<div class="umodels">' + modelsTable(m, model) + "</div>" +
+        "</div>";
+    });
+    host.innerHTML = out;
+
+    host.querySelectorAll(".urow").forEach(function (row) {
+      row.addEventListener("click", function () {
+        var card = row.parentNode, id = card.getAttribute("data-id");
+        open[id] = !open[id];
+        card.classList.toggle("open", open[id]);
+      });
+    });
+  }
+
+  populateModels();
+  render();
+  modelSel.addEventListener("change", render);
+  sortSel.addEventListener("change", render);
+  if (expandAllBtn) {
+    expandAllBtn.addEventListener("click", function () {
+      allOpen = !allOpen;
+      DATA.matches.forEach(function (m) { open[m.id] = allOpen; });
+      expandAllBtn.textContent = allOpen ? "Collapse all" : "Expand all";
+      render();
+    });
+  }
+})();
+"""
 
 
 def main() -> None:
