@@ -263,6 +263,49 @@ def cmd_record(args: argparse.Namespace) -> None:
     print(f"recorded {added} agent forecast(s) for fixture {forecast.fixture_id}")
 
 
+def cmd_list_fixtures(args: argparse.Namespace) -> None:
+    """Print fixtures kicking off within [as_of, as_of+days) as TSV lines.
+
+    Columns: fixture_id<TAB>Home<TAB>Away<TAB>venue. Used by the daily morning job
+    to decide which matches to send to the live match-analyst subagent. Already-
+    researched fixtures (an agent-mode row in the ledger) are skipped unless --all.
+    """
+
+    from wc_predictor.forecast_live import _team_names, load_silver_data
+
+    _, fixtures, teams = load_silver_data()
+    names = _team_names(teams)
+    start = pd.Timestamp(args.as_of)
+    end = start + pd.Timedelta(days=max(1, args.days))
+
+    done: set[str] = set()
+    if not args.all:
+        try:
+            from wc_predictor.lab.analyst_ledger import load_ledger
+
+            done = {str(r["fixture_id"]) for r in load_ledger() if r.get("mode") == "agent"}
+        except Exception:
+            done = set()
+
+    seen: set[frozenset] = set()
+    for fx in fixtures.itertuples(index=False):
+        hid, aid = str(fx.home_team_id), str(fx.away_team_id)
+        if hid in ("", "nan") or aid in ("", "nan"):
+            continue
+        try:
+            if not (pd.notna(fx.match_date) and start <= pd.Timestamp(fx.match_date) < end):
+                continue
+        except Exception:
+            continue
+        if str(fx.fixture_id) in done:
+            continue
+        key = frozenset((hid, aid))
+        if key in seen:
+            continue
+        seen.add(key)
+        print(f"{fx.fixture_id}\t{names.get(hid, hid)}\t{names.get(aid, aid)}\t{getattr(fx, 'venue', '') or ''}")
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description="Match-analyst CLI bridge")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -272,6 +315,12 @@ def main(argv: list[str] | None = None) -> None:
     dp.add_argument("--as-of", required=True, help="YYYY-MM-DD")
     dp.add_argument("--out", default=None, help="output JSON path")
     dp.set_defaults(func=cmd_dump_packet)
+
+    lf = sub.add_parser("list-fixtures", help="list fixtures to research (TSV)")
+    lf.add_argument("--as-of", required=True, help="YYYY-MM-DD (today)")
+    lf.add_argument("--days", type=int, default=1, help="window size in days (default 1 = today)")
+    lf.add_argument("--all", action="store_true", help="include already-researched fixtures")
+    lf.set_defaults(func=cmd_list_fixtures)
 
     rc = sub.add_parser("record", help="append an agent forecast JSON to the ledger")
     rc.add_argument("--json", required=True, help="path to the agent forecast JSON")
