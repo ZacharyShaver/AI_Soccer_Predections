@@ -6,9 +6,9 @@ on the paired subset and positive means our ledger forecasts scored better.
 
 ## Ledger Coverage
 
-- Ledger predictions: 114
+- Ledger predictions: 135
 - Scored predictions: 0
-- Pending predictions: 114
+- Pending predictions: 135
 
 ## Current Status
 

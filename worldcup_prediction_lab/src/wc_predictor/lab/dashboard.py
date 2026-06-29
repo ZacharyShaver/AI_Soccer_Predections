@@ -373,6 +373,105 @@ def _betting_section() -> str:
     )
 
 
+def _analyst_section() -> str:
+    """Match-Analyst agent section: deterministic baseline picks + forward track record.
+
+    Like the betting section, this is fully guarded: it fits the live model, makes
+    market-anchored forecasts for upcoming fixtures, records them, and shows the
+    agent's own track record (deterministic floor + any live agent-mode calls).
+    Network/market failure degrades to a muted note and never breaks the dashboard.
+    """
+
+    try:
+        from wc_predictor.lab.analyst_cli import run_analyst_live
+
+        as_of = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        forecasts = run_analyst_live(as_of, record=True)
+    except Exception as exc:  # pragma: no cover - live/network dependent
+        return (
+            '<details class="sec"><summary>Match-Analyst agent '
+            '<span class="h2sub">· market-anchored forecasts + self-record</span></summary>'
+            f'<div class="secbody"><p class="muted">Live model unavailable right now '
+            f'({_esc(type(exc).__name__)}). Re-runs on the next refresh.</p></div></details>'
+        )
+
+    def _track_record_block() -> str:
+        try:
+            from wc_predictor.lab.analyst_ledger import (
+                load_ledger,
+                resolve_forecasts,
+                track_record,
+            )
+
+            results_df = load_results()
+            results = {
+                str(r["match_id"]): (int(r["home_score"]), int(r["away_score"]))
+                for _, r in results_df.iterrows()
+            } if not results_df.empty else {}
+            tr = track_record(resolve_forecasts(load_ledger(), results))
+        except Exception:
+            return ""
+        if not any(t["n"] or t["pending"] for t in tr.values()):
+            return ""
+        rows = ""
+        for mode, t in sorted(tr.items()):
+            acc = _pct(t["accuracy"]) if t["accuracy"] is not None else "—"
+            rps = _fmt(t["mean_rps"]) if t["mean_rps"] is not None else "—"
+            vm = (f'{t["vs_market"]:+.4f}' if t["vs_market"] is not None else "—")
+            vm_cls = "" if t["vs_market"] is None else (" hit" if t["vs_market"] < 0 else " miss")
+            rows += (
+                f'<tr><td class="vname">{_esc(mode)}</td><td class="num">{t["n"]}</td>'
+                f'<td class="num">{acc}</td><td class="num">{rps}</td>'
+                f'<td class="num{vm_cls}">{vm}</td><td class="num">{t["pending"]}</td></tr>'
+            )
+        return (
+            '<h3 class="subh">📒 Track record <span class="h2sub">· resolved forecasts, RPS lower = better</span></h3>'
+            '<table class="lb"><thead><tr><th>mode</th><th class="num">resolved</th>'
+            '<th class="num">accuracy</th><th class="num">RPS</th>'
+            '<th class="num">vs market</th><th class="num">pending</th></tr></thead>'
+            f'<tbody>{rows}</tbody></table>'
+            '<div class="note">Backtest floor (964 matches): analyst RPS 0.1497 beats Elo 0.1574 '
+            '(CI excl 0) and ties the market 0.1496 — market-anchored by design. <b>vs market</b> '
+            'negative means the analyst beat the market on resolved games; the live <b>agent</b> '
+            'mode (news/lineups) is the only path to a real edge, measured here forward.</div>'
+        )
+
+    def _pick_row(f) -> str:
+        return (
+            f'<tr><td class="vname">{_esc(f.home_team_name)} v {_esc(f.away_team_name)}</td>'
+            f'<td class="dt">{_esc(f.match_date)}</td>'
+            f'<td>{_esc(f.pick_team)}</td>'
+            f'<td class="num" data-sort="{f.p_home}">{_pct(f.p_home)}</td>'
+            f'<td class="num" data-sort="{f.p_draw}">{_pct(f.p_draw)}</td>'
+            f'<td class="num" data-sort="{f.p_away}">{_pct(f.p_away)}</td>'
+            f'<td class="num strong" data-sort="{f.confidence}">{_pct(f.confidence)}</td>'
+            f'<td>{_esc(f.mode)}</td></tr>'
+        )
+
+    picks_block = (
+        '<table class="lb sortable"><thead><tr><th>match</th><th>date</th><th>pick</th>'
+        '<th class="num">H</th><th class="num">D</th><th class="num">A</th>'
+        '<th class="num">conf</th><th>mode</th></tr></thead>'
+        f'<tbody>{"".join(_pick_row(f) for f in forecasts)}</tbody></table>'
+        if forecasts
+        else '<p class="muted">No upcoming fixtures with a model forecast right now.</p>'
+    )
+
+    return (
+        '<details class="sec"><summary>Match-Analyst agent '
+        f'<span class="h2sub">· {len(forecasts)} upcoming forecast(s) · click a column to sort</span></summary>'
+        '<div class="secbody">'
+        '<div class="note">A market-anchored agent: it starts from the de-vigged market '
+        '(which out-predicts our Elo) and deviates only on a tracked signal. The <b>deterministic</b> '
+        'rows are the backtestable floor; the live <b>agent</b> mode (a Claude subagent that reads '
+        'news/lineups/odds) is logged here as it makes calls.</div>'
+        f"{_track_record_block()}"
+        '<h3 class="subh">🔮 Upcoming picks <span class="h2sub">· market-anchored H/D/A + chosen winner</span></h3>'
+        f"{picks_block}"
+        "</div></details>"
+    )
+
+
 def _write_dashboard_outputs(
     html_doc: str,
     *,
@@ -639,6 +738,7 @@ def build_dashboard(
         n_upcoming=len(upcoming_payload),
         upcoming_json=upcoming_json,
         betting_section=_betting_section(),
+        analyst_section=_analyst_section(),
         script=_SCRIPT,
     )
 
@@ -818,6 +918,8 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 </div></details>
 
 {betting_section}
+
+{analyst_section}
 
 {accuracy_section}
 

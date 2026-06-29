@@ -119,6 +119,33 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-06-29 — Claude — Match-Analyst agent built (Zach-directed, NEW lane, NOT Codex's fusion)
+New subsystem, outside Codex's T2 fusion lane (no overlap). A two-mode match forecaster
+that emits H/D/A + a chosen winner and keeps its own live record. **Committed to master.**
+- **Why two modes:** live news/social/odds can't be backtested (no historical archive), so
+  the agent is split into a **backtestable deterministic core** and a **live Claude subagent**.
+- **Core (leak-free, `lab/analyst.py`):** `build_packet` assembles by-date signals (Elo +
+  de-vigged market + recent form + altitude + own calibration temp); `deterministic_analyst`
+  is **market-anchored** — starts at the market (proven to out-predict our Elo), deviates only
+  on a tracked signal, capped ±60 Elo; falls back to the Elo anchor with no market.
+- **Self-history (`lab/analyst_ledger.py`):** idempotent record by fixture_id, resolve + RPS
+  vs frozen Elo/market baselines, `track_record` by mode, leak-free `calibration_summary`
+  (temperature fit on the agent's OWN resolved forecasts, fed back into future calls). Ledger
+  at `runs/analyst/ledger.jsonl` (tracked, like the betting ledger).
+- **Bridge + live runner (`lab/analyst_cli.py`):** `dump-packet` / `record` for the subagent;
+  `run_analyst_live` used by the dashboard. **Subagent:** `.claude/agents/match-analyst.md`
+  (Bash/WebSearch/WebFetch/Read/Write) — reads the packet, researches lineups/injuries/odds,
+  deviates from the anchor only on cited findings, records an `agent`-mode forecast.
+- **Dashboard:** new `_analyst_section()` (upcoming market-anchored picks + forward track
+  record). Betting section untouched.
+- **Honest backtest floor (964 market join, `runs/analyst/backtest.py`):** analyst RPS
+  **0.1497** beats Elo 0.1574 (paired CI excl 0) and **ties** market 0.1496 (CI spans 0).
+  Market-anchored → won't beat the market quantitatively, as expected; the live news mode is
+  the only real-edge path, measured forward. **11 new tests pass; full suite 223 pass** (the 2
+  `test_eval_harness` n=72→73 failures are pre-existing martj42 sample drift, the eval lane's).
+- Tore down my own `claude/accuracy-pick` worktree + branch (keepers already on master). Codex
+  worktrees/branches left untouched.
+
 ### 2026-06-28 — Claude — Zach-directed "edge hunt" science session (worktree, NOT promoted)
 Exploratory falsification session with Zach in isolated worktree `claude/accuracy-pick`
 (`.worktrees/claude-accuracy-pick`, scripts under `worldcup_prediction_lab/runs/accuracy_pick/`
