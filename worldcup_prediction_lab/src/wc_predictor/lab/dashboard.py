@@ -472,6 +472,66 @@ def _analyst_section() -> str:
     )
 
 
+def _standings_section() -> str:
+    """Tournament standings: Monte-Carlo championship odds, read from the JSON artifact.
+
+    The sim is too slow to run inline, so this only READS the daily-refreshed JSON
+    (lab.championship.refresh writes it). Degrades to a muted note if it's missing.
+    """
+
+    try:
+        from wc_predictor.lab.championship import load
+
+        data = load()
+    except Exception as exc:  # pragma: no cover
+        return (
+            '<details class="sec"><summary>Tournament standings '
+            '<span class="h2sub">· championship odds</span></summary>'
+            f'<div class="secbody"><p class="muted">Standings unavailable ({_esc(type(exc).__name__)}).</p></div></details>'
+        )
+    if not data or not data.get("teams"):
+        return (
+            '<details class="sec"><summary>Tournament standings '
+            '<span class="h2sub">· championship odds</span></summary>'
+            '<div class="secbody"><p class="muted">No simulation yet. Run '
+            '<code>uv run python -m wc_predictor.lab.championship --as-of YYYY-MM-DD</code> '
+            '(the daily job does this automatically).</p></div></details>'
+        )
+
+    teams = data["teams"]
+    rows = ""
+    for i, t in enumerate(teams, start=1):
+        rows += (
+            f'<tr><td class="num">{i}</td>'
+            f'<td class="vname">{_esc(t["team"])}</td>'
+            f'<td>{_esc(t["group"])}</td>'
+            f'<td class="num" data-sort="{t["elo"]}">{t["elo"]:.0f}</td>'
+            f'<td class="num" data-sort="{t["p_r16"]}">{_pct(t["p_r16"])}</td>'
+            f'<td class="num" data-sort="{t["p_qf"]}">{_pct(t["p_qf"])}</td>'
+            f'<td class="num" data-sort="{t["p_sf"]}">{_pct(t["p_sf"])}</td>'
+            f'<td class="num" data-sort="{t["p_final"]}">{_pct(t["p_final"])}</td>'
+            f'<td class="num strong" data-sort="{t["p_win"]}">{_pct(t["p_win"])}</td></tr>'
+        )
+    table = (
+        '<table class="lb sortable"><thead><tr><th>#</th><th>team</th><th>grp</th>'
+        '<th class="num">Elo</th><th class="num">R16</th><th class="num">QF</th>'
+        '<th class="num">SF</th><th class="num">Final</th><th class="num">Champion</th></tr></thead>'
+        f'<tbody>{rows}</tbody></table>'
+    )
+    leader = teams[0]
+    return (
+        '<details class="sec"><summary>Tournament standings '
+        f'<span class="h2sub">· championship odds · {_esc(leader["team"])} favourite {_pct(leader["p_win"])} · click a column to sort</span></summary>'
+        '<div class="secbody">'
+        f'<div class="note">Monte-Carlo simulation ({data.get("n_sims", 0):,} runs) from our '
+        f'Elo bar, as of {_esc(data.get("as_of", "?"))}. Played results held fixed; the rest '
+        'simulated. <b>Elo-only</b> — no injuries, lineups, or market. Tournament variance is '
+        'huge, so even the favourite rarely clears ~25%. Probabilities nest: Champion ≤ Final ≤ … ≤ R16.</div>'
+        f"{table}"
+        "</div></details>"
+    )
+
+
 def _write_dashboard_outputs(
     html_doc: str,
     *,
@@ -739,6 +799,7 @@ def build_dashboard(
         upcoming_json=upcoming_json,
         betting_section=_betting_section(),
         analyst_section=_analyst_section(),
+        standings_section=_standings_section(),
         script=_SCRIPT,
     )
 
@@ -916,6 +977,8 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 <noscript><p class="muted">Enable JavaScript to browse per-model forecasts.</p></noscript>
 <div class="note">Each row shows the selected model's H/D/A. <b>Consensus</b> averages every model. <b>Model disagreement</b> ranks matches by how much the models differ on the home-win probability — the fixtures worth a closer look. Expand a match to see every model side by side.</div>
 </div></details>
+
+{standings_section}
 
 {betting_section}
 
