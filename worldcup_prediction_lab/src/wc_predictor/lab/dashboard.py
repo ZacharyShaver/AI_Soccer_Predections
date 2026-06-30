@@ -532,6 +532,40 @@ def _standings_section() -> str:
     )
 
 
+def _write_live_json(
+    generated: str,
+    sections: dict[str, str],
+    lb_rows: str,
+    *,
+    out_path: str | Path = OUT_PATH,
+    pages_path: str | Path = PAGES_OUT_PATH,
+    publish_pages: bool = True,
+) -> None:
+    """Write the dynamic dashboard data as JSON next to each HTML output.
+
+    The page fetches ``data/live.json`` on load and on a timer and swaps these
+    fragments in, so an open tab (or a browser-cached page) shows the latest pushed
+    data without a full HTML rebuild. Stored beside index.html so the fetch is
+    same-origin (no CORS). ``generated`` is the freshness key the JS compares.
+    """
+
+    payload = json.dumps(
+        {
+            "generated": generated,
+            "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "sections": sections,
+            "lb_rows": lb_rows,
+        },
+        separators=(",", ":"),
+    )
+    targets = [Path(out_path).parent / "data" / "live.json"]
+    if publish_pages:
+        targets.append(Path(pages_path).parent / "data" / "live.json")
+    for target in targets:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(payload, encoding="utf-8")
+
+
 def _write_dashboard_outputs(
     html_doc: str,
     *,
@@ -783,6 +817,13 @@ def build_dashboard(
         separators=(",", ":"),
     )
 
+    # Compute the dynamic sections once: they go into the baked HTML AND into a
+    # JSON artifact the page re-fetches on load / on a timer ("pull" live updates).
+    lb_rows_html = "".join(lb_rows)
+    betting_html = _betting_section()
+    analyst_html = _analyst_section()
+    standings_html = _standings_section()
+
     html_doc = _TEMPLATE.format(
         generated=generated,
         days=len(days),
@@ -792,15 +833,24 @@ def build_dashboard(
         leader=(_esc(leader.variant_id) if leader else "—"),
         leader_rps=(_fmt(leader.mean_rps) if leader else "—"),
         accuracy_section=accuracy_section,
-        lb_rows="".join(lb_rows),
+        lb_rows=lb_rows_html,
         backtest_section=backtest_section,
         result_cards=("".join(result_cards) or '<p class="muted">No matches scored yet.</p>'),
         n_upcoming=len(upcoming_payload),
         upcoming_json=upcoming_json,
-        betting_section=_betting_section(),
-        analyst_section=_analyst_section(),
-        standings_section=_standings_section(),
+        betting_section=betting_html,
+        analyst_section=analyst_html,
+        standings_section=standings_html,
         script=_SCRIPT,
+    )
+
+    _write_live_json(
+        generated,
+        {"sec-standings": standings_html, "sec-betting": betting_html, "sec-analyst": analyst_html},
+        lb_rows_html,
+        out_path=out_path,
+        pages_path=pages_path,
+        publish_pages=publish_pages,
     )
 
     return _write_dashboard_outputs(
@@ -900,6 +950,11 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 .sortable th:hover{{color:var(--ink)}}
 .sortable th.sorted-asc::after{{content:" \\25B2";color:var(--mut);font-size:9px}}
 .sortable th.sorted-desc::after{{content:" \\25BC";color:var(--mut);font-size:9px}}
+/* live-pull badge + refresh flash */
+.livebadge{{display:inline-block;margin-left:8px;padding:1px 8px;border:1px solid var(--line);border-radius:10px;font-size:11px;color:var(--mut);white-space:nowrap}}
+.livebadge.on{{color:var(--pos);border-color:var(--pos)}}
+.live.flash{{animation:liveflash 1.2s ease-out}}
+@keyframes liveflash{{from{{background:rgba(34,197,94,.12)}}to{{background:transparent}}}}
 /* upcoming by-model */
 .umatch{{border:1px solid var(--line);border-radius:9px;margin-bottom:8px;background:#0b0f14}}
 .urow{{display:grid;grid-template-columns:84px 1fr 210px 92px 24px;gap:12px;align-items:center;padding:10px 12px;cursor:pointer}}
@@ -949,7 +1004,8 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 }}
 </style></head><body><div class="wrap">
 <h1>⚽ World Cup Model-Research Lab</h1>
-<div class="sub">Claude-orchestrates-Codex daily bake-off · generated {generated}</div>
+<div class="sub">Claude-orchestrates-Codex daily bake-off · generated {generated}
+<span id="liveBadge" class="livebadge" title="The page re-fetches data/live.json on load and every 5 minutes">● live · data as of {generated}</span></div>
 
 <div class="cards">
 <div class="stat"><div class="v">{days}</div><div class="k">Days run</div></div>
@@ -978,11 +1034,11 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 <div class="note">Each row shows the selected model's H/D/A. <b>Consensus</b> averages every model. <b>Model disagreement</b> ranks matches by how much the models differ on the home-win probability — the fixtures worth a closer look. Expand a match to see every model side by side.</div>
 </div></details>
 
-{standings_section}
+<div id="sec-standings" class="live">{standings_section}</div>
 
-{betting_section}
+<div id="sec-betting" class="live">{betting_section}</div>
 
-{analyst_section}
+<div id="sec-analyst" class="live">{analyst_section}</div>
 
 {accuracy_section}
 
@@ -990,7 +1046,7 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 <div class="secbody">
 <table class="lb sortable"><thead><tr><th>#</th><th>variant</th><th class="num">n</th><th class="num">RPS</th>
 <th class="num">log loss</th><th class="num">Brier</th><th class="num">acc</th><th class="num">dec.acc</th><th>edge vs baseline</th></tr></thead>
-<tbody>{lb_rows}</tbody></table>
+<tbody id="lb-body">{lb_rows}</tbody></table>
 <div class="note">Lower RPS / log loss / Brier is better. Edge = baseline RPS − variant RPS (green = beats baseline). Small n — read as direction, not verdict.</div>
 </div></details>
 
@@ -1008,6 +1064,7 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 </div>
 <script>
 window.__UPCOMING__ = {upcoming_json};
+window.__GENERATED__ = "{generated}";
 </script>
 <script>
 {script}
@@ -1052,6 +1109,42 @@ _SCRIPT = r"""
     });
   }
   document.querySelectorAll("table.sortable").forEach(makeSortable);
+
+  // ---- live "pull": re-fetch data/live.json on load + every 5 min, swap fragments ----
+  function applyLive(data) {
+    if (!data || !data.generated) return;
+    var badge = document.getElementById("liveBadge");
+    var fresh = data.generated !== window.__GENERATED__;
+    if (fresh) {
+      if (data.sections) {
+        Object.keys(data.sections).forEach(function (id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          el.innerHTML = data.sections[id];
+          el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+          // section innerHTML (incl. thead) was replaced -> rebind sort on its tables
+          el.querySelectorAll("table.sortable").forEach(makeSortable);
+        });
+      }
+      if (data.lb_rows) {
+        var lb = document.getElementById("lb-body");
+        if (lb) lb.innerHTML = data.lb_rows;  // thead untouched -> existing sort handlers still apply
+      }
+      window.__GENERATED__ = data.generated;
+    }
+    if (badge) {
+      badge.textContent = "● live · " + (fresh ? "updated " : "data as of ") + data.generated;
+      badge.classList.add("on");
+    }
+  }
+  function pullLive() {
+    fetch("./data/live.json?ts=" + Date.now(), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (d) applyLive(d); })
+      .catch(function () {});
+  }
+  pullLive();
+  setInterval(pullLive, 300000);
 
   // ---- interactive by-model upcoming forecasts ----
   var DATA = window.__UPCOMING__ || { matches: [], models: [], default: "__consensus__" };
