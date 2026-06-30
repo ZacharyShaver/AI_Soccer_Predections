@@ -119,6 +119,24 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-06-29 — Claude — Tournament-standing session: LANE SPLIT (Claude=standings, Codex=variant)
+Zach asked for two knockout-stage features (group_incentive is now a no-op in the bracket).
+**Lane split:** Claude owns the **championship-odds standings** (dashboard); Codex owns the
+**`tournament_form` knockout-context variant** (finalize + test + leak-free backtest + verdict).
+- **Claude's lane (in progress):** `lab/championship.py` (`refresh`/`load` — runs the P4 Monte
+  Carlo via `simulate.run_championship_odds.run`, writes `runs/standings/championship_odds.json`;
+  ~3 min at 20k sims so it's decoupled from the dashboard build) + dashboard `_standings_section()`
+  (reads the JSON, renders a sortable R16→Champion table). Wiring the daily job to regenerate it.
+- **Codex's lane (DISPATCHED below):** Claude drafted the variant at
+  `lab/variants/tournament_form.py` (mean residual of actual−Elo-expectation over each team's 2026
+  WC matches → bounded ±60 Elo home-adv delta; opponent-adjusted; static-at-fit like recent_form).
+  Codex: review for leakage/bugs, write `tests/lab/test_tournament_form.py`, backtest via
+  `eval_harness` on history/wc72/market964, record ONE `runs/fusion/codex__tournament_form__*.json`,
+  state pass/fail vs the recalibrated bars (hist 0.1744 / wc72 0.1606 / market964 0.1574). Promotion
+  bar: beat recalibrated on history with a paired CI excluding 0 AND no wc72 regression. **Null
+  result is fine** (model's wrung out — this is honest science, not a forced pass). Codex does NOT
+  run git; logs to the Codex→Claude log and STOPS. Claude reviews + commits.
+
 ### 2026-06-29 — Claude — Match-Analyst agent built (Zach-directed, NEW lane, NOT Codex's fusion)
 New subsystem, outside Codex's T2 fusion lane (no overlap). A two-mode match forecaster
 that emits H/D/A + a chosen winner and keeps its own live record. **Committed to master.**
@@ -748,6 +766,13 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-06-30 - Codex - tournament_form finalize + honest backtest
+- What I did: Reviewed Claude's `tournament_form` draft for leakage/bugs and left production logic unchanged. The implementation matches the accepted static-at-fit lab pattern: residuals are computed only from the training frame passed to `fit()`, then applied as a bounded home-advantage delta at prediction time. Added focused tests for registry discovery, direct `_tform` home-advantage behavior, cap behavior, and a data-gated real-silver fit/predict smoke. I did not run git.
+- Files changed / written: NEW `worldcup_prediction_lab/tests/lab/test_tournament_form.py`; NEW ledger result `worldcup_prediction_lab/runs/fusion/codex__tournament_form__2026-06-30T00-11-19Z.json`; EDIT `co-op.md` for this log entry only. `worldcup_prediction_lab/src/wc_predictor/lab/variants/tournament_form.py` was reviewed but not changed.
+- Evidence: Focused tests passed with `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache; uv run --extra dev python -m pytest tests/lab/test_tournament_form.py -q` -> 3 passed. Leak-free eval/record command used `registry.build("tournament_form", ...)` through `lab/eval_harness`: history `n=15890`, RPS `0.1761964787`; current WC sample `n=73` (function is still named `score_on_wc60`, but live data now has 73 played rows), RPS `0.1671361234`; market964 `n=964`, RPS `0.1588629806` with market RPS `0.1495807803`. Manual history paired CI vs recalibrated baseline: tournament_form minus recalibrated mean diff `+0.0017918500`, 95% CI `[+0.0013420721, +0.0021851652]`, excludes 0; positive means tournament_form is worse.
+- Result: done. Verdict: DO NOT PROMOTE. It fails the bar on all relevant checks: worse than recalibrated on history (bar `0.1744`), significantly worse by paired CI, regresses the current WC sample vs bar `0.1606`, and is worse on market964 vs bar `0.1574`. Note: on history and market964 the existing harness uses online `_update_from_match` paths rather than `fit()`, so this static-at-fit feature is inactive there; changing that would be a behavior redesign, not a bug fix in this lane.
+- Open questions: None. If Claude wants a future version that is active in online history/market scoring, it should be a new explicit design for online tournament residual updates with its own leakage review, not a gratuitous patch to this static-at-fit variant.
 
 ### 2026-06-27 - Codex - T2 fusion prep (isolated collaboration lane)
 - What I did: Zach/dev says **COLLABORATE**. Codex created an isolated worktree at `C:\Users\ztsha\wc_worktrees\codex-fusion-prep` on branch `codex/fusion-prep` and is taking the non-conflicting T2 fusion lane. I am not editing Claude's active `master` experiment scripts, dashboard files, tuning passes, or market-as-base work.
