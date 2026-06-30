@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-06-29T13:02:53Z`
+Generated: `2026-06-30T00:31:38Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 272
-- Registered variants: 20
+- Registered variants: 21
 
 | Rank | Variant | n | RPS | log loss | Brier | Overall acc | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -29,6 +29,7 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 18 | `rest_days` | 33 | 0.1500 | 0.8008 | 0.4554 | 0.636 | 0.808 | +0.0000 |
 | 19 | `accuracy_pick_tuned` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 | 20 | `ml_elo_correction` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
+| 21 | `tournament_form` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -72,6 +73,8 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: Static pick-tuning knobs: small H/D/A offsets, high-draw close-match override, and already-safe favorite override toward the other side.
 - `ml_elo_correction` — Trained softmax correction layer blended with recalibrated Elo.  
   feature: Train on pre-match recalibrated Elo probabilities, rating spread, draw mass, neutral/host context, and tournament class; blend learned probabilities with Elo.
+- `tournament_form` — Elo adjusted for over/under-performance vs expectation in this World Cup.  
+  feature: Mean residual (actual result - Elo win-expectation) over each team's 2026 WC matches; hot teams get a small Elo bump, cold teams a small dock. Opponent-adjusted.
 
 ## Caveats
 
