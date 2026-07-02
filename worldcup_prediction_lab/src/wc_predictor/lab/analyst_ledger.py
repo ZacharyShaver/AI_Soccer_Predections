@@ -61,15 +61,19 @@ def record_forecast(
     """
 
     path = Path(ledger_path)
-    seen = {str(r["fixture_id"]) for r in load_ledger(path)}
+    # Idempotent per (fixture_id, mode): the deterministic floor and the live agent
+    # each record their own row for a fixture without one blocking the other, while
+    # re-running the same mode stays a no-op.
+    seen = {(str(r["fixture_id"]), str(r.get("mode", ""))) for r in load_ledger(path)}
     path.parent.mkdir(parents=True, exist_ok=True)
     added = 0
     with path.open("a", encoding="utf-8") as fh:
         for f in forecasts:
             fid = str(f.fixture_id)
-            if fid in seen:
+            key = (fid, str(f.mode))
+            if key in seen:
                 continue
-            seen.add(fid)
+            seen.add(key)
             rec = {"snapshot_date": as_of, **{k: getattr(f, k) for k in _PERSIST_FIELDS}}
             if elo_probs and fid in elo_probs:
                 rec["elo_probs"] = list(elo_probs[fid])
