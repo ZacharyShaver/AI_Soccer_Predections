@@ -119,6 +119,47 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-02 — Claude — dc_squad_fusion: stacked champion PROMOTED (squad leg inside the fusion)
+Stacked the day's two promotions: `dc_elo_fusion`'s Elo leg swapped for `squad_value` so
+the pool inherits the Transfermarkt squad signal the goal-based DC leg can't see. **Cleanest
+possible test — champion's FROZEN weight 0.7 kept, only the leg swapped (zero selection
+freedom): beats dc_elo_fusion on the full 15,899 history walk, RPS 0.17219 vs 0.17230,
+paired CI [-0.00014, -0.00008] EXCLUDES 0.** OOF-weight confirmation agrees (CI [-0.00016,
+-0.00002]); full-argmin weight == the frozen 0.7; **market964 also significant** (0.15547
+vs 0.15563, CI [-0.00026, -0.00006]) — still behind the market 0.14958 like everything.
+Implementation: `DcEloFusionModel` generalized to take `components`; new variant
+`dc_squad_fusion` (`lab/variants/dc_squad_fusion.py` + 4 tests; dc_elo_fusion tests
+unaffected). Ledger `claude__dc-squad-fusion`; scratch `runs/dc_squad_fusion_scratch/`
+(uncommitted). **Champion chain now: elo_recalibrated 0.17438 → dixon_coles_tuned 0.17262
+→ dc_elo_fusion 0.17230 → dc_squad_fusion 0.17219** (cumulative -1.25% vs recalibrated;
+market gap shrunk from 7.8% to ~5.9% on the 964). Next rungs (Claude): pi-ratings, BTD.
+
+### 2026-07-02 — Claude — Codex scorecard-join lane REVIEWED + INTEGRATED (lane 1 done)
+Codex delivered the lane cleanly (red-green, evidence logged in the worktree's
+CODEX_TASK.md): `evaluation/scorecard.py` now augments martj42-keyed results with
+`fixture_keyed_results` rows (lazy import, duplicate match_ids dropped, graceful fallback
+when the fixtures parquet is absent) + a regression test that even exercises reversed
+home/away orientation. Verified on master: 27 evaluation tests pass, scorecard reruns
+**n_scored 0 → 127 of 147** (20 pending). First real headline for the live ledger: **RPS
+0.1490 [0.1280, 0.1713]** — at the market's historical bar (0.1496). Committed.
+**Known follow-ups (not this lane):** (a) scored rows count every as_of partition per
+fixture — a most-informed-per-match dedupe would be cleaner; (b) the market-comparison
+pairing still joins by raw id → paired_market_n=0; same bridge could fix it. Worktree
+`scorecard-join` kept until Zach confirms, then torn down. **Lane 2 (eval-harness pinned-n
+tests) still queued for Codex.**
+
+### 2026-07-02 — Claude — DISPATCHED Codex: scorecard-join fix (worktree lane, Zach-directed)
+Zach asked to hand the simple well-specified tasks to Codex in separate worktrees. Lane 1
+dispatched: **fix the P7 scorecard 0-of-147 join bug** in worktree
+`C:\Users\ztsha\wc_worktrees\scorecard-join` (branch `exp/2026-07-02/scorecard-join`), task
+spec + evidence log at `CODEX_TASK.md` in that worktree. Fix = augment `evaluation/
+scorecard.py` results with `lab/leaderboard.fixture_keyed_results` rows (verified today:
+36/41 forecasted fixtures resolve through the bridge) + regression test. Codex does NOT run
+git; Claude reviews, merges, commits. **Queued lane 2 (after lane 1 verifies):** re-pin the
+2 stale `tests/lab/test_eval_harness.py` pinned-n bar tests by explicit date cutoff so live
+martj42 growth stops breaking them (n=72 assertions now see 76). Claude keeps the
+harder lanes (squad-value×fusion stacking, pi-ratings, shootout realism).
+
 ### 2026-07-02 — Claude — Codex dashboard-reorg lane REVIEWED + COMMITTED
 Codex's model-compare-tab lane (plan `docs/superpowers/plans/2026-07-02-research-lab-model-
 compare-tab.md`, dispatched by Zach, ran parallel to Claude's squad-value lane) reviewed and

@@ -1,12 +1,15 @@
+import json
+
 import pandas as pd
 import pytest
 
+from wc_predictor.data.ingest_international_results import _write_parquet
 from wc_predictor.evaluation.metrics import (
     brier_score,
     home_draw_away_log_loss,
     ranked_probability_score,
 )
-from wc_predictor.evaluation.scorecard import build_scorecard
+from wc_predictor.evaluation.scorecard import build_scorecard, run
 
 
 def _prediction(
@@ -178,3 +181,75 @@ def test_build_scorecard_is_deterministic_for_identical_inputs():
     second = build_scorecard(predictions, _results(), market_df=market, ci_floor=2)
 
     assert first == second
+
+
+def test_run_scores_fixture_keyed_predictions_with_martj42_results(tmp_path):
+    predictions_dir = tmp_path / "predictions"
+    ledger_path = predictions_dir / "date=2026-06-21" / "predictions.jsonl"
+    ledger_path.parent.mkdir(parents=True)
+    predictions = [
+        _prediction("p-fixture-1", "fixture-1", prob_home=0.70, prob_draw=0.20, prob_away=0.10),
+        _prediction("p-fixture-2", "fixture-2", prob_home=0.20, prob_draw=0.25, prob_away=0.55),
+    ]
+    ledger_path.write_text(
+        "".join(f"{json.dumps(row, sort_keys=True)}\n" for row in predictions),
+        encoding="utf-8",
+    )
+
+    matches = pd.DataFrame(
+        [
+            {
+                "match_id": "martj42-1",
+                "date": pd.Timestamp("2026-06-22"),
+                "home_team_id": "ARG",
+                "away_team_id": "CAN",
+                "home_score": 3,
+                "away_score": 1,
+            },
+            {
+                "match_id": "martj42-2",
+                "date": pd.Timestamp("2026-06-23"),
+                "home_team_id": "USA",
+                "away_team_id": "MEX",
+                "home_score": 0,
+                "away_score": 2,
+            },
+        ]
+    )
+    fixtures = pd.DataFrame(
+        [
+            {
+                "fixture_id": "fixture-1",
+                "match_date": pd.Timestamp("2026-06-22"),
+                "home_team_id": "CAN",
+                "away_team_id": "ARG",
+            },
+            {
+                "fixture_id": "fixture-2",
+                "match_date": pd.Timestamp("2026-06-23"),
+                "home_team_id": "USA",
+                "away_team_id": "MEX",
+            },
+        ]
+    )
+    matches_path = tmp_path / "martj42_matches.parquet"
+    fixtures_path = tmp_path / "openfootball_worldcup_2026_fixtures.parquet"
+    _write_parquet(matches, matches_path)
+    _write_parquet(fixtures, fixtures_path)
+
+    old_join = build_scorecard(
+        predictions,
+        matches.loc[:, ["match_id", "home_score", "away_score"]],
+    )
+    assert old_join.aggregate["n_scored"] == 0
+
+    report = run(
+        predictions_dir=predictions_dir,
+        matches_path=matches_path,
+        fixtures_path=fixtures_path,
+        market_odds_path=tmp_path / "missing_market.parquet",
+        report_path=tmp_path / "forecast_scorecard.md",
+    )
+
+    assert report.aggregate["n_scored"] == 2
+    assert report.aggregate["n_pending"] == 0

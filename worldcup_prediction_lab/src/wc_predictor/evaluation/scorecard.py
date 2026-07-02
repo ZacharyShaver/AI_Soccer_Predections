@@ -26,6 +26,7 @@ BOOTSTRAP_N = 1000
 BOOTSTRAP_SEED = 0
 MATCHES_FILE = "martj42_matches.parquet"
 MARKET_ODDS_FILE = "footballdata_market_odds.parquet"
+FIXTURES_FILE = "openfootball_worldcup_2026_fixtures.parquet"
 
 
 @dataclass(frozen=True)
@@ -491,6 +492,7 @@ def run(
     *,
     predictions_dir: str | Path = settings.RUNS_DIR / "predictions",
     matches_path: str | Path = settings.SILVER_DIR / MATCHES_FILE,
+    fixtures_path: str | Path = settings.SILVER_DIR / FIXTURES_FILE,
     market_odds_path: str | Path = settings.SILVER_DIR / MARKET_ODDS_FILE,
     report_path: str | Path = settings.REPORTS_DIR / "backtests" / "forecast_scorecard.md",
     ci_floor: int = CI_FLOOR,
@@ -501,6 +503,17 @@ def run(
         if Path(matches_path).exists()
         else pd.DataFrame(columns=["match_id", "home_score", "away_score"])
     )
+    if Path(fixtures_path).exists() and not matches.empty:
+        from wc_predictor.lab.leaderboard import fixture_keyed_results
+
+        fixtures = _read_parquet(fixtures_path)
+        fixture_results = fixture_keyed_results(matches, fixtures)
+        if not fixture_results.empty:
+            matches = (
+                pd.concat([matches, fixture_results], ignore_index=True, sort=False)
+                .drop_duplicates(subset=["match_id"], keep="first")
+                .reset_index(drop=True)
+            )
     market = _read_parquet(market_odds_path) if Path(market_odds_path).exists() else None
     report = build_scorecard(predictions, matches, market_df=market, ci_floor=ci_floor)
     write_scorecard_report(report, report_path)

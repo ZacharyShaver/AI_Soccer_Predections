@@ -7,12 +7,8 @@ on the paired subset and positive means our ledger forecasts scored better.
 ## Ledger Coverage
 
 - Ledger predictions: 147
-- Scored predictions: 0
-- Pending predictions: 147
-
-## Current Status
-
-- No ledger forecasts have resolved yet.
+- Scored predictions: 127
+- Pending predictions: 20
 
 ## Our Running Metrics
 
@@ -20,23 +16,31 @@ Bootstrap 95% CIs are reported once the metric has at least 30 finite observatio
 
 | Metric | n | Mean |
 | --- | ---: | --- |
-| RPS | 0 | n/a |
-| H/D/A log loss | 0 | n/a |
-| Brier | 0 | n/a |
+| RPS | 127 | 0.1490 [0.1280, 0.1713] |
+| H/D/A log loss | 127 | 0.8369 [0.7539, 0.9290] |
+| Brier | 127 | 0.4794 [0.4208, 0.5441] |
 
 ## Market Comparison
 
-No scored ledger forecasts are available for market comparison.
+No overlapping market data for scored ledger forecasts.
 
 - Paired scored matches: 0
 
 ## Notable Hits
 
-- None yet.
+- 54a091654a78: predicted away, actual away, RPS 0.0133, log loss 0.1689
+- 54a091654a78: predicted away, actual away, RPS 0.0133, log loss 0.1689
+- 54a091654a78: predicted away, actual away, RPS 0.0133, log loss 0.1689
+- 54a091654a78: predicted away, actual away, RPS 0.0133, log loss 0.1689
+- 54a091654a78: predicted away, actual away, RPS 0.0154, log loss 0.1819
 
 ## Notable Misses
 
-- None yet.
+- 3c751910c0af: predicted away, actual home, RPS 0.5498, log loss 1.7307
+- 3c751910c0af: predicted away, actual home, RPS 0.5498, log loss 1.7307
+- 3c751910c0af: predicted away, actual home, RPS 0.5498, log loss 1.7307
+- dc7a375312a4: predicted away, actual home, RPS 0.3990, log loss 1.3129
+- dc7a375312a4: predicted away, actual home, RPS 0.3990, log loss 1.3129
 
 ## Caveats
 
