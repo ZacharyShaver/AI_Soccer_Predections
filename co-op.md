@@ -119,6 +119,26 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-02 — Claude — Squad value (Transfermarkt): FIRST non-scoreline signal to clear the bar — PROMOTED
+Third lane of Zach's ordered list ("new strength data" — the edge-hunt frontier). Source:
+**transfermarkt-datasets** (CC0-1.0, weekly refresh, hosted DuckDB): 656k dated player
+valuations 2004→2026-06. New ingestion `data/ingest_transfermarkt.py` (+5 offline tests)
+builds a MONTHLY per-team squad-value silver (top-15 citizen values, 730-day staleness so
+retired players expire): 41,215 rows / **184 teams** after adding 14 `transfermarkt` alias
+rows (South Korea, Czechia, Türkiye, Ivory Coast, Bosnia, The Gambia… were silently
+unmatched). DQ report committed; silver gitignored as usual. **Variant `squad_value`**
+(recal Elo + `clip(10·ln(V_h/V_a), ±80)`, strictly-before-match monthly lookup, ≥5 valued
+players, delta applies on neutral ground): beats `elo_recalibrated` on ALL three samples —
+**history OOF (6-block walk-forward config selection, n=13,249): -0.00033, CI [-0.00048,
+-0.00017] excl 0; TRUE in-walk with the deployed class: 0.17414 vs 0.17438, CI [-0.00032,
+-0.00014] excl 0**; wc76 0.15878 vs 0.15945; market964 0.15694 vs 0.15736 (still behind the
+market 0.14958, as everything is). Covered subsample (59.3% of matches) -0.00054. Grid
+well-behaved (small optimum, monotone degradation past it). Report
+`reports/backtests/squad_value.md`; ledger `claude__squad_value`; scratch under
+`runs/squad_value_scratch/` (uncommitted). 6 variant tests. **Queued next: stack the
+squad-value delta under `dc_elo_fusion`'s Elo constituent** (gains plausibly additive,
+unproven); the same source's appearances/last_season fields are a future availability rung.
+
 ### 2026-07-02 — Claude — DC×Elo fusion: FIRST fusion to beat its best constituent — PROMOTED
 Follow-up to the Dixon-Coles integration below. Ran the queued fusion experiment
 (`runs/dc_fusion_scratch/experiment.py`, scratch/uncommitted per convention; two ledger
