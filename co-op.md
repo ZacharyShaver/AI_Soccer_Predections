@@ -119,6 +119,26 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-02 — Claude — Dixon-Coles lane REVIEWED + COMMITTED (Zach-directed)
+The 06-30 evening Dixon-Coles work (untracked files, no co-op log entry recorded by whoever
+built it) was reviewed and integrated on Zach's direction. **First model-class win of the
+project:** `dixon_coles_tuned` (online bivariate-Poisson attack/defense ratings, Dixon-Coles
+low-score tau correction, FIXED home edge) beats `elo_recalibrated` on the 15.9k history
+walk-forward — RPS 0.1726 vs 0.1744, paired 95% CI [-0.00243, -0.00103] excludes 0.
+Review performed: model code correct (the online update is the exact Poisson log-likelihood
+gradient; market join is leak-free strictly-before-date), 11 new tests pass, full suite 238
+green (the 2 eval-harness failures are the pre-existing pinned-n sample drift, now n=76),
+and `verify_best.py` was RERUN on current silver (n grew 15,893→15,899): the claim
+reproduces (-0.00177, CI still excludes 0). Committed: `models/dixon_coles.py`, variants
+`dixon_coles_poisson` + `dixon_coles_tuned`, 3 test files, report
+`reports/backtests/dixon_coles_poisson.md` (with a review addendum). Sweep scratch under
+`runs/dixon_coles_scratch/` stays uncommitted per convention. **Queued next (Claude lane):
+fuse dixon_coles_tuned × elo_recalibrated** — DC wins only 50.7% of individual matches while
+beating Elo on the mean, i.e. genuinely decorrelated errors, so the earlier "fusion doesn't
+beat the best constituent" null (tested only correlated Elo-family variants) does not cover
+this pair. Codex's `lab/fusion_recipes.py` machinery will be reused as-is, results to the
+shared `runs/fusion/` ledger.
+
 ### 2026-07-02 — Claude — Diagnosed + hardened the two silently-failing daily scheduled tasks
 Zach reported both recurring scheduled tasks had been failing to trigger/complete. Not a
 Codex lane (ops/tooling on the two Task Scheduler jobs, not the fusion/model work) — no
