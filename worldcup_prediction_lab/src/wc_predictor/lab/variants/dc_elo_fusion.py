@@ -45,15 +45,26 @@ DC_WEIGHT = 0.7  # full-history argmin on the log pool; out-of-fold path was 0.8
 
 
 class DcEloFusionModel:
+    """Log pool of a Dixon-Coles leg and an Elo-family leg.
+
+    ``components`` is (dc_variant_id, elo_variant_id) so sibling variants
+    (e.g. dc_squad_fusion) can reuse the pooling with a different Elo leg.
+    """
+
     model_version = "dc_elo_fusion_v1"
 
-    def __init__(self, *, generated_at_utc: str) -> None:
+    def __init__(
+        self,
+        *,
+        generated_at_utc: str,
+        components: tuple[str, str] = COMPONENT_VARIANTS,
+    ) -> None:
         from wc_predictor.lab import registry
 
         self.generated_at_utc = generated_at_utc
         self.dixon_coles, self.elo = (
             registry.build(variant_id, generated_at_utc=generated_at_utc)
-            for variant_id in COMPONENT_VARIANTS
+            for variant_id in components
         )
 
     def fit(self, train_matches_df):

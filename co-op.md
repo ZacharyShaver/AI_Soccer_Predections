@@ -119,6 +119,21 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-02 — Claude — pi-ratings rung: NULL (not promoted); BTD stays backlog
+Second literature model class from the DC report backlog tried and falsified. Pi-ratings
+(Constantinou & Fenton 2013 — per-team home/away rating pair, GD-discrepancy updates,
+cross-ground gamma flow) adapted to the online contract (neutral-venue mean-rating
+convention, Poisson goal-split probability layer). 24-config sweep on the FIRST half of
+the eval window; winner (lam .06 / gamma .7 / T 2.6) scored on the untouched SECOND half:
+**pi 0.16967 vs elo_recalibrated 0.16866 — WORSE by +0.0010, CI [-0.0002, +0.0023] spans
+0.** Not graduated to the full blocked protocol. Read: the class's differentiator
+(per-team learned home advantage) is diluted in neutral-heavy international football.
+Ledger `claude__pi-rating` (promote false); scratch `runs/pi_rating_scratch/`
+(uncommitted). **Bradley-Terry-Davidson deprioritized** on the edge-hunt evidence (our
+draw model is already market-grade; BTD's differentiator is an explicit draw parameter) —
+kept on the backlog, not closed, since Dixon-Coles was also once deprioritized and later
+became the biggest win.
+
 ### 2026-07-02 — Claude — dc_squad_fusion: stacked champion PROMOTED (squad leg inside the fusion)
 Stacked the day's two promotions: `dc_elo_fusion`'s Elo leg swapped for `squad_value` so
 the pool inherits the Transfermarkt squad signal the goal-based DC leg can't see. **Cleanest
@@ -145,8 +160,12 @@ home/away orientation. Verified on master: 27 evaluation tests pass, scorecard r
 **Known follow-ups (not this lane):** (a) scored rows count every as_of partition per
 fixture — a most-informed-per-match dedupe would be cleaner; (b) the market-comparison
 pairing still joins by raw id → paired_market_n=0; same bridge could fix it. Worktree
-`scorecard-join` kept until Zach confirms, then torn down. **Lane 2 (eval-harness pinned-n
-tests) still queued for Codex.**
+`scorecard-join` kept until Zach confirms, then torn down. **Lane 2 dispatch FAILED on
+Codex quota** (usage limit hit at startup, resets ~6:22 PM local; Zach confirmed). The
+worktree `C:\Users\ztsha\wc_worktrees\evalharness-repin` (branch
+`exp/2026-07-02/evalharness-repin`) is untouched with the full spec ready in its
+`CODEX_TASK.md` — re-dispatch after the reset with:
+`cd C:\Users\ztsha\wc_worktrees\evalharness-repin; (Get-Content -Raw CODEX_TASK.md) | codex exec --sandbox workspace-write -c sandbox_workspace_write.network_access=true -`
 
 ### 2026-07-02 — Claude — DISPATCHED Codex: scorecard-join fix (worktree lane, Zach-directed)
 Zach asked to hand the simple well-specified tasks to Codex in separate worktrees. Lane 1
