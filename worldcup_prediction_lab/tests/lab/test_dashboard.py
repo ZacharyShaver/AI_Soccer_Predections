@@ -266,3 +266,47 @@ def test_research_lab_renders_model_compare_tab(monkeypatch, tmp_path):
     assert '<tbody id="model-compare-body">' in html
     assert "model_a" in html
     assert "model_b" in html
+
+
+def test_upcoming_rows_render_pick_and_contrarian_hooks(monkeypatch, tmp_path):
+    monkeypatch.setattr(dashboard, "build_standings", lambda: [
+        VariantStanding(
+            variant_id="model_a",
+            n_scored=10,
+            mean_rps=0.1,
+            mean_log_loss=0.7,
+            mean_brier=0.4,
+            overall_accuracy=0.6,
+            decisive_accuracy=0.8,
+            edge_vs_baseline_rps=0.02,
+        )
+    ])
+    monkeypatch.setattr(
+        dashboard,
+        "load_results",
+        lambda: pd.DataFrame(columns=["match_id", "home_score", "away_score"]),
+    )
+    monkeypatch.setattr(dashboard, "collect_predictions", lambda: pd.DataFrame())
+    monkeypatch.setattr(
+        dashboard,
+        "load_silver_data",
+        lambda: (
+            pd.DataFrame(),
+            pd.DataFrame(columns=["fixture_id"]),
+            pd.DataFrame(columns=["canonical_team_id", "canonical_name"]),
+        ),
+    )
+    monkeypatch.setattr(dashboard, "load_backtest_cache", lambda: None)
+    monkeypatch.setattr(dashboard, "_betting_section", lambda: "")
+    monkeypatch.setattr(dashboard, "_analyst_section", lambda: "")
+    monkeypatch.setattr(dashboard, "_standings_section", lambda: "")
+    monkeypatch.setattr(dashboard, "_accuracy_timeline", lambda *args, **kwargs: [])
+    monkeypatch.setattr(dashboard, "_accuracy_timeline_section", lambda *args, **kwargs: "")
+
+    out_path = dashboard.build_dashboard(out_path=tmp_path / "dashboard.html", publish_pages=False)
+    html = out_path.read_text(encoding="utf-8")
+
+    assert "function pickName(p, m)" in html
+    assert "function contrarianLine(m, selectedPick)" in html
+    assert 'class="pickbadge' in html
+    assert 'class="ucontrarian"' in html

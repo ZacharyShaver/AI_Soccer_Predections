@@ -207,3 +207,11 @@ def test_accuracy_timeline_uses_mobile_card_layout_css():
     assert ".timeline thead{{display:none}}" in _TEMPLATE
     assert ".timeline tr{{display:grid;grid-template-columns:1fr 1fr" in _TEMPLATE
     assert ".timeline .accbarcell{{width:100%;grid-column:1 / -1}}" in _TEMPLATE
+
+
+def test_upcoming_rows_give_matchup_full_width_on_mobile():
+    from wc_predictor.lab.dashboard import _TEMPLATE
+
+    assert ".urow{{grid-template-columns:1fr 24px;row-gap:8px}}" in _TEMPLATE
+    assert ".urow .umeta{{grid-column:1 / -1;grid-row:2;min-width:0}}" in _TEMPLATE
+    assert ".urow .umeta .mt{{white-space:normal;overflow:visible;text-overflow:clip}}" in _TEMPLATE

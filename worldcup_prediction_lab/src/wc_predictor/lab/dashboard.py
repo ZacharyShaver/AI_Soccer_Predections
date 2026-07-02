@@ -1058,7 +1058,11 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 .urow{{display:grid;grid-template-columns:84px 1fr 210px 92px 24px;gap:12px;align-items:center;padding:10px 12px;cursor:pointer}}
 .urow:hover{{background:rgba(255,255,255,.025)}}
 .umeta{{min-width:0}} .umeta .mt{{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+.uinfo{{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}}
 .umeta .uspread{{font-size:11px;color:var(--mut)}}
+.pickbadge{{display:inline-block;border-radius:999px;padding:1px 7px;font-size:10px;font-weight:800;letter-spacing:.03em;background:#30363d;white-space:nowrap}}
+.pick-home{{color:var(--h)}} .pick-draw{{color:var(--d)}} .pick-away{{color:var(--a)}}
+.ucontrarian{{font-size:11px;color:var(--gold);white-space:nowrap}}
 .uchev{{color:var(--mut);text-align:center;transition:transform .15s}}
 .umatch.open .uchev{{transform:rotate(90deg)}}
 .umodels{{display:none;border-top:1px solid var(--line);padding:6px 12px 10px}}
@@ -1073,8 +1077,13 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 .umodels th:nth-child(3),.umodels td:nth-child(3){{width:20%}}
 .uempty{{color:var(--mut);padding:12px 2px}}
 @media (max-width:640px){{
-  .urow{{grid-template-columns:1fr 64px 22px;row-gap:6px}}
-  .urow .barcell{{grid-column:1 / -1}}
+  .urow{{grid-template-columns:1fr 24px;row-gap:8px}}
+  .urow .dt{{grid-column:1;grid-row:1}}
+  .urow .uchev{{grid-column:2;grid-row:1;justify-self:end}}
+  .urow .umeta{{grid-column:1 / -1;grid-row:2;min-width:0}}
+  .urow .umeta .mt{{white-space:normal;overflow:visible;text-overflow:clip}}
+  .urow .barcell{{grid-column:1 / -1;grid-row:3}}
+  .urow>span:nth-child(4){{grid-column:1 / -1;grid-row:4}}
   .controls{{gap:8px}} .controls label{{flex:1}}
   .wrap{{padding:18px 12px 48px}}
   h1{{font-size:20px}}
@@ -1322,6 +1331,42 @@ _SCRIPT = r"""
     if (model === CONSENSUS) return consensus(m.picks);
     return m.picks[model] || null;
   }
+  function pickKey(p) {
+    var best = 0;
+    for (var i = 1; i < 3; i++) {
+      if (p[i] > p[best]) best = i;
+    }
+    return ["home", "draw", "away"][best];
+  }
+  function pickName(p, m) {
+    var key = pickKey(p);
+    if (key === "home") return m.home;
+    if (key === "away") return m.away;
+    return "Draw";
+  }
+  function pickBadge(p, m) {
+    var key = pickKey(p);
+    return '<span class="pickbadge pick-' + key + '">PICK ' + esc(pickName(p, m)) + "</span>";
+  }
+  function contrarianLine(m, selectedPick) {
+    var counts = {}, examples = {};
+    DATA.models.forEach(function (vid) {
+      var p = m.picks[vid];
+      if (!p) return;
+      var key = pickKey(p);
+      if (key === selectedPick) return;
+      counts[key] = (counts[key] || 0) + 1;
+      examples[key] = examples[key] || vid;
+    });
+    var keys = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+    if (!keys.length) return "";
+    var key = keys[0], n = counts[key];
+    var label = key === "home" ? m.home : (key === "away" ? m.away : "Draw");
+    var text = n === 1
+      ? "contrarian: " + examples[key] + " → " + label
+      : "split: " + n + " models on " + label;
+    return '<span class="ucontrarian">' + esc(text) + "</span>";
+  }
   function upset(p) {
     var t = p[0] + p[1] + p[2] || 1, h = p[0] / t, d = p[1] / t, a = p[2] / t;
     var avoid = h >= a ? d + a : d + h;
@@ -1395,12 +1440,15 @@ _SCRIPT = r"""
       var isOpen = open[m.id];
       var barCell = p ? bar(p) : '<span class="muted">no forecast for this model</span>';
       var upCell = p ? upsetCell(p) : "";
+      var selectedPick = p ? pickKey(p) : null;
+      var pickInfo = p ? pickBadge(p, m) + contrarianLine(m, selectedPick) : "";
       var sp = (spread(m.picks) * 100).toFixed(1);
       out += '<div class="umatch' + (isOpen ? " open" : "") + '" data-id="' + esc(m.id) + '">' +
         '<div class="urow">' +
           '<span class="dt">' + esc(m.date) + "</span>" +
           '<span class="umeta"><div class="mt">' + esc(m.home) + ' <span class="vs">v</span> ' +
-            esc(m.away) + '</div><div class="uspread">disagreement ' + sp + " pts</div></span>" +
+            esc(m.away) + '</div><div class="uinfo">' + pickInfo +
+            '<span class="uspread">disagreement ' + sp + " pts</span></div></span>" +
           '<span class="barcell">' + barCell + "</span>" +
           "<span>" + upCell + "</span>" +
           '<span class="uchev">▸</span>' +

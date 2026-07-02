@@ -1,9 +1,12 @@
 """Tests for the match-level simulator (P4 / S2)."""
 
 import numpy as np
+import pandas as pd
+import pytest
 
 from wc_predictor.models.elo import EloModel
 from wc_predictor.simulate.match_sim import (
+    home_advance_probability,
     simulate_group_match,
     simulate_knockout,
 )
@@ -42,6 +45,19 @@ def test_knockout_is_symmetric_under_neutral_when_swapping_sides():
         for s in range(800)
     )
     assert abs(a_home - a_away) < 60  # within sampling noise; no home-slot bias
+
+
+def test_drawn_regulation_resolves_as_a_coin_flip():
+    """Shootouts are empirically ~50/50 (n=561, CI [46.9%, 55.1%]) — the
+    advance probability must be prob_home + 0.5 * prob_draw, NOT the old
+    strength-weighted prob_home / (prob_home + prob_away) tie-break."""
+
+    model = _model({"A": 2000, "B": 1500})
+    row = pd.Series({"home_team_id": "A", "away_team_id": "B", "neutral": True})
+    p = model.predict_match(row)
+    assert home_advance_probability(model, row) == pytest.approx(
+        p.prob_home + 0.5 * p.prob_draw, abs=1e-12
+    )
 
 
 def test_simulate_group_match_returns_nonnegative_goals_and_favours_stronger():

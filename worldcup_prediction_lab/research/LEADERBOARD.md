@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-07-02T18:10:25Z`
+Generated: `2026-07-02T19:35:16Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 331
-- Registered variants: 25
+- Registered variants: 26
 
 | Rank | Variant | n | RPS | log loss | Brier | Overall acc | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -31,9 +31,10 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 20 | `ml_elo_correction` | 1 | 0.1749 | 0.7569 | 0.4228 | 1.000 | 1.000 | -0.0236 |
 | 21 | `tournament_form` | 1 | 0.1927 | 0.7783 | 0.4411 | 1.000 | 1.000 | -0.0414 |
 | 22 | `dc_elo_fusion` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
-| 23 | `dixon_coles_poisson` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
-| 24 | `dixon_coles_tuned` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
-| 25 | `squad_value` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
+| 23 | `dc_squad_fusion` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
+| 24 | `dixon_coles_poisson` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
+| 25 | `dixon_coles_tuned` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
+| 26 | `squad_value` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -81,6 +82,8 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: Mean residual (actual result - Elo win-expectation) over each team's 2026 WC matches; hot teams get a small Elo bump, cold teams a small dock. Opponent-adjusted.
 - `dc_elo_fusion` — Log opinion pool of dixon_coles_tuned (w=0.7) and elo_recalibrated — first fusion to beat its best constituent.  
   feature: Weighted geometric mean of the H/D/A probabilities from the two best, genuinely decorrelated model classes (goal-based Dixon-Coles + outcome-based recalibrated Elo); scoreline shape delegated to the Dixon-Coles component.
+- `dc_squad_fusion` — dc_elo_fusion with the squad_value Elo leg — Dixon-Coles pooled with squad-value-aware Elo (current history champion).  
+  feature: Swap dc_elo_fusion's plain recalibrated-Elo leg for squad_value so the pool inherits the Transfermarkt squad-value signal the goal-based Dixon-Coles leg cannot see.
 - `dixon_coles_poisson` — Online Dixon-Coles bivariate-Poisson attack/defense rating (not Elo-derived).  
   feature: Team attack/defense ratings in log-goal-rate space, online Poisson-regression gradient updates, Dixon-Coles low-score tau correction, host-aware home edge.
 - `dixon_coles_tuned` — Dixon-Coles Poisson rating, coordinate-descent tuned; beats recalibrated Elo on history.  

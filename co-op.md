@@ -119,6 +119,23 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-02 — Claude — Shootouts ARE coin flips: sim fixed, favourites' odds cut (Argentina 28.4→22.9%)
+Knockout-mechanics lane. Ingested martj42's companion `shootouts.csv` (probe scratch
+`runs/shootout_scratch/`, uncommitted): 561 shootouts joined to drawn silver matches with
+LEAK-FREE pre-match ratings (single online recal-Elo walk). **Stronger side won 51.0%
+(Wilson CI [46.9%, 55.1%] — a coin flip; even ≥100-Elo favourites 53.7%, CI spans 50%),
+while `simulate_knockout`'s conditional-on-not-draw rule assumed 68.0% on those same
+matches.** Fixed: `home_advance_probability` = `prob_home + 0.5*prob_draw` (drawn tie →
+coin-flip pens; martj42 scores include ET so model-draw==went-to-pens). Regression test
+pins the formula; 20 simulate tests green. Championship odds re-run (20k sims, as-of
+07-02): **Argentina 28.4%→22.9%, Spain 15.2%, France 13.1%** — the favourite haircut
+compounds across 5 knockout rounds exactly as predicted. Report:
+`reports/backtests/shootout_realism.md`. The congestion half of the lane is already
+covered by `match_congestion` accumulating knockout matches in the live bake-off.
+Also ran the 3 match-analyst agents for the un-researched upcoming fixtures (ARG-CPV
+85/11/4 Argentina; AUS-EGY 29/33.5/37.5 Egypt; BRA-NOR 50.5/26.5/23 Brazil) — agent-mode
+ledger n now 5 forecasts + 1 resolved.
+
 ### 2026-07-02 — Claude — pi-ratings rung: NULL (not promoted); BTD stays backlog
 Second literature model class from the DC report backlog tried and falsified. Pi-ratings
 (Constantinou & Fenton 2013 — per-team home/away rating pair, GD-discrepancy updates,

@@ -3,11 +3,15 @@
 Group games sample a full scoreline from the Elo model's calibrated
 ``ScorelineDistribution`` (so goal difference / goals scored feed the FIFA
 tiebreakers). Knockout games resolve to a single winner: regulation uses the
-M4 three-way outcome probabilities, and a drawn regulation result is taken to
-extra-time/penalties modelled as conditional-on-not-draw — i.e. the stronger
-side advances with probability ``prob_home / (prob_home + prob_away)``. This is
-a documented modelling choice (a middle ground between pure 50/50 penalties and
-full skill); its effect on championship odds is second-order.
+M4 three-way outcome probabilities, and a drawn result goes to penalties
+modelled as a COIN FLIP. That replaces the original conditional-on-not-draw
+tie-break (``prob_home / (prob_home + prob_away)``): measured on 561
+historical shootouts with leak-free pre-match Elo ratings (2026-07-02,
+``runs/shootout_scratch/``), the stronger side won only 51.0% (Wilson 95% CI
+[46.9%, 55.1%] — indistinguishable from 50/50; even >=100-Elo favourites:
+53.7%, CI spans 50%), while the old rule assumed 68.0% on those same matches.
+Note martj42 scores include extra time, so the outcome model's "draw" for a
+knockout already means "went to penalties".
 
 All randomness flows through an injected ``numpy.random.Generator`` so a fixed
 seed reproduces identical tournaments.
@@ -65,15 +69,14 @@ def simulate_group_match(
 
 
 def home_advance_probability(model, match_row: pd.Series) -> float:
-    """P(home team advances) in a knockout: win in regulation, or win the tie-break."""
+    """P(home team advances) in a knockout: win outright, or win the shootout.
+
+    The shootout term is 0.5 — empirically shootouts are coin flips regardless
+    of team strength (see module docstring for the 561-shootout evidence).
+    """
 
     p = model.predict_match(match_row)
-    decisive = p.prob_home + p.prob_away
-    if decisive <= 0.0:
-        tie_break_home = 0.5
-    else:
-        tie_break_home = p.prob_home / decisive
-    return p.prob_home + p.prob_draw * tie_break_home
+    return p.prob_home + 0.5 * p.prob_draw
 
 
 def simulate_knockout(
