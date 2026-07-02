@@ -119,6 +119,19 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-02 — Claude — Codex dashboard-reorg lane REVIEWED + COMMITTED
+Codex's model-compare-tab lane (plan `docs/superpowers/plans/2026-07-02-research-lab-model-
+compare-tab.md`, dispatched by Zach, ran parallel to Claude's squad-value lane) reviewed and
+integrated: Trust-snapshot card row, bucket reorg (Forecast command center → Needs attention
+→ Trust snapshot → Research lab → Tournament context), Research-lab Performance/Compare
+tabs with a sortable all-models table, and mobile stacked-card CSS for the timeline/
+leaderboard tables. Diff is clean and self-contained (static-generator single source of
+truth preserved; `_model_compare_rows` + `_trust_snapshot_section` pure helpers). Verified:
+its 20 tests pass (test_dashboard.py + test_upset.py), full suite 259 green, and the
+rebuilt page carries the tab + snapshot + the three new variants (dc_elo_fusion,
+squad_value, dixon_coles). Committed with regenerated dashboards; `.superpowers/` tool
+state left untracked.
+
 ### 2026-07-02 — Claude — Squad value (Transfermarkt): FIRST non-scoreline signal to clear the bar — PROMOTED
 Third lane of Zach's ordered list ("new strength data" — the edge-hunt frontier). Source:
 **transfermarkt-datasets** (CC0-1.0, weekly refresh, hosted DuckDB): 656k dated player

@@ -142,3 +142,127 @@ def test_live_leaderboard_renders_overall_and_decisive_accuracy(monkeypatch, tmp
     assert '<th class="num">acc</th><th class="num">dec.acc</th>' in html
     assert 'data-label="acc" data-sort="0.6">0.60</td>' in html
     assert 'data-label="dec.acc" data-sort="0.8">0.80</td>' in html
+
+
+def test_dashboard_uses_ab1_bucket_order(monkeypatch, tmp_path):
+    monkeypatch.setattr(dashboard, "build_standings", lambda: [
+        VariantStanding(
+            variant_id="model_a",
+            n_scored=10,
+            mean_rps=0.1,
+            mean_log_loss=0.7,
+            mean_brier=0.4,
+            overall_accuracy=0.6,
+            decisive_accuracy=0.8,
+            edge_vs_baseline_rps=0.02,
+        )
+    ])
+    monkeypatch.setattr(
+        dashboard,
+        "load_results",
+        lambda: pd.DataFrame(columns=["match_id", "home_score", "away_score"]),
+    )
+    monkeypatch.setattr(dashboard, "collect_predictions", lambda: pd.DataFrame())
+    monkeypatch.setattr(
+        dashboard,
+        "load_silver_data",
+        lambda: (
+            pd.DataFrame(),
+            pd.DataFrame(columns=["fixture_id"]),
+            pd.DataFrame(columns=["canonical_team_id", "canonical_name"]),
+        ),
+    )
+    monkeypatch.setattr(dashboard, "load_backtest_cache", lambda: None)
+    monkeypatch.setattr(
+        dashboard,
+        "_betting_section",
+        lambda: '<details class="sec"><summary>Betting edges vs Polymarket</summary></details>',
+    )
+    monkeypatch.setattr(
+        dashboard,
+        "_analyst_section",
+        lambda: '<details class="sec"><summary>Match-Analyst agent</summary></details>',
+    )
+    monkeypatch.setattr(
+        dashboard,
+        "_standings_section",
+        lambda: '<details class="sec"><summary>Tournament standings</summary></details>',
+    )
+    monkeypatch.setattr(dashboard, "_accuracy_timeline", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        dashboard,
+        "_accuracy_timeline_section",
+        lambda *args, **kwargs: '<details class="sec"><summary>Accuracy over time</summary></details>',
+    )
+
+    out_path = dashboard.build_dashboard(out_path=tmp_path / "dashboard.html", publish_pages=False)
+    html = out_path.read_text(encoding="utf-8")
+
+    bucket_order = [
+        "Forecast command center",
+        "Needs attention",
+        "Trust snapshot",
+        "Research lab",
+        "Tournament context",
+    ]
+    positions = [html.index(label) for label in bucket_order]
+
+    assert positions == sorted(positions)
+    assert html.index("Leaderboard") > html.index("Research lab")
+    assert html.index("Results") > html.index("Research lab")
+
+
+def test_research_lab_renders_model_compare_tab(monkeypatch, tmp_path):
+    monkeypatch.setattr(dashboard, "build_standings", lambda: [
+        VariantStanding(
+            variant_id="model_a",
+            n_scored=10,
+            mean_rps=0.1,
+            mean_log_loss=0.7,
+            mean_brier=0.4,
+            overall_accuracy=0.6,
+            decisive_accuracy=0.8,
+            edge_vs_baseline_rps=0.02,
+        ),
+        VariantStanding(
+            variant_id="model_b",
+            n_scored=8,
+            mean_rps=0.12,
+            mean_log_loss=0.75,
+            mean_brier=0.42,
+            overall_accuracy=0.55,
+            decisive_accuracy=0.7,
+            edge_vs_baseline_rps=-0.01,
+        ),
+    ])
+    monkeypatch.setattr(
+        dashboard,
+        "load_results",
+        lambda: pd.DataFrame(columns=["match_id", "home_score", "away_score"]),
+    )
+    monkeypatch.setattr(dashboard, "collect_predictions", lambda: pd.DataFrame())
+    monkeypatch.setattr(
+        dashboard,
+        "load_silver_data",
+        lambda: (
+            pd.DataFrame(),
+            pd.DataFrame(columns=["fixture_id"]),
+            pd.DataFrame(columns=["canonical_team_id", "canonical_name"]),
+        ),
+    )
+    monkeypatch.setattr(dashboard, "load_backtest_cache", lambda: None)
+    monkeypatch.setattr(dashboard, "_betting_section", lambda: "")
+    monkeypatch.setattr(dashboard, "_analyst_section", lambda: "")
+    monkeypatch.setattr(dashboard, "_standings_section", lambda: "")
+    monkeypatch.setattr(dashboard, "_accuracy_timeline", lambda *args, **kwargs: [])
+    monkeypatch.setattr(dashboard, "_accuracy_timeline_section", lambda *args, **kwargs: "")
+
+    out_path = dashboard.build_dashboard(out_path=tmp_path / "dashboard.html", publish_pages=False)
+    html = out_path.read_text(encoding="utf-8")
+
+    assert 'id="research-tab-performance"' in html
+    assert 'id="research-tab-compare"' in html
+    assert 'for="research-tab-compare">Compare models</label>' in html
+    assert '<tbody id="model-compare-body">' in html
+    assert "model_a" in html
+    assert "model_b" in html

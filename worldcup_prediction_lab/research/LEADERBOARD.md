@@ -1,11 +1,11 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-07-02T15:37:40Z`
+Generated: `2026-07-02T18:10:25Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
 - Total scored predictions across variants: 331
-- Registered variants: 24
+- Registered variants: 25
 
 | Rank | Variant | n | RPS | log loss | Brier | Overall acc | Decisive acc | Edge vs baseline |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -33,6 +33,7 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
 | 22 | `dc_elo_fusion` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 | 23 | `dixon_coles_poisson` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 | 24 | `dixon_coles_tuned` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
+| 25 | `squad_value` | 0 | n/a | n/a | n/a | n/a | n/a | n/a |
 
 ## Variants
 
@@ -84,6 +85,8 @@ Each variant is scored on its most-informed pre-kickoff prediction per match (la
   feature: Team attack/defense ratings in log-goal-rate space, online Poisson-regression gradient updates, Dixon-Coles low-score tau correction, host-aware home edge.
 - `dixon_coles_tuned` — Dixon-Coles Poisson rating, coordinate-descent tuned; beats recalibrated Elo on history.  
   feature: Same online Poisson attack/defense model as dixon_coles_poisson, with a coarse sweep-tuned learning_rate/shrinkage/rho and a FIXED (non-updating) home edge.
+- `squad_value` — Recalibrated Elo + Transfermarkt squad-value differential (first non-scoreline signal).  
+  feature: Bounded Elo delta from the log ratio of the two sides' Transfermarkt squad values (top-15 citizen market values, monthly, strictly pre-match).
 
 ## Caveats
 

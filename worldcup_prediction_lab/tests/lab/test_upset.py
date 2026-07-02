@@ -70,6 +70,13 @@ def test_dashboard_css_keeps_result_cards_wide_enough_for_mini_table():
     assert ".mini{{font-size:11px;table-layout:fixed}}" in _TEMPLATE
 
 
+def test_dashboard_css_wraps_long_summary_card_values():
+    from wc_predictor.lab.dashboard import _TEMPLATE
+
+    assert ".stat{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}}" in _TEMPLATE
+    assert ".stat .v{{font-size:clamp(18px,2.5vw,26px);font-weight:700;line-height:1.15;overflow-wrap:anywhere;word-break:break-word}}" in _TEMPLATE
+
+
 def test_upcoming_probability_bar_renders_readable_labels_above_bar():
     from wc_predictor.lab.dashboard import _upcoming_bar
 
@@ -166,3 +173,37 @@ def test_accuracy_timeline_section_renders_metric_copy():
     assert "Decisive only" in section
     assert "2026-06-11" in section
     assert "50%" in section
+
+
+def test_accuracy_timeline_section_has_mobile_card_labels():
+    from wc_predictor.lab.dashboard import _accuracy_timeline_section
+
+    section = _accuracy_timeline_section(
+        [
+            {
+                "date": "2026-06-11",
+                "n": 2,
+                "hits": 1,
+                "daily_accuracy": 0.5,
+                "cumulative_n": 2,
+                "cumulative_hits": 1,
+                "cumulative_accuracy": 0.5,
+                "decisive_n": 1,
+                "decisive_hits": 1,
+                "cumulative_decisive_accuracy": 1.0,
+            }
+        ],
+        variant_id="elo_baseline",
+    )
+
+    assert 'data-label="daily hits"' in section
+    assert 'data-label="overall cumulative"' in section
+    assert 'data-label="decisive cumulative"' in section
+
+
+def test_accuracy_timeline_uses_mobile_card_layout_css():
+    from wc_predictor.lab.dashboard import _TEMPLATE
+
+    assert ".timeline thead{{display:none}}" in _TEMPLATE
+    assert ".timeline tr{{display:grid;grid-template-columns:1fr 1fr" in _TEMPLATE
+    assert ".timeline .accbarcell{{width:100%;grid-column:1 / -1}}" in _TEMPLATE

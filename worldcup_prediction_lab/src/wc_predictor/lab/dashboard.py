@@ -217,13 +217,13 @@ def _accuracy_timeline_section(rows: list[dict], *, variant_id: str) -> str:
         decisive_width = max(0.0, min(100.0, (decisive or 0.0) * 100.0))
         body_rows.append(
             f'<tr><td class="dt">{_esc(row["date"])}</td>'
-            f'<td class="num">{row["hits"]}/{row["n"]}</td>'
-            f'<td class="num">{_pct(row["daily_accuracy"])}</td>'
-            f'<td class="accbarcell"><div class="accbar"><div class="accfill" style="width:{width:.1f}%"></div>'
+            f'<td class="num" data-label="daily hits">{row["hits"]}/{row["n"]}</td>'
+            f'<td class="num" data-label="daily acc">{_pct(row["daily_accuracy"])}</td>'
+            f'<td class="accbarcell" data-label="overall cumulative"><div class="accbar"><div class="accfill" style="width:{width:.1f}%"></div>'
             f'<span>{_pct(cumulative)}</span></div></td>'
-            f'<td class="num">{row["cumulative_hits"]}/{row["cumulative_n"]}</td>'
-            f'<td class="num">{row.get("decisive_hits", 0)}/{row.get("decisive_n", 0)}</td>'
-            f'<td class="accbarcell"><div class="accbar decisive"><div class="accfill decisive" style="width:{decisive_width:.1f}%"></div>'
+            f'<td class="num" data-label="cum. hits">{row["cumulative_hits"]}/{row["cumulative_n"]}</td>'
+            f'<td class="num" data-label="decisive hits">{row.get("decisive_hits", 0)}/{row.get("decisive_n", 0)}</td>'
+            f'<td class="accbarcell" data-label="decisive cumulative"><div class="accbar decisive"><div class="accfill decisive" style="width:{decisive_width:.1f}%"></div>'
             f'<span>{_pct(decisive)}</span></div></td></tr>'
         )
 
@@ -247,6 +247,73 @@ def _accuracy_timeline_section(rows: list[dict], *, variant_id: str) -> str:
         f'<tbody>{"".join(body_rows)}</tbody></table></div>'
         '</div></details>'
     )
+
+
+def _trust_snapshot_section(
+    rows: list[dict],
+    *,
+    leader: object | None,
+    n_variants: int,
+    n_scored: int,
+) -> str:
+    latest = rows[-1] if rows else {}
+    overall = _pct(latest.get("cumulative_accuracy")) if latest else "—"
+    decisive = _pct(latest.get("cumulative_decisive_accuracy")) if latest else "—"
+    overall_record = (
+        f'{latest.get("cumulative_hits", 0)}/{latest.get("cumulative_n", 0)}'
+        if latest
+        else "—"
+    )
+    decisive_record = (
+        f'{latest.get("cumulative_decisive_hits", 0)}/{latest.get("cumulative_decisive_n", 0)}'
+        if latest
+        else "—"
+    )
+    leader_name = _esc(getattr(leader, "variant_id", "—")) if leader else "—"
+    leader_rps = _fmt(getattr(leader, "mean_rps", None)) if leader else "—"
+    return (
+        '<section class="bucket-shell trust-shell" id="trust-snapshot">'
+        '<div class="bucket-head"><div><h2>Trust snapshot</h2>'
+        '<div class="h2sub">Quick read before digging into the lab tables</div></div></div>'
+        '<div class="trustgrid">'
+        f'<div class="trustcard"><div class="v">{overall}</div><div class="k">Baseline overall</div>'
+        f'<div class="micro">{overall_record} including draws</div></div>'
+        f'<div class="trustcard"><div class="v gold">{decisive}</div><div class="k">Baseline decisive</div>'
+        f'<div class="micro">{decisive_record} excluding draws</div></div>'
+        f'<div class="trustcard"><div class="v name">{leader_name}</div><div class="k">Current leader</div>'
+        f'<div class="micro">RPS {leader_rps}</div></div>'
+        f'<div class="trustcard"><div class="v">{n_variants}</div><div class="k">Models tracked</div>'
+        f'<div class="micro">{n_scored} scored matches</div></div>'
+        '</div></section>'
+    )
+
+
+def _model_compare_rows(standings: list[object]) -> str:
+    if not standings:
+        return '<tr><td colspan="8" class="muted">No model standings available yet.</td></tr>'
+
+    rows = []
+    for rank, s in enumerate(standings, start=1):
+        edge = getattr(s, "edge_vs_baseline_rps", None)
+        if edge is None or getattr(s, "n_scored", 0) == 0:
+            edge_cell = '<span class="muted">—</span>'
+            edge_sort = -9
+        else:
+            side = "pos" if edge > 0 else ("neg" if edge < 0 else "zero")
+            edge_cell = f'<span class="edgepill {side}">{edge:+.4f}</span>'
+            edge_sort = edge
+        rows.append(
+            f'<tr><td class="rank" data-sort="{rank}">{rank}</td>'
+            f'<td class="vname">{_esc(getattr(s, "variant_id", "—"))}</td>'
+            f'<td class="num" data-label="n" data-sort="{getattr(s, "n_scored", 0)}">{getattr(s, "n_scored", 0)}</td>'
+            f'<td class="num strong" data-label="RPS" data-sort="{getattr(s, "mean_rps", None) if getattr(s, "mean_rps", None) is not None else 9}">{_fmt(getattr(s, "mean_rps", None))}</td>'
+            f'<td class="num" data-label="log loss" data-sort="{getattr(s, "mean_log_loss", None) if getattr(s, "mean_log_loss", None) is not None else 9}">{_fmt(getattr(s, "mean_log_loss", None))}</td>'
+            f'<td class="num" data-label="Brier" data-sort="{getattr(s, "mean_brier", None) if getattr(s, "mean_brier", None) is not None else 9}">{_fmt(getattr(s, "mean_brier", None))}</td>'
+            f'<td class="num" data-label="overall acc" data-sort="{getattr(s, "overall_accuracy", None) if getattr(s, "overall_accuracy", None) is not None else -1}">{_fmt(getattr(s, "overall_accuracy", None), 2)}</td>'
+            f'<td class="num" data-label="dec.acc" data-sort="{getattr(s, "decisive_accuracy", None) if getattr(s, "decisive_accuracy", None) is not None else -1}">{_fmt(getattr(s, "decisive_accuracy", None), 2)}</td>'
+            f'<td class="edge" data-label="edge" data-sort="{edge_sort}">{edge_cell}</td></tr>'
+        )
+    return "".join(rows)
 
 
 def _betting_section() -> str:
@@ -820,9 +887,16 @@ def build_dashboard(
     # Compute the dynamic sections once: they go into the baked HTML AND into a
     # JSON artifact the page re-fetches on load / on a timer ("pull" live updates).
     lb_rows_html = "".join(lb_rows)
+    model_compare_rows_html = _model_compare_rows(standings)
     betting_html = _betting_section()
     analyst_html = _analyst_section()
     standings_html = _standings_section()
+    trust_snapshot_html = _trust_snapshot_section(
+        accuracy_rows,
+        leader=leader,
+        n_variants=len(standings),
+        n_scored=n_scored,
+    )
 
     html_doc = _TEMPLATE.format(
         generated=generated,
@@ -832,8 +906,10 @@ def build_dashboard(
         n_variants=len(standings),
         leader=(_esc(leader.variant_id) if leader else "—"),
         leader_rps=(_fmt(leader.mean_rps) if leader else "—"),
+        trust_snapshot_section=trust_snapshot_html,
         accuracy_section=accuracy_section,
         lb_rows=lb_rows_html,
+        model_compare_rows=model_compare_rows_html,
         backtest_section=backtest_section,
         result_cards=("".join(result_cards) or '<p class="muted">No matches scored yet.</p>'),
         n_upcoming=len(upcoming_payload),
@@ -873,9 +949,31 @@ body{{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system
 h1{{font-size:24px;margin:0 0 2px}} .sub{{color:var(--mut);font-size:13px;margin-bottom:22px}}
 h2{{font-size:16px;margin:30px 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}}
 .h2sub{{color:var(--mut);font-size:12px;font-weight:400}}
+.bucket-shell{{margin:18px 0}}
+.bucket-head{{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:20px 0 8px;border-bottom:1px solid var(--line);padding-bottom:8px}}
+.bucket-head h2{{margin:0;border:0;padding:0}}
+.bucket-head .h2sub{{display:block;margin-top:2px}}
+.trustgrid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}}
+.trustcard{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}}
+.trustcard .v{{font-size:clamp(22px,3vw,32px);font-weight:800;line-height:1.05;overflow-wrap:anywhere}}
+.trustcard .v.gold{{color:var(--gold)}} .trustcard .v.name{{font-size:clamp(17px,2.3vw,24px);color:var(--ink)}}
+.trustcard .k{{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-top:6px}}
+.trustcard .micro{{color:var(--mut);font-size:12px;margin-top:2px}}
+.lab-tabs{{margin-top:10px}}
+.lab-tab-input{{position:absolute;opacity:0;pointer-events:none}}
+.lab-tab-labels{{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}}
+.lab-tab-labels label{{cursor:pointer;border:1px solid var(--line);background:#0b0f14;color:var(--mut);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700}}
+#research-tab-performance:checked ~ .lab-tab-labels label[for="research-tab-performance"],
+#research-tab-compare:checked ~ .lab-tab-labels label[for="research-tab-compare"]{{color:var(--ink);border-color:var(--h);background:rgba(59,130,246,.14)}}
+.lab-panel{{display:none}}
+#research-tab-performance:checked ~ .lab-panel-performance,
+#research-tab-compare:checked ~ .lab-panel-compare{{display:block}}
+.model-compare{{margin-top:8px}}
+.edgepill{{display:inline-block;min-width:64px;text-align:center;border-radius:999px;padding:2px 8px;font-weight:800;font-variant-numeric:tabular-nums;background:#30363d}}
+.edgepill.pos{{color:var(--pos)}} .edgepill.neg{{color:var(--neg)}} .edgepill.zero{{color:var(--mut)}}
 .cards{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:6px}}
-.stat{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}}
-.stat .v{{font-size:26px;font-weight:700}} .stat .k{{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.04em}}
+.stat{{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}}
+.stat .v{{font-size:clamp(18px,2.5vw,26px);font-weight:700;line-height:1.15;overflow-wrap:anywhere;word-break:break-word}} .stat .k{{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.04em}}
 table{{width:100%;border-collapse:collapse}}
 .lb{{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}}
 .lb th,.lb td{{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}}
@@ -983,6 +1081,18 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
   .cards{{grid-template-columns:1fr 1fr;gap:8px}}
   .stat{{padding:10px 12px}} .stat .v{{font-size:20px;overflow-wrap:anywhere}}
   .grid{{grid-template-columns:1fr}}
+  /* accuracy timeline -> stacked cards */
+  .accuracy-card{{padding:12px}}
+  .timeline thead{{display:none}}
+  .timeline,.timeline tbody,.timeline tr,.timeline td{{display:block;width:100%}}
+  .timeline tr{{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;border:1px solid var(--line);border-radius:10px;margin:10px 0;padding:10px 12px;background:#0b0f14}}
+  .timeline td{{border:none;padding:0;text-align:left}}
+  .timeline td.dt{{grid-column:1 / -1;color:var(--ink);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:2px}}
+  .timeline td[data-label]::before{{content:attr(data-label);display:block;color:var(--mut);font-size:9px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}}
+  .timeline .num{{text-align:left}}
+  .timeline .accbarcell{{width:100%;grid-column:1 / -1}}
+  .timeline .accbar{{height:22px;min-width:0}}
+  .timeline .accbar span{{font-size:11px}}
   /* leaderboard table -> stacked cards */
   .lb thead{{display:none}}
   .lb,.lb tbody,.lb tr,.lb td{{display:block;width:100%}}
@@ -1015,7 +1125,7 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 <div class="stat"><div class="v">{leader}</div><div class="k">Leader · RPS {leader_rps}</div></div>
 </div>
 
-<details class="sec" open><summary>Upcoming forecasts — by model <span class="h2sub">· {n_upcoming} fixtures · pick a model, sort, or expand a match for all models</span></summary>
+<details class="sec command-sec" open><summary>Forecast command center <span class="h2sub">· {n_upcoming} upcoming fixtures · pick a model, sort, or expand a match for all models</span></summary>
 <div class="secbody">
 <div class="controls">
 <label>Model <select id="upModel"></select></label>
@@ -1034,12 +1144,26 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 <div class="note">Each row shows the selected model's H/D/A. <b>Consensus</b> averages every model. <b>Model disagreement</b> ranks matches by how much the models differ on the home-win probability — the fixtures worth a closer look. Expand a match to see every model side by side.</div>
 </div></details>
 
-<div id="sec-standings" class="live">{standings_section}</div>
-
+<section class="bucket-shell needs-shell" id="needs-attention">
+<div class="bucket-head"><div><h2>Needs attention</h2>
+<div class="h2sub">Edges, watchlist rows, and analyst notes that deserve a closer look</div></div></div>
 <div id="sec-betting" class="live">{betting_section}</div>
-
 <div id="sec-analyst" class="live">{analyst_section}</div>
+</section>
 
+{trust_snapshot_section}
+
+<section class="bucket-shell lab-shell" id="research-lab">
+<div class="bucket-head"><div><h2>Research lab</h2>
+<div class="h2sub">Model accuracy, leaderboard scoring, walk-forward checks, and scored-match archive</div></div></div>
+<div class="lab-tabs">
+<input class="lab-tab-input" type="radio" name="research-tab" id="research-tab-performance" checked>
+<input class="lab-tab-input" type="radio" name="research-tab" id="research-tab-compare">
+<div class="lab-tab-labels">
+<label for="research-tab-performance">Performance</label>
+<label for="research-tab-compare">Compare models</label>
+</div>
+<div class="lab-panel lab-panel-performance">
 {accuracy_section}
 
 <details class="sec" open><summary>Leaderboard <span class="h2sub">· live recorded forecasts · click a column to sort</span></summary>
@@ -1060,6 +1184,24 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 <span>white outline = actual outcome · ✓ called it</span></div>
 <div class="grid">{result_cards}</div>
 </div></details>
+</div>
+<div class="lab-panel lab-panel-compare">
+<details class="sec" open><summary>Model comparison <span class="h2sub">· every model side by side · click a column to sort</span></summary>
+<div class="secbody">
+<div class="note">Use this tab to compare the models we have made across probability quality and pick accuracy. Lower RPS / log loss / Brier is better; higher accuracy is better; positive edge beats the baseline on RPS.</div>
+<table class="lb model-compare sortable"><thead><tr><th>#</th><th>variant</th><th class="num">n</th><th class="num">RPS</th>
+<th class="num">log loss</th><th class="num">Brier</th><th class="num">overall acc</th><th class="num">dec.acc</th><th>edge vs baseline</th></tr></thead>
+<tbody id="model-compare-body">{model_compare_rows}</tbody></table>
+</div></details>
+</div>
+</div>
+</section>
+
+<section class="bucket-shell context-shell" id="tournament-context">
+<div class="bucket-head"><div><h2>Tournament context</h2>
+<div class="h2sub">Championship odds and bracket-level context live below the model lab</div></div></div>
+<div id="sec-standings" class="live">{standings_section}</div>
+</section>
 
 </div>
 <script>
