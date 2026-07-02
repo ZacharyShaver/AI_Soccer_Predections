@@ -6,6 +6,8 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
+import sys
+import traceback
 from typing import Any
 
 import pandas as pd
@@ -164,8 +166,21 @@ def _summary_payload(summary: DailyUpdateSummary) -> dict[str, Any]:
 
 
 def main() -> None:
-    summary = run_daily_update()
-    print(json.dumps(_summary_payload(summary), indent=2, sort_keys=True))
+    # Never fail silently. The scheduled task pipes stdout+stderr into a single
+    # append-only log (runs/daily_update.log); an unhandled exception here previously
+    # cost three consecutive days of the daily forecast run (2026-06-26 to 2026-06-28,
+    # a WindowsPath JSON-serialization crash in _summary_payload) with zero output
+    # captured. Always emit a grep-able marker plus the full traceback, flushed, before
+    # exiting non-zero, so a future bug is loud instead of silent.
+    try:
+        summary = run_daily_update()
+        print(json.dumps(_summary_payload(summary), indent=2, sort_keys=True), flush=True)
+    except Exception:
+        print("[run_daily_update] FAILED:", flush=True)
+        traceback.print_exc()
+        sys.stdout.flush()
+        sys.stderr.flush()
+        sys.exit(1)
 
 
 if __name__ == "__main__":

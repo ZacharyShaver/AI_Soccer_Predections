@@ -2,9 +2,10 @@ import json
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from wc_predictor.data.ingest_international_results import _write_parquet
-from wc_predictor.run_daily_update import run_daily_update
+from wc_predictor.run_daily_update import main, run_daily_update
 
 
 def _fixture(
@@ -225,3 +226,26 @@ def test_run_daily_update_skips_gracefully_when_no_fixtures_are_after_as_of(tmp_
     assert summary.forecast_count == 0
     assert summary.ledger_path == partition
     assert not partition.exists() or partition.read_text(encoding="utf-8") == ""
+
+
+def test_main_prints_failure_marker_and_exits_nonzero_on_unexpected_error(
+    monkeypatch, capsys
+):
+    # Regression test for the 2026-06-26..2026-06-28 silent-failure incident: an
+    # unhandled exception inside run_daily_update() (there, a WindowsPath JSON
+    # serialization crash) must never exit with zero visible output. main() should
+    # always print a grep-able "[run_daily_update] FAILED" marker plus the traceback
+    # and exit non-zero, so the scheduled task's log always shows *something* on
+    # failure instead of a blank "run start" with nothing after it.
+    def boom(*args, **kwargs):
+        raise RuntimeError("simulated pipeline failure")
+
+    monkeypatch.setattr("wc_predictor.run_daily_update.run_daily_update", boom)
+
+    with pytest.raises(SystemExit) as exc_info:
+        main()
+
+    assert exc_info.value.code == 1
+    captured = capsys.readouterr()
+    assert "[run_daily_update] FAILED" in captured.out
+    assert "RuntimeError: simulated pipeline failure" in captured.err

@@ -119,6 +119,50 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-02 — Claude — Diagnosed + hardened the two silently-failing daily scheduled tasks
+Zach reported both recurring scheduled tasks had been failing to trigger/complete. Not a
+Codex lane (ops/tooling on the two Task Scheduler jobs, not the fusion/model work) — no
+overlap. Diagnosis + fixes done directly, PowerShell/git ownership per this file's rules.
+
+**`WorldCupDailyForecast` (9:00 AM, `run_daily_update.ps1`) — silently failed 3 days
+straight (6/26, 6/27, 6/28):** log shows "run start" then nothing — no output, no "run
+end". Confirmed root cause for 6/27–6/28 from commit history: `68634df` (6/26) added
+`dashboard_path`/`pages_path` fields to the daily summary as raw `WindowsPath` objects;
+`_summary_payload()` only stringified the two older fields, so the final `json.dumps` at
+the end of every run raised `TypeError` — all the real work (ingest/retrain/forecast)
+completed, only the closing summary print crashed. Fixed manually on 6/28 (`5e81ded`), but
+only for the two fields that existed then. 6/26's failure predates that bug and is
+unexplained (no fix commit addresses it; possibly a separate one-off).
+- **Hardened `run_daily_update.py`:** `main()` now wraps the whole run in try/except,
+  always prints a grep-able `[run_daily_update] FAILED` marker + full traceback (flushed)
+  before exiting 1, so any *future* bug is loud instead of silent. Added a regression test
+  (`test_main_prints_failure_marker_and_exits_nonzero_on_unexpected_error`).
+- **Hardened `run_daily_update.ps1`:** added `PYTHONUNBUFFERED=1` (Python fully buffers
+  stdout when piped — a hang killed by the scheduled task's execution time limit could
+  lose all buffered output, which may explain why nothing was captured even for 6/26–6/28
+  rather than a visible traceback); wrapped both python steps in try/catch/finally so a
+  closing "run end" log line is now guaranteed even if the wrapper itself throws.
+
+**`WC-Daily-Match-Analyst` (7:00 AM, `daily_match_analyst.ps1`) — registered 6/30, failed
+its first two automatic mornings (6/30 test run and 7/1):** the one-shot headless Claude
+session (`-p` mode) launched the dashboard rebuild with `run_in_background` and then
+waited for a completion notification a one-shot session can never receive (no future turn
+to deliver it), so it exited having committed/pushed nothing. This is documented inline in
+the prompt itself ("this happened on 2026-06-30") — yet it recurred on 7/1 with that
+warning already present, confirming a prose "don't do X" instruction isn't reliable under
+time/complexity pressure. Only 7/2 completed correctly (confirmed push `90fe3b2..905eaa8`).
+- **Restructured `daily_match_analyst.ps1` into two phases:** Phase 1 is a *bounded,
+  time-boxed* (20 min) Claude session that ONLY researches fixtures and records picks via
+  `analyst_cli` — no dashboard rebuild, no git. If it fails, hangs, or times out, it's
+  killed and logged, and phase 2 proceeds regardless. Phase 2 is pure deterministic
+  PowerShell — `championship`, `run_experiments`, git add/commit/push — with no LLM in the
+  loop for the guaranteed steps, so a misbehaving research session can never again
+  silently skip the push.
+
+**Status:** both tasks are currently working (last runs today, 7/2, succeeded). These
+fixes address the confirmed failure modes but can't rule out novel future ones — flagging
+here per this file's rule that this is one-off ops/tooling work, not a plan-queue task.
+
 ### 2026-06-29 — Claude — Tournament-standing session: LANE SPLIT (Claude=standings, Codex=variant)
 Zach asked for two knockout-stage features (group_incentive is now a no-op in the bracket).
 **Lane split:** Claude owns the **championship-odds standings** (dashboard); Codex owns the
