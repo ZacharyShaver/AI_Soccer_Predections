@@ -119,6 +119,25 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-02 — Claude — DC×Elo fusion: FIRST fusion to beat its best constituent — PROMOTED
+Follow-up to the Dixon-Coles integration below. Ran the queued fusion experiment
+(`runs/dc_fusion_scratch/experiment.py`, scratch/uncommitted per convention; two ledger
+entries `claude__fuse-dc-elo-{linear,log}` in `runs/fusion/`). Protocol: 6-block
+time-ordered walk-forward — each block scored with the pool weight chosen ONLY on earlier
+blocks, so the weight is out-of-fold; the a-priori equal weight was also checked full-sample.
+**Result: the log opinion pool (weight 0.7 on DC) beats `dixon_coles_tuned` — the best
+single constituent — out-of-fold on history (n=13,249): RPS 0.17111 vs 0.17141, paired CI
+[-0.00048, -0.00011] EXCLUDES 0.** Linear pool equivalent. No wc regression (n=76: fused
+0.1583 < DC 0.1588 < Elo 0.1594 — fused best); market964 direction right (0.1556 vs 0.1560,
+CI spans 0); still loses to the market 0.1496 like everything else. Weight path stable
+across blocks (0.85→0.70). Effect is small (~0.2% relative RPS) but meets the same
+paired-CI standard as every prior promotion. This does NOT overturn Codex's T2 null — that
+result correctly covered correlated Elo-family constituents; DC broke the precondition
+(50.7% per-match split vs Elo). **Promoted as variant `dc_elo_fusion`**
+(`lab/variants/dc_elo_fusion.py` + `tests/lab/test_dc_elo_fusion.py`, 5 tests; log pool
+via Codex's `fusion_recipes.logarithmic_opinion_pool`, scoreline delegated to the DC
+component, Elo-component rating context). Committed with dashboards rebuilt.
+
 ### 2026-07-02 — Claude — Dixon-Coles lane REVIEWED + COMMITTED (Zach-directed)
 The 06-30 evening Dixon-Coles work (untracked files, no co-op log entry recorded by whoever
 built it) was reviewed and integrated on Zach's direction. **First model-class win of the
