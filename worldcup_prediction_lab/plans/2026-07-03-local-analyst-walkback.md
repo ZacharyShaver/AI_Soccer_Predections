@@ -423,7 +423,7 @@ git commit -m "walkback: GDELT news-well builder with frozen per-match JSON well
   - `clean_well(well: dict) -> dict` — returns a copy with only clean docs plus `well["lint"] = {"kept": int, "dropped": [{"url", "violations"}]}`.
   - `well_ok(well: dict, *, min_docs: int = 3) -> bool` — coverage gate used by the runner.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```python
 # tests/lab/test_walkback_linter.py
@@ -477,12 +477,12 @@ def test_clean_well_and_gate():
     assert well_ok(cleaned, min_docs=4) is False
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/lab/test_walkback_linter.py -v`
 Expected: FAIL with `ModuleNotFoundError` on `linter`
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```python
 # src/wc_predictor/lab/walkback/linter.py
@@ -541,7 +541,7 @@ def well_ok(well: dict, *, min_docs: int = 3) -> bool:
     return len(well.get("docs", [])) >= min_docs
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/lab/test_walkback_linter.py -v`
 Expected: 6 PASS
