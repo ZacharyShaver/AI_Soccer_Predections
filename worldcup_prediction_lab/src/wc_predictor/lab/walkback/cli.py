@@ -118,6 +118,17 @@ def cmd_run(args: argparse.Namespace) -> None:
     print(stats)
 
 
+def cmd_evaluate(args: argparse.Namespace) -> None:
+    from wc_predictor.lab.walkback.evaluate import evaluate, write_report
+
+    universe = load_universe(cutoff=args.cutoff)
+    preds = [json.loads(l) for l in Path(args.preds).read_text(encoding="utf-8").splitlines()
+             if l.strip()]
+    results = evaluate(universe, preds)
+    write_report(results, Path(args.report))
+    print(json.dumps(results["ladder"], indent=1))
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="python -m wc_predictor.lab.walkback")
     sub = parser.add_subparsers(required=True)
@@ -142,6 +153,12 @@ def main(argv: list[str] | None = None) -> None:
     rn.add_argument("--wells-root", default="runs/newswells")
     rn.add_argument("--out", default="runs/analyst_walkback/preds.jsonl")
     rn.set_defaults(func=cmd_run)
+
+    ev = sub.add_parser("evaluate", help="ladder + paired CIs + calibration report")
+    ev.add_argument("--cutoff", default=CUTOFF_DEFAULT)
+    ev.add_argument("--preds", default="runs/analyst_walkback/preds.jsonl")
+    ev.add_argument("--report", default="reports/backtests/local_analyst_walkback.md")
+    ev.set_defaults(func=cmd_evaluate)
 
     args = parser.parse_args(argv)
     args.func(args)
