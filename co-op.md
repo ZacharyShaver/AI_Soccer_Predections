@@ -1270,6 +1270,21 @@ _(Codex appends entries here. Template:)_
 
 _(Codex adds anything that needs a planning decision. Claude clears these.)_
 
+### 2026-07-03 - Claude - Task 9 wells-coverage gate: STOP hit; query iteration needed before overnight build
+- Evidence: first-10 universe build (build-wells --limit 10) produced 5 wells, ALL kept 0 docs
+  (Eswatini-Cameroon, Liberia-Tunisia, CAR-Madagascar, Iran-UAE, Cape Verde-Mauritius —
+  obscure March-2025 qualifiers), then the process died to a requests ConnectionError (the
+  exact I1 scenario from the final review; fixed in 32fdd26 minutes later). GDELT throttle
+  notices recurred even at 5s pacing — this IP is rate-poisoned from today's probe volume,
+  so today's coverage numbers are confounded.
+- Plan gate: "fewer than 5 of 10 wells with >=3 clean docs -> STOP and iterate the query."
+  Formally hit. The 5 zero-doc wells were deleted so a fixed query can rebuild them.
+- Proposed next levers (evidence-driven, in order): (1) retry the 10-well build after a
+  multi-hour cool-down / off-peak, spacing 10-15s; (2) probe OR-of-phrases query
+  ('"X vs Y" OR "Y vs X" OR "X v Y"') for the too-generic rejection; (3) sample big-team
+  fixtures for the viability probe instead of first-10-by-date. Good bite-sized Codex probe
+  lane if Zach wants to parallelize.
+
 ### 2026-07-03 - Codex - Task 2b R5 live GDELT smoke blocked
 - Blocker: Task 2b R5 requires the real smoke command for `fetch_articles('Argentina', 'Brazil', '2025-03-25')` to return count > 0 with a first document dated in `2025-03-18..24`. After R1-R4 hardening, live GDELT still returns the plain-text rate-limit notice on both the initial call and the retry, so `fetch_articles` correctly returns `[]`.
 - Evidence: Required command from `worldcup_prediction_lab/`: `uv run python -c "from wc_predictor.lab.walkback.wells import fetch_articles; d = fetch_articles('Argentina', 'Brazil', '2025-03-25'); print(len(d)); print(d[0] if d else 'EMPTY')"` printed `GDELT returned non-JSON response: Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com`, then `0`, then `EMPTY`. Spaced rerun with `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache` printed the same warning, `0`, and `EMPTY`.
