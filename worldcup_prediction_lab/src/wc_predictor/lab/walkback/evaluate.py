@@ -66,14 +66,29 @@ def _calibration(probs_list, outcomes) -> dict:
             "clump_top10": clump.most_common(10)}
 
 
-def evaluate(universe: pd.DataFrame, preds: list[dict]) -> dict:
+def evaluate(universe: pd.DataFrame, preds: list[dict], *,
+             climatology: tuple[float, float, float] | None = None) -> dict:
     uni = universe.copy()
     uni["match_id"] = uni["match_id"].astype(str)
     uni = uni.set_index("match_id", drop=False)
-    clim = climatology_probs(universe)
+    if climatology is not None:
+        clim, clim_source = climatology, "explicit"
+    else:
+        clim, clim_source = climatology_probs(universe), "frame-fallback"
+
+    # Baseline ladder rows: computed ONCE over the full universe, independent of
+    # which matches each lane predicted. Per-lane rigor lives in the paired CIs.
+    all_outcomes = [str(o) for o in uni["outcome"]]
+    all_elo = [tuple(t) for t in uni[["elo_prob_home", "elo_prob_draw", "elo_prob_away"]].itertuples(index=False)]
+    all_mkt = [tuple(t) for t in uni[["market_prob_home", "market_prob_draw", "market_prob_away"]].itertuples(index=False)]
+    n_all = len(uni)
+    ladder: dict[str, dict] = {
+        "climatology": {"n": n_all, "rps": sum(_rps_series([clim] * n_all, all_outcomes)) / max(1, n_all)},
+        "elo": {"n": n_all, "rps": sum(_rps_series(all_elo, all_outcomes)) / max(1, n_all)},
+        "market": {"n": n_all, "rps": sum(_rps_series(all_mkt, all_outcomes)) / max(1, n_all)},
+    }
 
     lanes: dict[str, dict] = {}
-    ladder: dict[str, dict] = {}
     by_lane: dict[str, list[dict]] = {}
     for p in preds:
         by_lane.setdefault(f"{p['model']}/{p['condition']}", []).append(p)
@@ -90,7 +105,6 @@ def evaluate(universe: pd.DataFrame, preds: list[dict]) -> dict:
         model_rps = _rps_series(model_p, outcomes)
         elo_rps = _rps_series(elo_p, outcomes)
         mkt_rps = _rps_series(mkt_p, outcomes)
-        clim_rps = _rps_series([clim] * len(rows), outcomes)
         n = len(rows)
         lanes[lane_key] = {
             "n": n,
@@ -100,15 +114,15 @@ def evaluate(universe: pd.DataFrame, preds: list[dict]) -> dict:
             "calibration": _calibration(model_p, outcomes),
         }
         ladder[lane_key] = {"n": n, "rps": lanes[lane_key]["rps"]}
-        ladder.setdefault("climatology", {"n": n, "rps": sum(clim_rps) / max(1, n)})
-        ladder.setdefault("elo", {"n": n, "rps": sum(elo_rps) / max(1, n)})
-        ladder.setdefault("market", {"n": n, "rps": sum(mkt_rps) / max(1, n)})
 
-    return {"lanes": lanes, "ladder": ladder}
+    return {"lanes": lanes, "ladder": ladder, "climatology_source": clim_source}
 
 
 def write_report(results: dict, path: Path) -> None:
     lines = ["# Local-model match-analyst walk-back", ""]
+    lines.append(f"Climatology source: {results.get('climatology_source', 'unknown')} "
+                 "(explicit = pre-cutoff market964 base rates; frame-fallback = INVALID for real runs)")
+    lines.append("")
     lines += ["## Accuracy ladder (lower RPS = better)", "",
               "| Lane | n | RPS |", "| --- | ---: | ---: |"]
     for name, row in sorted(results["ladder"].items(), key=lambda kv: kv[1]["rps"]):

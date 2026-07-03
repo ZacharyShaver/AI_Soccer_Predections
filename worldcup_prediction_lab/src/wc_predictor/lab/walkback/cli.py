@@ -119,12 +119,14 @@ def cmd_run(args: argparse.Namespace) -> None:
 
 
 def cmd_evaluate(args: argparse.Namespace) -> None:
-    from wc_predictor.lab.walkback.evaluate import evaluate, write_report
+    from wc_predictor.lab.walkback.evaluate import climatology_probs, evaluate, write_report
 
     universe = load_universe(cutoff=args.cutoff)
+    full_history = load_universe(cutoff="1900-01-01")
+    clim = climatology_probs(full_history, cutoff=args.cutoff)
     preds = [json.loads(l) for l in Path(args.preds).read_text(encoding="utf-8").splitlines()
              if l.strip()]
-    results = evaluate(universe, preds)
+    results = evaluate(universe, preds, climatology=clim)
     write_report(results, Path(args.report))
     print(json.dumps(results["ladder"], indent=1))
 

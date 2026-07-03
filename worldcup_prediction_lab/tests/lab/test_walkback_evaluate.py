@@ -61,3 +61,22 @@ def test_fit_temperature_flattens_overconfidence():
     outcomes = (["home"] * 12) + (["draw"] * 9) + (["away"] * 9)
     temp = fit_temperature(probs, outcomes)
     assert temp > 1.0
+
+
+def test_explicit_climatology_is_used():
+    from wc_predictor.evaluation.metrics import ranked_probability_score
+
+    uni = _universe()
+    res = evaluate(uni, _preds(uni), climatology=(1.0, 0.0, 0.0))
+    assert res["climatology_source"] == "explicit"
+    expected = sum(ranked_probability_score((1.0, 0.0, 0.0), o) for o in uni["outcome"]) / len(uni)
+    assert abs(res["ladder"]["climatology"]["rps"] - expected) < 1e-12
+
+
+def test_ladder_baselines_cover_full_universe():
+    uni = _universe()
+    preds = _preds(uni)[:10]  # lane predicts only the first 10 matches
+    res = evaluate(uni, preds)
+    assert res["lanes"]["test-model/both"]["n"] == 10
+    assert res["ladder"]["elo"]["n"] == len(uni)
+    assert res["ladder"]["climatology"]["n"] == len(uni)
