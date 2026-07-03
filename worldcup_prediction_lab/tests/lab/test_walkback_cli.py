@@ -57,3 +57,18 @@ def test_run_batch_survives_client_errors(tmp_path: Path):
     client.chat_json.side_effect = ValueError("no valid JSON")
     stats = run_batch(_universe(), tmp_path / "none", client, "stats", out)
     assert stats["errors"] == 2 and stats["done"] == 0
+
+
+def test_run_batch_survives_corrupt_well(tmp_path: Path):
+    wells_root = tmp_path / "wells"
+    wells_root.mkdir()
+    (wells_root / "m1.json").write_text("{ this is not json", encoding="utf-8")
+    _mk_well("m2", "Spain", "Austria", wells_root, n_docs=3)
+    out = tmp_path / "preds.jsonl"
+
+    client = MagicMock()
+    client.model = "test-model"
+    client.chat_json.return_value = {"p_home": 0.4, "p_draw": 0.3, "p_away": 0.3}
+
+    stats = run_batch(_universe(), wells_root, client, "news", out)
+    assert stats == {"done": 1, "skipped_existing": 0, "skipped_no_well": 0, "errors": 1}

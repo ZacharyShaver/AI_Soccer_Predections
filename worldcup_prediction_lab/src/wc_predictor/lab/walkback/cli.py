@@ -43,7 +43,12 @@ def run_batch(universe: pd.DataFrame, wells_root: Path, client: LMClient,
                 continue
             well = None
             if condition in ("news", "both"):
-                well = load_well(str(row["match_id"]), wells_root)
+                try:
+                    well = load_well(str(row["match_id"]), wells_root)
+                except Exception as exc:
+                    print(f"  ERROR {row['match_id']}: corrupt well: {exc}")
+                    stats["errors"] += 1
+                    continue
                 if well is None or not well_ok(well):
                     stats["skipped_no_well"] += 1
                     continue
