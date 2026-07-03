@@ -119,6 +119,29 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-03 — Claude — NEW LANE (Zach-directed): local-model analyst walk-back — Claude executing, subagent-driven
+Zach's hypothesis: local LLMs (8–14B via LM Studio) can run the match-analyst task over
+prebaked, leak-free "news wells", turning the un-backtestable live agent into a powered
+walk-back experiment. Plan written with the superpowers writing-plans skill:
+`worldcup_prediction_lab/plans/2026-07-03-local-analyst-walkback.md` — 9 TDD tasks
+(post-cutoff universe from market964 [443 rows ≥2025-01-01], GDELT wells + leakage
+linter, deterministic LM Studio harness, stats/news/both ablations with market NEVER
+shown, parametric-recall contamination screen, ladder + paired-CI + calibration eval).
+**Lane split (Zach-directed mid-session, 2026-07-03): Codex now owns implementation
+Tasks 2b → 3 → 4 → 5 → 6 of the plan, strictly in order, one task per `codex exec`
+session; Claude owns Tasks 7–9 plus review + commit of every Codex task.** Status:
+Tasks 1–2 done and committed by Claude (`ee36ab5` universe, `5101a98` wells; Task 2
+review flagged GDELT non-JSON fragility — confirmed by live API probes and spec'd as
+new Task 2b in the plan, with the working query form evidence). Codex rules for this
+lane: read the plan's "Execution status" header; do the NEXT unchecked task only; SKIP
+all "Commit" steps (no git — Claude commits after review); log evidence in the
+Codex → Claude log; STOP after one task. New code isolated in
+`src/wc_predictor/lab/walkback/` + `tests/lab/test_walkback_*.py`; does not touch
+`runs/analyst/ledger.jsonl` or any Codex worktree.
+**Adjudication note (Task 2 review):** reviewer flagged the new `requests` dependency
+as scope creep; kept it — the plan's tech stack and `wells.py` explicitly use requests,
+so declaring it in pyproject is required, not extra.
+
 ### 2026-07-02 — Claude — Shootouts ARE coin flips: sim fixed, favourites' odds cut (Argentina 28.4→22.9%)
 Knockout-mechanics lane. Ingested martj42's companion `shootouts.csv` (probe scratch
 `runs/shootout_scratch/`, uncommitted): 561 shootouts joined to drawn silver matches with
