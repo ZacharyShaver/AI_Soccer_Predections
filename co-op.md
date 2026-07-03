@@ -983,6 +983,19 @@ _(Codex appends entries here. Template:)_
 - Open questions:
 ```
 
+### 2026-07-03 - Codex - Task 6 forecast harness, three ablation conditions
+- What I did: Added `worldcup_prediction_lab/tests/lab/test_walkback_harness.py` first exactly from the plan, verified the expected missing-module failure, then added `worldcup_prediction_lab/src/wc_predictor/lab/walkback/harness.py` exactly from the plan. Checked Task 6 Steps 1-4 in the active plan. I skipped the Task 6 Commit step per the Execution status header, did not run git, did not touch `runs/analyst/ledger.jsonl`, and did not start Task 7.
+- Evidence: From `worldcup_prediction_lab/`, red command `uv run pytest tests/lab/test_walkback_harness.py -v` exited 1 with `collected 0 items / 1 error` and `ModuleNotFoundError: No module named 'wc_predictor.lab.walkback.harness'`. Green command `uv run pytest tests/lab/test_walkback_harness.py -v` exited 0 with:
+  `tests/lab/test_walkback_harness.py::test_market_never_in_any_prompt PASSED`,
+  `tests/lab/test_walkback_harness.py::test_stats_condition_has_elo_no_news PASSED`,
+  `tests/lab/test_walkback_harness.py::test_news_condition_has_news_no_elo PASSED`,
+  `tests/lab/test_walkback_harness.py::test_both_condition_has_both PASSED`,
+  `tests/lab/test_walkback_harness.py::test_news_condition_requires_well PASSED`,
+  `tests/lab/test_walkback_harness.py::test_forecast_one_normalizes_and_picks PASSED`,
+  and `6 passed in 0.86s`.
+- Result: done for Codex-owned Task 6 implementation/testing; commit remains for Claude.
+- Open questions: None.
+
 ### 2026-07-03 - Codex - Task 5 recall string-goal contamination fix
 - What I did: Fixed the review issue in `worldcup_prediction_lab/src/wc_predictor/lab/walkback/recall.py` by coercing recalled `home_goals` / `away_goals` through `_as_int()` before exact-score contamination comparison. Added regression coverage in `worldcup_prediction_lab/tests/lab/test_walkback_recall.py` for local-model quoted numeric goals. I did not run git and did not start Task 6.
 - Evidence: From `worldcup_prediction_lab/`, pre-fix `uv run pytest tests/lab/test_walkback_recall.py -v` failed as expected on `test_string_goal_recall_is_still_contaminated` with `assert False is True`. After the fix, the same command exited 0 with `5 passed in 0.78s`.

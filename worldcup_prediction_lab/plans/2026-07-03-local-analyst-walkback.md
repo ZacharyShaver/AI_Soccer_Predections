@@ -823,7 +823,7 @@ git commit -m "walkback: parametric-recall contamination screen (exact-score rul
   - `build_prompt(row, well: dict | None, condition: str) -> tuple[str, str]` — (system, user). **`market_prob_*` must never appear in any prompt.**
   - `forecast_one(row, well: dict | None, condition: str, client: LMClient) -> dict` — `{"match_id", "condition", "model", "p_home", "p_draw", "p_away", "pick"}` with probs clamped to ≥0.001 and renormalized to sum 1.0; `pick` = argmax outcome.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```python
 # tests/lab/test_walkback_harness.py
@@ -892,12 +892,12 @@ def test_forecast_one_normalizes_and_picks():
     assert out["condition"] == "both" and out["model"] == "test-model"
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/lab/test_walkback_harness.py -v`
 Expected: FAIL with `ModuleNotFoundError` on `harness`
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```python
 # src/wc_predictor/lab/walkback/harness.py
@@ -981,7 +981,7 @@ def forecast_one(row: pd.Series, well: dict | None, condition: str, client: LMCl
             "p_home": p_home, "p_draw": p_draw, "p_away": p_away, "pick": pick}
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/lab/test_walkback_harness.py -v`
 Expected: 6 PASS
