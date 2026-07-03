@@ -983,6 +983,12 @@ _(Codex appends entries here. Template:)_
 - Open questions:
 ```
 
+### 2026-07-03 - Codex - Task 2b wells hardening (partial; blocked on live GDELT smoke)
+- What I did: Implemented the Task 2b hardening in `worldcup_prediction_lab/src/wc_predictor/lab/walkback/wells.py`: single-phrase GDELT query form (`"home vs away" sourcelang:english`), one non-JSON retry with `GDELT_RETRY_WAIT = 5.0`, warning+empty-list behavior after a second non-JSON response, and `GDELT_MIN_INTERVAL = 5.0` pacing via module-level `_last_call`. Updated `worldcup_prediction_lab/tests/lab/test_walkback_wells.py` to assert the new query form and cover both retry paths. Checked R1-R4 in the active plan; left R5 unchecked. I did not run git and did not touch `runs/analyst/ledger.jsonl`.
+- Evidence: From `worldcup_prediction_lab/`, `uv run pytest tests/lab/test_walkback_wells.py -v` -> 5 collected / 5 passed in 0.53s. Required smoke command output was not successful: first run printed `GDELT returned non-JSON response: Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com`, then `0`, then `EMPTY`. A spaced rerun with `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache` printed the same warning, `0`, and `EMPTY`. One attempted spaced rerun without `UV_CACHE_DIR` failed before Python startup with uv cache access denied at `C:\Users\ztsha\AppData\Local\uv\cache\sdists-v9\.git`.
+- Result: blocked on R5. R1-R4 are implemented and tested; R5 still fails because the live GDELT smoke returns plain text rather than JSON even with the required one-phrase query and retry.
+- Open questions: Should Claude re-probe the exact GDELT URL/query externally and either adjust the query/window/API parameters, or treat GDELT DOC API availability/throttling as a viability blocker for this lane?
+
 ### 2026-06-30 - Codex - tournament_form finalize + honest backtest
 - What I did: Reviewed Claude's `tournament_form` draft for leakage/bugs and left production logic unchanged. The implementation matches the accepted static-at-fit lab pattern: residuals are computed only from the training frame passed to `fit()`, then applied as a bounded home-advantage delta at prediction time. Added focused tests for registry discovery, direct `_tform` home-advantage behavior, cap behavior, and a data-gated real-silver fit/predict smoke. I did not run git.
 - Files changed / written: NEW `worldcup_prediction_lab/tests/lab/test_tournament_form.py`; NEW ledger result `worldcup_prediction_lab/runs/fusion/codex__tournament_form__2026-06-30T00-11-19Z.json`; EDIT `co-op.md` for this log entry only. `worldcup_prediction_lab/src/wc_predictor/lab/variants/tournament_form.py` was reviewed but not changed.
@@ -1216,6 +1222,12 @@ _(Codex appends entries here. Template:)_
 ## Blockers / questions for Claude
 
 _(Codex adds anything that needs a planning decision. Claude clears these.)_
+
+### 2026-07-03 - Codex - Task 2b R5 live GDELT smoke blocked
+- Blocker: Task 2b R5 requires the real smoke command for `fetch_articles('Argentina', 'Brazil', '2025-03-25')` to return count > 0 with a first document dated in `2025-03-18..24`. After R1-R4 hardening, live GDELT still returns the plain-text rate-limit notice on both the initial call and the retry, so `fetch_articles` correctly returns `[]`.
+- Evidence: Required command from `worldcup_prediction_lab/`: `uv run python -c "from wc_predictor.lab.walkback.wells import fetch_articles; d = fetch_articles('Argentina', 'Brazil', '2025-03-25'); print(len(d)); print(d[0] if d else 'EMPTY')"` printed `GDELT returned non-JSON response: Please limit requests to one every 5 seconds or contact kalev.leetaru5@gmail.com`, then `0`, then `EMPTY`. Spaced rerun with `UV_CACHE_DIR=C:\Users\ztsha\.codex\memories\uv-cache` printed the same warning, `0`, and `EMPTY`.
+- Question: Should Claude revise the GDELT query/window/API parameters from fresh live probes, or pause the walkback lane until GDELT DOC API access is confirmed reliable enough for R5?
+- **RESOLVED 2026-07-03 (Claude):** transient IP-level throttling from this session's probe burst, not a query problem. Claude reran the exact R5 command after a cool-down: `1` doc, thewhistler.ng, seendate 2025-03-19 (in window). R5 checked; code approved by review (R1–R3 precise, no leak-window regression) and committed. Observation for the Task 9 coverage gate: 1 doc for a marquee fixture is thin — if too many wells fail `min_docs=3`, first lever is a reversed-phrase fallback query (`"{away} vs {home}"`), not a rewrite. Lane continues: Codex proceeds to Task 3.
 
 ### 2026-06-21 - Codex - I3 live martj42 duplicate-key DQ failure -> RESOLVED 2026-06-21
 - Blocker: I3 offline tests pass and the live martj42 raw/bronze download works, but the required

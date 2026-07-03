@@ -8,6 +8,7 @@ built once, linted once, then reused to evaluate any model.
 from __future__ import annotations
 
 import json
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -15,6 +16,10 @@ import pandas as pd
 import requests
 
 GDELT_DOC_API = "https://api.gdeltproject.org/api/v2/doc/doc"
+GDELT_MIN_INTERVAL = 5.0
+GDELT_RETRY_WAIT = 5.0
+
+_last_call: float | None = None
 
 
 def _to_date(seendate: str) -> str:
@@ -24,11 +29,18 @@ def _to_date(seendate: str) -> str:
 
 def fetch_articles(home: str, away: str, match_date: str, *, days_before: int = 7,
                    max_records: int = 30, session=None) -> list[dict]:
+    global _last_call
+
     session = session or requests.Session()
+    now = time.monotonic()
+    if _last_call is not None:
+        elapsed = now - _last_call
+        if elapsed < GDELT_MIN_INTERVAL:
+            time.sleep(GDELT_MIN_INTERVAL - elapsed)
     end = pd.Timestamp(match_date) - timedelta(days=1)
     start = pd.Timestamp(match_date) - timedelta(days=days_before)
     params = {
-        "query": f'"{home}" "{away}" sourcelang:english',
+        "query": f'"{home} vs {away}" sourcelang:english',
         "mode": "artlist",
         "format": "json",
         "maxrecords": str(max_records),
@@ -36,7 +48,19 @@ def fetch_articles(home: str, away: str, match_date: str, *, days_before: int = 
         "enddatetime": end.strftime("%Y%m%d") + "235959",
     }
     resp = session.get(GDELT_DOC_API, params=params, timeout=30)
-    articles = resp.json().get("articles", []) or []
+    _last_call = time.monotonic()
+    try:
+        payload = resp.json()
+    except ValueError:
+        time.sleep(GDELT_RETRY_WAIT)
+        resp = session.get(GDELT_DOC_API, params=params, timeout=30)
+        _last_call = time.monotonic()
+        try:
+            payload = resp.json()
+        except ValueError:
+            print(f"GDELT returned non-JSON response: {getattr(resp, 'text', '')[:80]}")
+            return []
+    articles = payload.get("articles", []) or []
     seen: set[str] = set()
     docs: list[dict] = []
     for a in articles:

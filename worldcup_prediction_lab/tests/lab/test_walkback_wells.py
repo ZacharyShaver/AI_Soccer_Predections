@@ -13,6 +13,12 @@ from wc_predictor.lab.walkback.wells import (
     save_well,
     well_path,
 )
+from wc_predictor.lab.walkback import wells
+
+
+@pytest.fixture(autouse=True)
+def _reset_gdelt_pacing(monkeypatch):
+    monkeypatch.setattr(wells, "_last_call", None)
 
 
 def _gdelt_response():
@@ -49,9 +55,40 @@ def test_fetch_articles_windows_query_and_dedupes():
     assert len(docs) == 1
     assert docs[0]["seendate"] == "2025-03-08"
     params = session.get.call_args.kwargs["params"]
-    assert '"Brazil"' in params["query"] and '"Norway"' in params["query"]
+    assert '"Brazil vs Norway"' in params["query"]
     assert params["startdatetime"] == "20250303000000"
     assert params["enddatetime"] == "20250309235959"  # strictly before match day
+
+
+def test_fetch_articles_retries_once_after_non_json(monkeypatch):
+    first = MagicMock()
+    first.json.side_effect = ValueError("not json")
+    first.text = "Please limit requests to one every 5 seconds"
+    second = MagicMock()
+    second.json.return_value = _gdelt_response()
+    session = MagicMock()
+    session.get.side_effect = [first, second]
+    monkeypatch.setattr(wells.time, "sleep", MagicMock())
+
+    docs = fetch_articles("Brazil", "Norway", "2025-03-10", session=session)
+
+    assert len(docs) == 1
+    assert session.get.call_count == 2
+
+
+def test_fetch_articles_returns_empty_when_retry_is_non_json(monkeypatch):
+    first = MagicMock()
+    first.json.side_effect = ValueError("not json")
+    first.text = "Please limit requests to one every 5 seconds"
+    second = MagicMock()
+    second.json.side_effect = ValueError("still not json")
+    second.text = "Please limit requests to one every 5 seconds"
+    session = MagicMock()
+    session.get.side_effect = [first, second]
+    monkeypatch.setattr(wells.time, "sleep", MagicMock())
+
+    assert fetch_articles("Brazil", "Norway", "2025-03-10", session=session) == []
+    assert session.get.call_count == 2
 
 
 def test_build_well_shape():
