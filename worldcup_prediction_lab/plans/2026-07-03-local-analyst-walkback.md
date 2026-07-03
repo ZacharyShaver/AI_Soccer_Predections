@@ -705,7 +705,7 @@ git commit -m "walkback: deterministic LM Studio chat client with strict-JSON pa
 - Consumes: universe rows (Task 1) and `LMClient.chat_json` (Task 4).
 - Produces: `recall_check(row, client: LMClient) -> dict` returning `{"match_id", "contaminated": bool, "recalled": {...raw model json...}}`. Contamination rule: **contaminated only if the model states the exact final score correctly** (correct-outcome-only is NOT contamination — excluding correctly-guessed outcomes would preferentially remove favorite-wins and bias the sample toward upsets; exact-score-by-chance is ~10%, an acceptable false-flag rate).
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```python
 # tests/lab/test_walkback_recall.py
@@ -750,12 +750,12 @@ def test_prompt_does_not_leak_the_result():
     assert "2" not in user_prompt.replace("2025", "")  # scores absent (date year allowed)
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/lab/test_walkback_recall.py -v`
 Expected: FAIL with `ModuleNotFoundError` on `recall`
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```python
 # src/wc_predictor/lab/walkback/recall.py
@@ -796,7 +796,7 @@ def recall_check(row: pd.Series, client: LMClient) -> dict:
     return {"match_id": str(row["match_id"]), "contaminated": contaminated, "recalled": recalled}
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/lab/test_walkback_recall.py -v`
 Expected: 4 PASS

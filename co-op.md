@@ -983,6 +983,23 @@ _(Codex appends entries here. Template:)_
 - Open questions:
 ```
 
+### 2026-07-03 - Codex - Task 5 recall string-goal contamination fix
+- What I did: Fixed the review issue in `worldcup_prediction_lab/src/wc_predictor/lab/walkback/recall.py` by coercing recalled `home_goals` / `away_goals` through `_as_int()` before exact-score contamination comparison. Added regression coverage in `worldcup_prediction_lab/tests/lab/test_walkback_recall.py` for local-model quoted numeric goals. I did not run git and did not start Task 6.
+- Evidence: From `worldcup_prediction_lab/`, pre-fix `uv run pytest tests/lab/test_walkback_recall.py -v` failed as expected on `test_string_goal_recall_is_still_contaminated` with `assert False is True`. After the fix, the same command exited 0 with `5 passed in 0.78s`.
+- Result: done for the Task 5 review fix; commit remains for Claude.
+- Open questions: None.
+
+### 2026-07-03 - Codex - Task 5 parametric-recall contamination screen
+- What I did: Added `worldcup_prediction_lab/tests/lab/test_walkback_recall.py` first exactly from the plan, verified the expected missing-module failure, then added `worldcup_prediction_lab/src/wc_predictor/lab/walkback/recall.py` exactly from the plan. Checked Task 5 Steps 1-4 in the active plan. I skipped the Task 5 Commit step per the Execution status header, did not run git, and did not touch `runs/analyst/ledger.jsonl`.
+- Evidence: From `worldcup_prediction_lab/`, red command `uv run pytest tests/lab/test_walkback_recall.py -v` exited 1 with `collected 0 items / 1 error` and `ModuleNotFoundError: No module named 'wc_predictor.lab.walkback.recall'`. Green command `uv run pytest tests/lab/test_walkback_recall.py -v` exited 0 with:
+  `tests/lab/test_walkback_recall.py::test_exact_score_recall_is_contaminated PASSED`,
+  `tests/lab/test_walkback_recall.py::test_correct_outcome_wrong_score_is_not_contaminated PASSED`,
+  `tests/lab/test_walkback_recall.py::test_unknown_is_not_contaminated PASSED`,
+  `tests/lab/test_walkback_recall.py::test_prompt_does_not_leak_the_result PASSED`,
+  and `4 passed in 0.90s`.
+- Result: done for Codex-owned Task 5 implementation/testing; commit remains for Claude.
+- Open questions: None.
+
 ### 2026-07-03 - Codex - Task 4 LM Studio strict-JSON client
 - What I did: Added `worldcup_prediction_lab/tests/lab/test_walkback_llm.py` first exactly from the plan, verified the expected missing-module failure, then added `worldcup_prediction_lab/src/wc_predictor/lab/walkback/llm.py` exactly from the plan. Checked Task 4 Steps 1-4 in the active plan. I skipped the Task 4 Commit step per the Execution status header, did not run git, and did not touch `runs/analyst/ledger.jsonl`.
 - Evidence (paths / row counts / schema): From `worldcup_prediction_lab/`, red command `uv run pytest tests/lab/test_walkback_llm.py -v` exited 1 with `collected 0 items / 1 error` and `ModuleNotFoundError: No module named 'wc_predictor.lab.walkback.llm'`. Green command `uv run pytest tests/lab/test_walkback_llm.py -v` exited 0 with:
