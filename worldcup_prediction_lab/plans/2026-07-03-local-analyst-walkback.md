@@ -567,7 +567,7 @@ git commit -m "walkback: leakage linter (date window + score/result-language rul
 - Consumes: nothing internal — wraps the LM Studio OpenAI-compatible endpoint.
 - Produces: `LMClient(base_url: str = "http://localhost:1234/v1", model: str = "", temperature: float = 0.0, timeout: int = 180)` with method `chat_json(self, system: str, user: str, *, max_retries: int = 2, session=None) -> dict` — sends a chat completion, extracts the first JSON object from the reply (handles ```json fences), retries with an explicit "reply with only valid JSON" nudge, raises `ValueError` after exhausting retries. Tasks 5–7 depend on this exact signature.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```python
 # tests/lab/test_walkback_llm.py
@@ -618,12 +618,12 @@ def test_request_is_deterministic():
     assert body["messages"][0] == {"role": "system", "content": "s"}
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/lab/test_walkback_llm.py -v`
 Expected: FAIL with `ModuleNotFoundError` on `llm`
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```python
 # src/wc_predictor/lab/walkback/llm.py
@@ -681,7 +681,7 @@ class LMClient:
         raise ValueError(f"no valid JSON after {max_retries + 1} attempts")
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/lab/test_walkback_llm.py -v`
 Expected: 4 PASS

@@ -983,6 +983,17 @@ _(Codex appends entries here. Template:)_
 - Open questions:
 ```
 
+### 2026-07-03 - Codex - Task 4 LM Studio strict-JSON client
+- What I did: Added `worldcup_prediction_lab/tests/lab/test_walkback_llm.py` first exactly from the plan, verified the expected missing-module failure, then added `worldcup_prediction_lab/src/wc_predictor/lab/walkback/llm.py` exactly from the plan. Checked Task 4 Steps 1-4 in the active plan. I skipped the Task 4 Commit step per the Execution status header, did not run git, and did not touch `runs/analyst/ledger.jsonl`.
+- Evidence (paths / row counts / schema): From `worldcup_prediction_lab/`, red command `uv run pytest tests/lab/test_walkback_llm.py -v` exited 1 with `collected 0 items / 1 error` and `ModuleNotFoundError: No module named 'wc_predictor.lab.walkback.llm'`. Green command `uv run pytest tests/lab/test_walkback_llm.py -v` exited 0 with:
+  `tests/lab/test_walkback_llm.py::test_parses_plain_json PASSED`,
+  `tests/lab/test_walkback_llm.py::test_parses_fenced_json_with_prose PASSED`,
+  `tests/lab/test_walkback_llm.py::test_retries_then_raises PASSED`,
+  `tests/lab/test_walkback_llm.py::test_request_is_deterministic PASSED`,
+  and `4 passed in 0.23s`.
+- Result: done
+- Open questions: None.
+
 ### 2026-07-03 - Codex - Task 3 leakage linter
 - What I did: Added the Task 3 leakage linter test `worldcup_prediction_lab/tests/lab/test_walkback_linter.py` first, verified the expected missing-module failure, then added `worldcup_prediction_lab/src/wc_predictor/lab/walkback/linter.py` exactly for the planned date-window, scoreline, result-language, clean-well, and min-doc gate behavior. Checked Task 3 Steps 1-4 in the active plan. I skipped the Task 3 Commit step per the Execution status header, did not run git, and did not touch `runs/analyst/ledger.jsonl`.
 - Evidence: From `worldcup_prediction_lab/`, red command `uv run pytest tests/lab/test_walkback_linter.py -v` produced `collected 0 items / 1 error` with `ModuleNotFoundError: No module named 'wc_predictor.lab.walkback.linter'`. Green command `uv run pytest tests/lab/test_walkback_linter.py -v` produced `collected 6 items` and all six tests passed: `test_clean_doc_passes`, `test_doc_on_or_after_match_day_rejected`, `test_scoreline_with_both_teams_rejected`, `test_past_tense_result_language_rejected`, `test_scoreline_without_team_context_is_fine`, and `test_clean_well_and_gate`; final summary `6 passed in 0.02s`.
