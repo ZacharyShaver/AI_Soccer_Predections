@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pandas as pd
 
-from wc_predictor.lab.walkback.cli import run_batch
+from wc_predictor.lab.walkback.cli import _existing_keys, _recall_exclusions, run_batch
 from wc_predictor.lab.walkback.wells import save_well
 
 
@@ -72,3 +72,29 @@ def test_run_batch_survives_corrupt_well(tmp_path: Path):
 
     stats = run_batch(_universe(), wells_root, client, "news", out)
     assert stats == {"done": 1, "skipped_existing": 0, "skipped_no_well": 0, "errors": 1}
+
+
+def test_existing_keys_skips_corrupt_lines(tmp_path: Path):
+    out = tmp_path / "preds.jsonl"
+    out.write_text(
+        json.dumps({"match_id": "m1", "model": "x", "condition": "stats"}) + "\n"
+        + "{ corrupt line\n"
+        + json.dumps({"match_id": "m2", "model": "x", "condition": "stats"}) + "\n",
+        encoding="utf-8",
+    )
+    assert _existing_keys(out) == {("m1", "x", "stats"), ("m2", "x", "stats")}
+
+
+def test_recall_exclusions_missing_file_returns_none(tmp_path: Path):
+    assert _recall_exclusions(tmp_path / "absent.jsonl") is None
+
+
+def test_recall_exclusions_parses_and_skips_corrupt(tmp_path: Path):
+    p = tmp_path / "recall_x.jsonl"
+    p.write_text(
+        json.dumps({"match_id": "m1", "contaminated": True}) + "\n"
+        + "{ corrupt\n"
+        + json.dumps({"match_id": "m2", "contaminated": False}) + "\n",
+        encoding="utf-8",
+    )
+    assert _recall_exclusions(p) == {"m1"}

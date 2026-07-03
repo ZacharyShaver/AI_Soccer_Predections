@@ -24,9 +24,29 @@ def _existing_keys(out_path: Path) -> set[tuple[str, str, str]]:
     for line in Path(out_path).read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
-        r = json.loads(line)
+        try:
+            r = json.loads(line)
+        except ValueError:
+            continue
         keys.add((str(r["match_id"]), str(r["model"]), str(r["condition"])))
     return keys
+
+
+def _recall_exclusions(recall_path: Path) -> set[str] | None:
+    """None = no recall file (run is unscreened); otherwise contaminated match_ids."""
+    if not Path(recall_path).exists():
+        return None
+    bad: set[str] = set()
+    for line in Path(recall_path).read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            r = json.loads(line)
+        except ValueError:
+            continue
+        if r.get("contaminated"):
+            bad.add(str(r["match_id"]))
+    return bad
 
 
 def run_batch(universe: pd.DataFrame, wells_root: Path, client: LMClient,
@@ -69,18 +89,24 @@ def cmd_build_wells(args: argparse.Namespace) -> None:
     if args.limit:
         universe = universe.head(args.limit)
     root = Path(args.root)
-    built = skipped = 0
+    built = skipped = errors = 0
     for _, row in universe.iterrows():
         if well_path(root, str(row["match_id"])).exists():
             skipped += 1
             continue
-        well = clean_well(build_well(row))
-        save_well(well, root)
+        try:
+            well = clean_well(build_well(row))
+            save_well(well, root)
+        except Exception as exc:
+            print(f"  ERROR {row['match_id']}: {exc}")
+            errors += 1
+            time.sleep(args.sleep)
+            continue
         built += 1
         print(f"{row['match_id']}: kept {well['lint']['kept']} docs "
               f"({row['home_team']} v {row['away_team']})")
         time.sleep(args.sleep)
-    print(f"built {built}, skipped existing {skipped}")
+    print(f"built {built}, skipped existing {skipped}, errors {errors}")
 
 
 def cmd_recall(args: argparse.Namespace) -> None:
@@ -107,10 +133,11 @@ def cmd_recall(args: argparse.Namespace) -> None:
 def cmd_run(args: argparse.Namespace) -> None:
     universe = load_universe(cutoff=args.cutoff)
     recall_path = Path(args.out).parent / f"recall_{args.model}.jsonl"
-    if recall_path.exists():
-        bad = {json.loads(l)["match_id"]
-               for l in recall_path.read_text(encoding="utf-8").splitlines()
-               if l.strip() and json.loads(l)["contaminated"]}
+    bad = _recall_exclusions(recall_path)
+    if bad is None:
+        print(f"WARNING: no recall file at {recall_path} — running UNSCREENED "
+              "(parametric-memory contamination not excluded)")
+    else:
         universe = universe[~universe["match_id"].astype(str).isin(bad)]
         print(f"excluded {len(bad)} contaminated matches (recall screen)")
     client = LMClient(model=args.model)
@@ -124,8 +151,14 @@ def cmd_evaluate(args: argparse.Namespace) -> None:
     universe = load_universe(cutoff=args.cutoff)
     full_history = load_universe(cutoff="1900-01-01")
     clim = climatology_probs(full_history, cutoff=args.cutoff)
-    preds = [json.loads(l) for l in Path(args.preds).read_text(encoding="utf-8").splitlines()
-             if l.strip()]
+    preds = []
+    for line in Path(args.preds).read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            preds.append(json.loads(line))
+        except ValueError:
+            continue
     results = evaluate(universe, preds, climatology=clim)
     write_report(results, Path(args.report))
     print(json.dumps(results["ladder"], indent=1))
