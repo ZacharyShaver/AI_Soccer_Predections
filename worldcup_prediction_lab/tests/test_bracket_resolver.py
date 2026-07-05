@@ -130,6 +130,86 @@ def test_resolve_group_slots_and_winner_propagation():
     assert by_num2[89].away_team_id == "A2"  # L74
 
 
+def test_resolve_uses_fixture_overrides_for_known_knockout_matchups():
+    fixtures = pd.DataFrame(
+        [
+            _ko(79, "round_of_32", "1A", "3C/E/F/H/I", "2026-06-30"),
+            _ko(80, "round_of_32", "1L", "3E/H/I/J/K", "2026-07-01"),
+            _ko(92, "round_of_16", "W79", "W80", "2026-07-05"),
+            _ko(94, "round_of_16", "W81", "W82", "2026-07-06"),
+            _ko(95, "round_of_16", "W86", "W88", "2026-07-07"),
+            _ko(96, "round_of_16", "W85", "W87", "2026-07-07"),
+        ]
+    )
+    overrides = pd.DataFrame(
+        [
+            {
+                "match_number": 92,
+                "home_team_id": "MEX",
+                "away_team_id": "ENG",
+                "source": "fifa_schedule",
+            },
+            {
+                "match_number": 94,
+                "home_team_id": "USA",
+                "away_team_id": "BEL",
+                "source": "fifa_schedule",
+            },
+            {
+                "match_number": 95,
+                "home_team_id": "ARG",
+                "away_team_id": "EGY",
+                "source": "fifa_schedule",
+            },
+            {
+                "match_number": 96,
+                "home_team_id": "SUI",
+                "away_team_id": "COL",
+                "source": "fifa_schedule",
+            },
+        ]
+    )
+
+    resolved, summary = resolve_bracket(fixtures, _results([]), overrides=overrides)
+    by_num = {int(r.match_number): r for r in resolved.itertuples() if pd.notna(r.match_number)}
+
+    assert (by_num[92].home_team_id, by_num[92].away_team_id) == ("MEX", "ENG")
+    assert (by_num[94].home_team_id, by_num[94].away_team_id) == ("USA", "BEL")
+    assert (by_num[95].home_team_id, by_num[95].away_team_id) == ("ARG", "EGY")
+    assert (by_num[96].home_team_id, by_num[96].away_team_id) == ("SUI", "COL")
+    assert summary["fixture_overrides_applied"] == 4
+
+
+def test_resolve_uses_advancer_overrides_for_knockout_draws():
+    fixtures = pd.DataFrame(
+        [
+            {
+                **_ko(88, "round_of_32", "2D", "2G", "2026-07-03"),
+                "home_team_id": "AUS",
+                "away_team_id": "EGY",
+            },
+            _ko(95, "round_of_16", "W86", "W88", "2026-07-07"),
+        ]
+    )
+    overrides = pd.DataFrame(
+        [
+            {
+                "match_number": 88,
+                "winner_team_id": "EGY",
+                "loser_team_id": "AUS",
+                "source": "official_shootout_advancer",
+            },
+        ]
+    )
+    results = _results([("2026-07-03", "AUS", "EGY", 1, 1)])
+
+    resolved, summary = resolve_bracket(fixtures, results, overrides=overrides)
+    by_num = {int(r.match_number): r for r in resolved.itertuples() if pd.notna(r.match_number)}
+
+    assert by_num[95].away_team_id == "EGY"
+    assert summary["advancer_overrides_available"] == 1
+
+
 def test_resolve_is_noop_without_knockout_rows():
     teams = ["T1", "T2", "T3", "T4"]
     sc = {

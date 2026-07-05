@@ -36,6 +36,7 @@ from wc_predictor.config import settings
 
 FIXTURES_FILE = "openfootball_worldcup_2026_fixtures.parquet"
 MATCHES_FILE = "martj42_matches.parquet"
+OVERRIDES_FILE = "knockout_overrides.csv"
 
 # match_number -> candidate groups for the eight best-third slots (openfootball).
 THIRD_SLOT_CANDIDATES: dict[int, frozenset[str]] = {
@@ -236,7 +237,66 @@ _SLOT_RE = re.compile(r"^([12])([A-L])$")
 _WL_RE = re.compile(r"^([WL])(\d+)$")
 
 
-def _winner_loser(match_row, results_index) -> tuple[str | None, str | None]:
+def _override_index(overrides: pd.DataFrame | None) -> dict[int, dict[str, str]]:
+    """Return non-empty override values keyed by fixture match_number."""
+
+    if overrides is None or overrides.empty or "match_number" not in overrides.columns:
+        return {}
+    index: dict[int, dict[str, str]] = {}
+    for row in overrides.to_dict(orient="records"):
+        try:
+            match_number = int(row["match_number"])
+        except (TypeError, ValueError):
+            continue
+        clean = {
+            key: str(value).strip()
+            for key, value in row.items()
+            if key != "match_number" and _has_id(value)
+        }
+        if clean:
+            index[match_number] = clean
+    return index
+
+
+def _apply_fixture_overrides(fixtures: pd.DataFrame, overrides: dict[int, dict[str, str]]) -> int:
+    """Apply known home/away team ids from an authoritative fixture override table."""
+
+    applied = 0
+    if not overrides or "match_number" not in fixtures.columns:
+        return applied
+    for idx, row in fixtures.iterrows():
+        if pd.isna(row["match_number"]):
+            continue
+        override = overrides.get(int(row["match_number"]))
+        if not override:
+            continue
+        changed = False
+        for col in ("home_team_id", "away_team_id"):
+            team = override.get(col)
+            current = fixtures.at[idx, col]
+            if _has_id(team) and (not _has_id(current) or str(current) != team):
+                fixtures.at[idx, col] = team
+                changed = True
+        if changed:
+            applied += 1
+    return applied
+
+
+def _advancer_overrides(overrides: dict[int, dict[str, str]]) -> dict[int, tuple[str, str]]:
+    advancers: dict[int, tuple[str, str]] = {}
+    for match_number, row in overrides.items():
+        winner = row.get("winner_team_id")
+        loser = row.get("loser_team_id")
+        if _has_id(winner) and _has_id(loser):
+            advancers[match_number] = (str(winner), str(loser))
+    return advancers
+
+
+def _winner_loser(
+    match_row,
+    results_index,
+    advancer_overrides: dict[int, tuple[str, str]] | None = None,
+) -> tuple[str | None, str | None]:
     home, away = str(match_row["home_team_id"]), str(match_row["away_team_id"])
     if home in ("", "nan", "None") or away in ("", "nan", "None"):
         return None, None
@@ -246,6 +306,10 @@ def _winner_loser(match_row, results_index) -> tuple[str | None, str | None]:
         return None, None
     hs, as_ = sc
     if hs == as_:
+        if advancer_overrides is not None and _has_id(match_row.get("match_number")):
+            override = advancer_overrides.get(int(match_row["match_number"]))
+            if override is not None:
+                return override
         return None, None  # knockout draws are decided on penalties; needs richer data
     return (home, away) if hs > as_ else (away, home)
 
@@ -253,12 +317,16 @@ def _winner_loser(match_row, results_index) -> tuple[str | None, str | None]:
 def resolve_bracket(
     fixtures: pd.DataFrame,
     results_df: pd.DataFrame,
+    overrides: pd.DataFrame | None = None,
 ) -> tuple[pd.DataFrame, dict]:
     """Return fixtures with knockout team ids resolved where provable, plus a summary."""
 
     fixtures = fixtures.copy()
     fixtures["match_date"] = pd.to_datetime(fixtures["match_date"], errors="coerce")
     result_index = _result_index(results_df)
+    override_index = _override_index(overrides)
+    advancers = _advancer_overrides(override_index)
+    fixture_overrides_applied = _apply_fixture_overrides(fixtures, override_index)
 
     group_fixtures = fixtures[fixtures["stage"] == "group"]
     standings = group_standings(group_fixtures, result_index)
@@ -317,7 +385,7 @@ def resolve_bracket(
                 ref_idx = by_number.get(ref)
                 if ref_idx is None:
                     continue
-                winner, loser = _winner_loser(fixtures.loc[ref_idx], result_index)
+                winner, loser = _winner_loser(fixtures.loc[ref_idx], result_index, advancers)
                 team = winner if want_winner else loser
                 if _has_id(team):
                     fixtures.at[idx, id_col] = team
@@ -337,6 +405,8 @@ def resolve_bracket(
         "knockout_total": int(len(ko)),
         "knockout_resolved": resolved,
         "thirds_assigned": len(thirds_assignment),
+        "fixture_overrides_applied": fixture_overrides_applied,
+        "advancer_overrides_available": len(advancers),
     }
     return fixtures, summary
 
@@ -363,6 +433,23 @@ def _write_parquet(df: pd.DataFrame, path: Path) -> None:
         con.execute(f"COPY df_to_write TO '{escaped}' (FORMAT PARQUET)")
 
 
+def load_knockout_overrides(
+    path: str | Path = settings.CONFIG_DIR / OVERRIDES_FILE,
+) -> pd.DataFrame:
+    """Load optional authoritative knockout fixture/advancer overrides.
+
+    The openfootball bracket is intentionally slot-based, and martj42 scores do
+    not always include shootout winners. This small, auditable config file lets
+    the daily resolver consume already-known official matchups and penalty
+    advancers without scraping live web pages during a scheduled run.
+    """
+
+    override_path = Path(path)
+    if not override_path.exists():
+        return pd.DataFrame()
+    return pd.read_csv(override_path, dtype=str).dropna(how="all")
+
+
 def resolve_and_persist_fixtures(silver_dir: str | Path = settings.SILVER_DIR) -> dict:
     """Resolve the bracket against current results and write resolved team ids
     back into the fixtures parquet so every downstream reader forecasts the
@@ -378,7 +465,8 @@ def resolve_and_persist_fixtures(silver_dir: str | Path = settings.SILVER_DIR) -
 
     fixtures = _read_parquet(fixtures_path)
     matches = _read_parquet(matches_path)
-    resolved, summary = resolve_bracket(fixtures, matches)
+    overrides = load_knockout_overrides()
+    resolved, summary = resolve_bracket(fixtures, matches, overrides=overrides)
     # Normalize null ids to None and keep the original column order for a clean write.
     resolved = resolved.loc[:, list(fixtures.columns)].copy()
     for col in ("home_team_id", "away_team_id"):

@@ -1,0 +1,17 @@
+match_number,home_team_id,away_team_id,winner_team_id,loser_team_id,source,as_of,note
+74,GER,PAR,PAR,GER,espn_schedule,2026-07-05,Round of 32 Germany v Paraguay; Paraguay advanced from a drawn match
+75,NED,MAR,MAR,NED,espn_schedule,2026-07-05,Round of 32 Netherlands v Morocco; Morocco advanced from a drawn match
+77,FRA,SWE,FRA,SWE,espn_schedule,2026-07-05,Round of 32 France v Sweden
+79,MEX,ECU,MEX,ECU,espn_schedule,2026-07-05,Round of 32 Mexico v Ecuador
+80,ENG,COD,ENG,COD,espn_schedule,2026-07-05,Round of 32 England v DR Congo
+81,USA,BIH,USA,BIH,espn_schedule,2026-07-05,Round of 32 United States v Bosnia and Herzegovina
+82,BEL,SEN,BEL,SEN,espn_schedule,2026-07-05,Round of 32 Belgium v Senegal
+85,SUI,ALG,SUI,ALG,espn_schedule,2026-07-05,Round of 32 Switzerland v Algeria
+87,COL,GHA,COL,GHA,espn_schedule,2026-07-05,Round of 32 Colombia v Ghana
+88,AUS,EGY,EGY,AUS,espn_schedule,2026-07-05,Round of 32 Australia v Egypt; Egypt advanced from a drawn match
+89,PAR,FRA,FRA,PAR,espn_schedule,2026-07-05,Round of 16 Paraguay v France; France won 1-0
+90,CAN,MAR,MAR,CAN,fifa_schedule,2026-07-05,Round of 16 Canada v Morocco; Morocco won 3-0
+92,MEX,ENG,,,foxsports_schedule,2026-07-05,Round of 16 Mexico v England
+94,USA,BEL,,,roadtrips_schedule,2026-07-05,Round of 16 USA v Belgium
+95,ARG,EGY,,,fifa_schedule,2026-07-05,Round of 16 Argentina v Egypt
+96,SUI,COL,,,fifa_schedule,2026-07-05,Round of 16 Switzerland v Colombia
