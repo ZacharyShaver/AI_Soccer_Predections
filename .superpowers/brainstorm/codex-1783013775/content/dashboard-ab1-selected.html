@@ -1,0 +1,56 @@
+<style>
+  .choice-wrap{max-width:980px;margin:0 auto}
+  .selected-banner{border:1px solid rgba(34,197,94,.45);background:linear-gradient(180deg,rgba(34,197,94,.14),rgba(15,23,42,.92));border-radius:18px;padding:20px;margin:18px 0}
+  .selected-banner h2{margin:0 0 8px;color:#bbf7d0}
+  .selected-banner p{margin:0;color:#cbd5e1;line-height:1.55}
+  .blueprint{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-top:20px}
+  .panel{border:1px solid rgba(148,163,184,.22);border-radius:16px;background:#07111f;padding:16px}
+  .panel h3{margin:0 0 12px;font-size:16px}
+  .bucket{display:grid;grid-template-columns:34px 1fr;gap:12px;border:1px solid rgba(148,163,184,.16);border-radius:13px;background:#0f172a;padding:12px;margin-bottom:10px}
+  .num{width:30px;height:30px;border-radius:999px;background:#2563eb;color:white;display:flex;align-items:center;justify-content:center;font-weight:800}
+  .bucket b{display:block;margin-bottom:3px;color:#e5e7eb}
+  .bucket span{display:block;color:#94a3b8;font-size:13px;line-height:1.4}
+  .mock{border:1px solid rgba(148,163,184,.18);border-radius:14px;background:#020617;padding:12px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+  .kpis div{border-radius:8px;background:#111827;padding:8px;text-align:center;color:#94a3b8;font-size:9px;text-transform:uppercase}
+  .kpis b{display:block;color:#e5e7eb;font-size:15px;text-transform:none}
+  .hero{border:1px solid rgba(59,130,246,.35);border-radius:12px;background:rgba(37,99,235,.12);padding:12px;margin-bottom:10px}
+  .hero b{display:block;color:#dbeafe;margin-bottom:8px}
+  .bar{height:10px;border-radius:999px;background:linear-gradient(90deg,#3b82f6 0 54%,#a1a1aa 54% 76%,#f97316 76%);margin:6px 0}
+  .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .mini{border:1px solid rgba(148,163,184,.16);border-radius:10px;background:#111827;padding:10px;color:#94a3b8;font-size:12px;min-height:62px}
+  .mini b{display:block;color:#e5e7eb;font-size:12px;margin-bottom:4px}
+  .next{margin-top:16px;color:#94a3b8;font-size:13px}
+  @media(max-width:900px){.blueprint{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<div class="choice-wrap">
+  <div class="selected-banner">
+    <h2>Selected direction: AB1 — Daily first, lab second</h2>
+    <p>The dashboard opens as a daily command center: upcoming forecasts and things that need attention first. The research lab remains close underneath for model trust, leaderboard, accuracy, backtests, and miss review.</p>
+  </div>
+
+  <div class="blueprint">
+    <div class="panel">
+      <h3>Bucket order</h3>
+      <div class="bucket"><div class="num">1</div><div><b>Today / Forecast command center</b><span>Upcoming fixtures, selected model, H/D/A bars, upset risk, model disagreement, expand for all models.</span></div></div>
+      <div class="bucket"><div class="num">2</div><div><b>Needs attention</b><span>Betting watchlist, analyst calls, high-disagreement matches, unusually high upset risk.</span></div></div>
+      <div class="bucket"><div class="num">3</div><div><b>Trust snapshot</b><span>Leader, RPS, overall/decisive accuracy, accuracy trend, “is the model getting better or worse?”</span></div></div>
+      <div class="bucket"><div class="num">4</div><div><b>Research lab</b><span>Full leaderboard, accuracy timeline, walk-forward backtest, results/misses, experiment diagnostics.</span></div></div>
+      <div class="bucket"><div class="num">5</div><div><b>Tournament context + archive</b><span>Standings/champion odds lower on the page; old results/backtests collapsed unless researching.</span></div></div>
+    </div>
+
+    <div class="panel">
+      <h3>First viewport sketch</h3>
+      <div class="mock">
+        <div class="kpis"><div><b>5</b>Fixtures</div><div><b>64%</b>Acc</div><div><b>0.116</b>RPS</div><div><b>3</b>Watch</div></div>
+        <div class="hero"><b>Upcoming forecasts</b><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+        <div class="mini-grid">
+          <div class="mini"><b>Needs attention</b>Edges, analyst, high disagreement</div>
+          <div class="mini"><b>Trust snapshot</b>Leader + accuracy trend</div>
+        </div>
+      </div>
+      <div class="next">Next step, if approved: convert this into an implementation plan against the current static dashboard generator.</div>
+    </div>
+  </div>
+</div>

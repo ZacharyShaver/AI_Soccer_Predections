@@ -1,0 +1,13 @@
+{
+  "n": 15893,
+  "dixon_coles_mean_rps": 0.1749042805763745,
+  "elo_recalibrated_mean_rps": 0.17439995974395148,
+  "paired_mean_diff_dc_minus_elo": 0.0005043208324230331,
+  "ci95": [
+    -0.0005291158307897572,
+    0.0015115830831372676
+  ],
+  "excludes_0": false,
+  "dixon_coles_better_on_n_matches": 8212,
+  "total_matches": 15893
+}

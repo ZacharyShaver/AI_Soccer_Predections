@@ -1,0 +1,52 @@
+{
+  "n_eval": 15899,
+  "elo_recalibrated_full_rps": 0.17437528896008436,
+  "sweep_first_half": [
+    {
+      "lam": 0.06,
+      "gamma": 0.7,
+      "total_goals": 2.6,
+      "first_half_rps": 0.1790488802131128
+    },
+    {
+      "lam": 0.06,
+      "gamma": 0.7,
+      "total_goals": 2.4,
+      "first_half_rps": 0.17908423084833477
+    },
+    {
+      "lam": 0.06,
+      "gamma": 0.5,
+      "total_goals": 2.6,
+      "first_half_rps": 0.1793535076680522
+    },
+    {
+      "lam": 0.06,
+      "gamma": 0.5,
+      "total_goals": 2.4,
+      "first_half_rps": 0.17937042139734177
+    },
+    {
+      "lam": 0.06,
+      "gamma": 0.3,
+      "total_goals": 2.6,
+      "first_half_rps": 0.18005855904469487
+    }
+  ],
+  "best_config": {
+    "lam": 0.06,
+    "gamma": 0.7,
+    "total_goals": 2.6
+  },
+  "holdout_second_half": {
+    "n": 7950,
+    "pi_rps": 0.1696749040730971,
+    "elo_rps": 0.16866267607372026,
+    "paired_mean_diff_pi_minus_elo": 0.0010122279993768177,
+    "ci95": [
+      -0.0002376958053504279,
+      0.0022589818695326652
+    ],
+    "excludes_0": false
+  }
+}

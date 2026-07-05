@@ -1,0 +1,8 @@
+{
+  "learning_rate": 0.03,
+  "shrinkage": 0.0002,
+  "rho": -0.05,
+  "home_edge_init": 0.32,
+  "home_edge_learning_rate": 0.0,
+  "history_rps": 0.17262432630269037
+}

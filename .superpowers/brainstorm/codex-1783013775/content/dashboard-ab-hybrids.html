@@ -1,0 +1,92 @@
+<style>
+  .hybrid-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:20px}
+  .hybrid{border:1px solid rgba(148,163,184,.28);border-radius:18px;background:#06111f;overflow:hidden;cursor:pointer;transition:.15s ease}
+  .hybrid:hover{border-color:#60a5fa;transform:translateY(-1px)}
+  .hybrid.selected{outline:2px solid #60a5fa;border-color:#60a5fa}
+  .head{padding:15px;border-bottom:1px solid rgba(148,163,184,.2);background:linear-gradient(180deg,#111827,#0b1220)}
+  .head h3{margin:0 0 4px;font-size:17px}
+  .head p{margin:0;color:#9ca3af;font-size:12px;line-height:1.35}
+  .screen{padding:12px;min-height:430px}
+  .top-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+  .kpi{border:1px solid rgba(148,163,184,.16);border-radius:9px;background:#111827;padding:7px;text-align:center;color:#94a3b8;font-size:9px;text-transform:uppercase}
+  .kpi b{display:block;color:#e5e7eb;font-size:15px;text-transform:none}
+  .hero{border:1px solid rgba(59,130,246,.35);border-radius:13px;background:rgba(37,99,235,.12);padding:11px;margin-bottom:9px}
+  .hero b{display:block;font-size:12px;margin-bottom:7px;color:#dbeafe}
+  .row{height:10px;border-radius:999px;background:linear-gradient(90deg,#3b82f6 0 52%,#a1a1aa 52% 75%,#f97316 75%);margin:5px 0}
+  .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+  .box{border:1px solid rgba(148,163,184,.16);border-radius:10px;background:#0f172a;padding:8px;min-height:60px}
+  .box strong{display:block;font-size:11px;color:#e5e7eb;margin-bottom:4px}
+  .box span{display:block;font-size:10px;color:#94a3b8;line-height:1.3}
+  .tabs{display:flex;gap:5px;margin:8px 0}
+  .tab{font-size:9px;border-radius:999px;background:#111827;border:1px solid rgba(148,163,184,.18);padding:4px 7px;color:#cbd5e1}
+  .tab.on{background:#1d4ed8;color:#eff6ff;border-color:#60a5fa}
+  .split-screen{display:grid;grid-template-columns:90px 1fr;gap:8px}
+  .side{display:grid;gap:6px;align-content:start}
+  .side div{font-size:9px;color:#cbd5e1;border-radius:8px;background:#111827;padding:7px;border:1px solid rgba(148,163,184,.16)}
+  .side .on{border-color:#60a5fa;background:rgba(37,99,235,.16)}
+  .stack{display:grid;gap:8px}
+  .rec{margin-top:16px;border:1px solid rgba(34,197,94,.45);background:rgba(34,197,94,.08);border-radius:14px;padding:12px;color:#bbf7d0;font-size:13px;line-height:1.45}
+  @media (max-width:1000px){.hybrid-grid{grid-template-columns:1fr}}
+</style>
+
+<h2>A + B hybrid directions</h2>
+<p class="subtitle">You liked Mission Control and Research Lab. These three versions decide which one wins the first viewport. Click the one that feels closest.</p>
+
+<div class="hybrid-grid">
+  <div class="hybrid" data-choice="ab1-daily-first" onclick="toggleSelect(this)">
+    <div class="head">
+      <h3>AB1 — Daily first, lab second</h3>
+      <p>Best if the first job is: “what should I look at today?”</p>
+    </div>
+    <div class="screen">
+      <div class="top-kpis"><div class="kpi"><b>5</b>Fixtures</div><div class="kpi"><b>64%</b>Acc</div><div class="kpi"><b>0.116</b>Leader</div><div class="kpi"><b>3</b>Watch</div></div>
+      <div class="hero"><b>1. Forecast command center</b><div class="row"></div><div class="row"></div><div class="row"></div></div>
+      <div class="mini-grid">
+        <div class="box"><strong>2. Needs attention</strong><span>Betting watchlist + model disagreement + analyst calls</span></div>
+        <div class="box"><strong>3. Trust snapshot</strong><span>Accuracy card + leaderboard top 5 only</span></div>
+      </div>
+      <div class="tabs"><div class="tab on">Live</div><div class="tab">Models</div><div class="tab">Backtest</div><div class="tab">Archive</div></div>
+      <div class="box"><strong>4. Research lab drawer</strong><span>Full leaderboard, accuracy timeline, walk-forward, results. Collapsed until needed.</span></div>
+    </div>
+  </div>
+
+  <div class="hybrid" data-choice="ab2-model-first" onclick="toggleSelect(this)">
+    <div class="head">
+      <h3>AB2 — Model first, daily beneath</h3>
+      <p>Best if the first job is: “which model should I trust and why?”</p>
+    </div>
+    <div class="screen">
+      <div class="top-kpis"><div class="kpi"><b>competitive</b>Leader</div><div class="kpi"><b>0.116</b>RPS</div><div class="kpi"><b>82%</b>Dec</div><div class="kpi"><b>24</b>Models</div></div>
+      <div class="hero"><b>1. Model health + leaderboard</b><div class="row"></div><div class="row"></div></div>
+      <div class="mini-grid">
+        <div class="box"><strong>2. Accuracy over time</strong><span>Trend cards, recent drop/increase, decisive vs draw-inclusive</span></div>
+        <div class="box"><strong>3. Why it ranks</strong><span>RPS/logloss/brier, edge vs baseline, sample count</span></div>
+      </div>
+      <div class="box"><strong>4. Today's forecasts using selected model</strong><span>Forecast slate becomes evidence for the chosen model.</span></div>
+      <div class="box"><strong>5. Miss review / results</strong><span>Find patterns in losses and model disagreement.</span></div>
+    </div>
+  </div>
+
+  <div class="hybrid" data-choice="ab3-two-mode" onclick="toggleSelect(this)">
+    <div class="head">
+      <h3>AB3 — Two-mode dashboard</h3>
+      <p>Best if you want one page but two mental modes: “Today” and “Lab.”</p>
+    </div>
+    <div class="screen">
+      <div class="tabs"><div class="tab on">Today</div><div class="tab">Research Lab</div><div class="tab">Public Story</div></div>
+      <div class="split-screen">
+        <div class="side"><div class="on">Forecasts</div><div>Edges</div><div>Analyst</div><div>Accuracy</div><div>Models</div><div>Archive</div></div>
+        <div class="stack">
+          <div class="hero"><b>Today mode: forecasts + watchlist</b><div class="row"></div><div class="row"></div></div>
+          <div class="mini-grid">
+            <div class="box"><strong>Daily decisions</strong><span>Upcoming, upset risk, edges</span></div>
+            <div class="box"><strong>Lab preview</strong><span>Leader + accuracy trend</span></div>
+          </div>
+          <div class="box"><strong>Research mode toggles the page</strong><span>Same data, reordered around leaderboard and model evaluation.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rec"><b>My recommendation:</b> AB1. It keeps the dashboard useful the second you open it, but still gives you B’s research depth directly below the fold. AB2 is better only if tuning has become the main daily task. AB3 is powerful, but more work and more moving parts.</div>

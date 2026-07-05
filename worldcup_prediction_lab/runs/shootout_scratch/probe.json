@@ -1,0 +1,5631 @@
+{
+  "joined_shootouts_with_prematch_ratings": 561,
+  "stronger_side_won": 286,
+  "stronger_side_win_rate": 0.5098039215686274,
+  "wilson_ci95": [
+    0.4685104262619466,
+    0.5509640600365129
+  ],
+  "sim_assumed_stronger_advance_rate_mean": 0.6802398850634095,
+  "gap_ge_100_elo": {
+    "n": 229,
+    "stronger_won": 123,
+    "rate": 0.537117903930131,
+    "wilson_ci95": [
+      0.472456019139162,
+      0.60055498920299
+    ]
+  },
+  "hits": [
+    {
+      "date": "1967-08-22",
+      "home_rating": 1590.7580932208887,
+      "away_rating": 1459.9287805003178,
+      "prob_home": 0.5471826429887272,
+      "prob_away": 0.18746892505204205,
+      "stronger": "IND",
+      "winner": "TPE",
+      "home_id": "IND"
+    },
+    {
+      "date": "1972-05-07",
+      "home_rating": 1627.6187999483966,
+      "away_rating": 1620.1216796321805,
+      "prob_home": 0.3478364299849481,
+      "prob_away": 0.32626133169683985,
+      "stronger": "KOR",
+      "winner": "IRQ",
+      "home_id": "KOR"
+    },
+    {
+      "date": "1972-05-17",
+      "home_rating": 1384.2188600022816,
+      "away_rating": 1615.3619063358326,
+      "prob_home": 0.16209747367313662,
+      "prob_away": 0.5835161586372088,
+      "stronger": "KOR",
+      "winner": "KOR",
+      "home_id": "THA"
+    },
+    {
+      "date": "1972-05-19",
+      "home_rating": 1390.5401402767427,
+      "away_rating": 1400.3692651886522,
+      "prob_home": 0.4446866758143852,
+      "prob_away": 0.25927926002875024,
+      "stronger": "CAM",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "1973-06-14",
+      "home_rating": 1490.546345766612,
+      "away_rating": 1437.3041818587744,
+      "prob_home": 0.5433592363737078,
+      "prob_away": 0.19014570155685112,
+      "stronger": "MRI",
+      "winner": "MRI",
+      "home_id": "MRI"
+    },
+    {
+      "date": "1973-06-14",
+      "home_rating": 1637.273467021287,
+      "away_rating": 1558.6534152022493,
+      "prob_home": 0.5799850137083653,
+      "prob_away": 0.16455667407259905,
+      "stronger": "GUI",
+      "winner": "GUI",
+      "home_id": "GUI"
+    },
+    {
+      "date": "1973-07-26",
+      "home_rating": 1505.9531470942532,
+      "away_rating": 1518.5701976199614,
+      "prob_home": 0.44011739263052985,
+      "prob_away": 0.26246980759957955,
+      "stronger": "KUW",
+      "winner": "MAS",
+      "home_id": "MAS"
+    },
+    {
+      "date": "1973-07-26",
+      "home_rating": 1435.4853046029818,
+      "away_rating": 1349.3495644374739,
+      "prob_home": 0.47854613747052377,
+      "prob_away": 0.23558502730733238,
+      "stronger": "CAM",
+      "winner": "SIN",
+      "home_id": "CAM"
+    },
+    {
+      "date": "1973-07-27",
+      "home_rating": 1500.0,
+      "away_rating": 1377.299709176919,
+      "prob_home": 0.5351034606686522,
+      "prob_away": 0.19592860486874047,
+      "stronger": "BAN",
+      "winner": "THA",
+      "home_id": "BAN"
+    },
+    {
+      "date": "1973-07-28",
+      "home_rating": 1709.819294870735,
+      "away_rating": 1638.7813778653897,
+      "prob_home": 0.4542538795771909,
+      "prob_away": 0.25259268975386734,
+      "stronger": "MYA",
+      "winner": "MYA",
+      "home_id": "MYA"
+    },
+    {
+      "date": "1973-08-23",
+      "home_rating": 1589.6704980367622,
+      "away_rating": 1566.1464510405647,
+      "prob_home": 0.3751461250568415,
+      "prob_away": 0.30754175040001663,
+      "stronger": "ALG",
+      "winner": "SYR",
+      "home_id": "ALG"
+    },
+    {
+      "date": "1973-08-25",
+      "home_rating": 1588.6564324169099,
+      "away_rating": 1616.0645970765177,
+      "prob_home": 0.3030057836195211,
+      "prob_away": 0.3817295868071544,
+      "stronger": "IRQ",
+      "winner": "ALG",
+      "home_id": "ALG"
+    },
+    {
+      "date": "1974-03-28",
+      "home_rating": 1325.0742433509427,
+      "away_rating": 1412.6501037447247,
+      "prob_home": 0.23397950053988884,
+      "prob_away": 0.4808369839437107,
+      "stronger": "UAE",
+      "winner": "QAT",
+      "home_id": "QAT"
+    },
+    {
+      "date": "1974-07-24",
+      "home_rating": 1448.526991219526,
+      "away_rating": 1476.49147941975,
+      "prob_home": 0.30235632227910725,
+      "prob_away": 0.38267122789616764,
+      "stronger": "IDN",
+      "winner": "IDN",
+      "home_id": "HKG"
+    },
+    {
+      "date": "1974-08-01",
+      "home_rating": 1525.5721084141176,
+      "away_rating": 1472.1716412842156,
+      "prob_home": 0.4253005645051865,
+      "prob_away": 0.2728006312586005,
+      "stronger": "IND",
+      "winner": "IDN",
+      "home_id": "IND"
+    },
+    {
+      "date": "1974-10-09",
+      "home_rating": 1560.7078261325364,
+      "away_rating": 1678.9289817792896,
+      "prob_home": 0.28458645854529324,
+      "prob_away": 0.40834917293673767,
+      "stronger": "MAR",
+      "winner": "MAR",
+      "home_id": "SYR"
+    },
+    {
+      "date": "1974-12-18",
+      "home_rating": 1575.642553764313,
+      "away_rating": 1525.9898468969552,
+      "prob_home": 0.419078239134721,
+      "prob_away": 0.27713131435824373,
+      "stronger": "KOR",
+      "winner": "KOR",
+      "home_id": "KOR"
+    },
+    {
+      "date": "1975-11-09",
+      "home_rating": 1533.531973906113,
+      "away_rating": 1501.6041626440594,
+      "prob_home": 0.3893695373394367,
+      "prob_away": 0.29773171894666006,
+      "stronger": "KEN",
+      "winner": "KEN",
+      "home_id": "KEN"
+    },
+    {
+      "date": "1975-12-09",
+      "home_rating": 1372.1410733506884,
+      "away_rating": 1584.9837788631953,
+      "prob_home": 0.18028814573425506,
+      "prob_away": 0.5574470197632507,
+      "stronger": "MAS",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "1976-12-22",
+      "home_rating": 1712.315942140909,
+      "away_rating": 1618.099341991586,
+      "prob_home": 0.4913376608152866,
+      "prob_away": 0.2266178031851805,
+      "stronger": "KOR",
+      "winner": "MAS",
+      "home_id": "KOR"
+    },
+    {
+      "date": "1977-01-09",
+      "home_rating": 1662.5947360234686,
+      "away_rating": 1736.5014994429634,
+      "prob_home": 0.33687365504963895,
+      "prob_away": 0.33372707761766834,
+      "stronger": "MAR",
+      "winner": "TUN",
+      "home_id": "TUN"
+    },
+    {
+      "date": "1977-03-22",
+      "home_rating": 1802.304073191508,
+      "away_rating": 1684.7747003328404,
+      "prob_home": 0.5273210454820354,
+      "prob_away": 0.201382984188908,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "ARG"
+    },
+    {
+      "date": "1977-07-27",
+      "home_rating": 1686.8927523019988,
+      "away_rating": 1721.038930107538,
+      "prob_home": 0.29514530462052324,
+      "prob_away": 0.39311068916520814,
+      "stronger": "MAR",
+      "winner": "IRN",
+      "home_id": "IRN"
+    },
+    {
+      "date": "1979-01-13",
+      "home_rating": 1488.1558149269867,
+      "away_rating": 1625.2436073979907,
+      "prob_home": 0.2628080587569864,
+      "prob_away": 0.4396327996967082,
+      "stronger": "MLI",
+      "winner": "MLI",
+      "home_id": "GNB"
+    },
+    {
+      "date": "1979-01-14",
+      "home_rating": 1490.8081860410825,
+      "away_rating": 1643.024494201602,
+      "prob_home": 0.24559583442233657,
+      "prob_away": 0.4642539401630267,
+      "stronger": "GUI",
+      "winner": "GUI",
+      "home_id": "GNB"
+    },
+    {
+      "date": "1979-05-22",
+      "home_rating": 1850.0240494056536,
+      "away_rating": 1861.3779373866544,
+      "prob_home": 0.32175921833840126,
+      "prob_away": 0.3544267068764612,
+      "stronger": "NED",
+      "winner": "ARG",
+      "home_id": "ARG"
+    },
+    {
+      "date": "1979-08-31",
+      "home_rating": 1422.5439488790805,
+      "away_rating": 1485.6611091683606,
+      "prob_home": 0.2616287826140953,
+      "prob_away": 0.4413221345234007,
+      "stronger": "MRI",
+      "winner": "SEY",
+      "home_id": "SEY"
+    },
+    {
+      "date": "1979-09-29",
+      "home_rating": 1407.495871600957,
+      "away_rating": 1442.5473779742974,
+      "prob_home": 0.4028665789066811,
+      "prob_away": 0.2883896133807365,
+      "stronger": "THA",
+      "winner": "IDN",
+      "home_id": "IDN"
+    },
+    {
+      "date": "1980-02-16",
+      "home_rating": 1436.9660002177088,
+      "away_rating": 1334.8621744944796,
+      "prob_home": 0.6120470962830553,
+      "prob_away": 0.14229999201666965,
+      "stronger": "GAM",
+      "winner": "GAM",
+      "home_id": "GAM"
+    },
+    {
+      "date": "1980-03-19",
+      "home_rating": 1653.3083999275607,
+      "away_rating": 1688.7012770006259,
+      "prob_home": 0.29369255059298655,
+      "prob_away": 0.3952105224059579,
+      "stronger": "EGY",
+      "winner": "ALG",
+      "home_id": "ALG"
+    },
+    {
+      "date": "1980-12-31",
+      "home_rating": 1497.6306821177,
+      "away_rating": 1690.762850690515,
+      "prob_home": 0.20074430063921625,
+      "prob_away": 0.5282321522428262,
+      "stronger": "CHN",
+      "winner": "CHN",
+      "home_id": "HKG"
+    },
+    {
+      "date": "1981-02-13",
+      "home_rating": 1595.933943403586,
+      "away_rating": 1595.1074072241177,
+      "prob_home": 0.46201144027598645,
+      "prob_away": 0.24716548426412854,
+      "stronger": "MLI",
+      "winner": "GUI",
+      "home_id": "MLI"
+    },
+    {
+      "date": "1981-12-13",
+      "home_rating": 1431.4101225376505,
+      "away_rating": 1362.4765883649889,
+      "prob_home": 0.4508300787779701,
+      "prob_away": 0.25498650696436787,
+      "stronger": "MAS",
+      "winner": "MAS",
+      "home_id": "MAS"
+    },
+    {
+      "date": "1982-02-21",
+      "home_rating": 1559.3569207489068,
+      "away_rating": 1519.3804603075366,
+      "prob_home": 0.4029134938963359,
+      "prob_away": 0.28835708902380125,
+      "stronger": "CIV",
+      "winner": "TOG",
+      "home_id": "CIV"
+    },
+    {
+      "date": "1982-02-22",
+      "home_rating": 1557.6385746758187,
+      "away_rating": 1403.3806282245905,
+      "prob_home": 0.5808797323875274,
+      "prob_away": 0.1639334035486228,
+      "stronger": "CIV",
+      "winner": "BFA",
+      "home_id": "CIV"
+    },
+    {
+      "date": "1982-03-19",
+      "home_rating": 1624.0905170970937,
+      "away_rating": 1712.6006658989331,
+      "prob_home": 0.3192409012732344,
+      "prob_away": 0.3581066480587626,
+      "stronger": "GHA",
+      "winner": "GHA",
+      "home_id": "LBY"
+    },
+    {
+      "date": "1982-05-15",
+      "home_rating": 1507.760255032695,
+      "away_rating": 1365.9192493563708,
+      "prob_home": 0.6620392067099325,
+      "prob_away": 0.10805009198590926,
+      "stronger": "THA",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "1982-05-17",
+      "home_rating": 1499.4504183118347,
+      "away_rating": 1751.9165150687663,
+      "prob_home": 0.14196802184196014,
+      "prob_away": 0.6125273432466951,
+      "stronger": "KOR",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "1982-07-08",
+      "home_rating": 1939.2216423025945,
+      "away_rating": 1767.4949060678805,
+      "prob_home": 0.6048670123860806,
+      "prob_away": 0.14726868552857816,
+      "stronger": "GER",
+      "winner": "GER",
+      "home_id": "GER"
+    },
+    {
+      "date": "1982-10-17",
+      "home_rating": 1408.066233268849,
+      "away_rating": 1456.5093480031555,
+      "prob_home": 0.2785312920432212,
+      "prob_away": 0.4170652061446616,
+      "stronger": "MAS",
+      "winner": "IDN",
+      "home_id": "IDN"
+    },
+    {
+      "date": "1982-11-27",
+      "home_rating": 1581.8022549749708,
+      "away_rating": 1573.9536097230707,
+      "prob_home": 0.4732995340739812,
+      "prob_away": 0.2392612028535624,
+      "stronger": "UGA",
+      "winner": "KEN",
+      "home_id": "UGA"
+    },
+    {
+      "date": "1983-02-27",
+      "home_rating": 1588.5710857478707,
+      "away_rating": 1583.1066670630375,
+      "prob_home": 0.4694788927657884,
+      "prob_away": 0.2419373712196724,
+      "stronger": "MLI",
+      "winner": "MLI",
+      "home_id": "MLI"
+    },
+    {
+      "date": "1983-06-04",
+      "home_rating": 1479.0191256698142,
+      "away_rating": 1379.0745320373405,
+      "prob_home": 0.5003091346366183,
+      "prob_away": 0.22032609969576977,
+      "stronger": "THA",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "1983-07-18",
+      "home_rating": 1501.7341457568007,
+      "away_rating": 1499.559133906089,
+      "prob_home": 0.3387270982309354,
+      "prob_away": 0.33246699267778584,
+      "stronger": "HKG",
+      "winner": "THA",
+      "home_id": "HKG"
+    },
+    {
+      "date": "1983-08-28",
+      "home_rating": 1640.9402141899566,
+      "away_rating": 1590.1920850636095,
+      "prob_home": 0.5396548631020354,
+      "prob_away": 0.19274002274660063,
+      "stronger": "MAR",
+      "winner": "NGA",
+      "home_id": "MAR"
+    },
+    {
+      "date": "1983-12-15",
+      "home_rating": 1580.6853693347723,
+      "away_rating": 1531.6326336440472,
+      "prob_home": 0.5371263966743056,
+      "prob_away": 0.19451125992045393,
+      "stronger": "CIV",
+      "winner": "CIV",
+      "home_id": "CIV"
+    },
+    {
+      "date": "1983-12-18",
+      "home_rating": 1536.771860695355,
+      "away_rating": 1602.157904601879,
+      "prob_home": 0.2590333577391122,
+      "prob_away": 0.4450387212369766,
+      "stronger": "NGA",
+      "winner": "MLI",
+      "home_id": "MLI"
+    },
+    {
+      "date": "1984-02-16",
+      "home_rating": 1450.0040327938952,
+      "away_rating": 1539.803098964943,
+      "prob_home": 0.317735265802838,
+      "prob_away": 0.3603046601624793,
+      "stronger": "MLI",
+      "winner": "SLE",
+      "home_id": "SLE"
+    },
+    {
+      "date": "1984-02-19",
+      "home_rating": 1450.6425737092898,
+      "away_rating": 1577.4763980355594,
+      "prob_home": 0.2746096241782243,
+      "prob_away": 0.4227022622473699,
+      "stronger": "SEN",
+      "winner": "SEN",
+      "home_id": "SLE"
+    },
+    {
+      "date": "1984-03-14",
+      "home_rating": 1677.1011830040766,
+      "away_rating": 1652.278052526009,
+      "prob_home": 0.3773497739314453,
+      "prob_away": 0.306024383208968,
+      "stronger": "ALG",
+      "winner": "CMR",
+      "home_id": "ALG"
+    },
+    {
+      "date": "1984-03-14",
+      "home_rating": 1672.3352149434427,
+      "away_rating": 1620.249033951737,
+      "prob_home": 0.42312107065396587,
+      "prob_away": 0.2743180979410134,
+      "stronger": "EGY",
+      "winner": "NGA",
+      "home_id": "EGY"
+    },
+    {
+      "date": "1984-03-28",
+      "home_rating": 1794.2913752461866,
+      "away_rating": 1500.2670772496128,
+      "prob_home": 0.7434786297111651,
+      "prob_away": 0.054362847118920005,
+      "stronger": "IRQ",
+      "winner": "IRQ",
+      "home_id": "IRQ"
+    },
+    {
+      "date": "1984-06-24",
+      "home_rating": 1711.6763909912552,
+      "away_rating": 1762.9613263068045,
+      "prob_home": 0.2752438799927266,
+      "prob_away": 0.4217909761044077,
+      "stronger": "ESP",
+      "winner": "ESP",
+      "home_id": "DEN"
+    },
+    {
+      "date": "1984-11-28",
+      "home_rating": 1726.9231383974661,
+      "away_rating": 1575.8455370770625,
+      "prob_home": 0.5764060182708062,
+      "prob_away": 0.16705088927781941,
+      "stronger": "GHA",
+      "winner": "GHA",
+      "home_id": "GHA"
+    },
+    {
+      "date": "1984-12-08",
+      "home_rating": 1557.778912016888,
+      "away_rating": 1332.047837697047,
+      "prob_home": 0.6724714552202966,
+      "prob_away": 0.10099926723315888,
+      "stronger": "KEN",
+      "winner": "KEN",
+      "home_id": "KEN"
+    },
+    {
+      "date": "1984-12-13",
+      "home_rating": 1601.1899116182622,
+      "away_rating": 1727.3505545053213,
+      "prob_home": 0.1923099900130275,
+      "prob_away": 0.54026881725664,
+      "stronger": "IRN",
+      "winner": "KSA",
+      "home_id": "KSA"
+    },
+    {
+      "date": "1984-12-15",
+      "home_rating": 1666.8788162850635,
+      "away_rating": 1655.5430414179816,
+      "prob_home": 0.35439577997533805,
+      "prob_away": 0.32178036962326084,
+      "stronger": "MWI",
+      "winner": "ZAM",
+      "home_id": "MWI"
+    },
+    {
+      "date": "1984-12-16",
+      "home_rating": 1453.8761059705105,
+      "away_rating": 1466.3161867679025,
+      "prob_home": 0.3204907325329046,
+      "prob_away": 0.3562808699264566,
+      "stronger": "EQG",
+      "winner": "CHA",
+      "home_id": "CHA"
+    },
+    {
+      "date": "1984-12-16",
+      "home_rating": 1722.1311720966671,
+      "away_rating": 1623.6187715852618,
+      "prob_home": 0.4980736104901966,
+      "prob_away": 0.22189398684550005,
+      "stronger": "IRN",
+      "winner": "KUW",
+      "home_id": "IRN"
+    },
+    {
+      "date": "1984-12-19",
+      "home_rating": 1420.1887772513962,
+      "away_rating": 1408.6690122502334,
+      "prob_home": 0.3547099195189161,
+      "prob_away": 0.3215655155120448,
+      "stronger": "CTA",
+      "winner": "GAB",
+      "home_id": "CTA"
+    },
+    {
+      "date": "1984-12-20",
+      "home_rating": 1549.651076245471,
+      "away_rating": 1662.7107235916308,
+      "prob_home": 0.2905871625833989,
+      "prob_away": 0.3996955488902626,
+      "stronger": "CMR",
+      "winner": "CMR",
+      "home_id": "CGO"
+    },
+    {
+      "date": "1985-04-16",
+      "home_rating": 1458.923639414078,
+      "away_rating": 1649.5779080085197,
+      "prob_home": 0.2033744401045782,
+      "prob_away": 0.5244804162991032,
+      "stronger": "MWI",
+      "winner": "MOZ",
+      "home_id": "MOZ"
+    },
+    {
+      "date": "1985-07-10",
+      "home_rating": 1453.889646434676,
+      "away_rating": 1547.6017413096658,
+      "prob_home": 0.22717459794354128,
+      "prob_away": 0.49054361139736735,
+      "stronger": "QAT",
+      "winner": "BHR",
+      "home_id": "BHR"
+    },
+    {
+      "date": "1985-07-12",
+      "home_rating": 1602.9776837535476,
+      "away_rating": 1543.6512061078583,
+      "prob_home": 0.5523193531024047,
+      "prob_away": 0.18387432843350737,
+      "stronger": "KSA",
+      "winner": "KSA",
+      "home_id": "KSA"
+    },
+    {
+      "date": "1985-08-25",
+      "home_rating": 1544.6681105749258,
+      "away_rating": 1495.2062550189996,
+      "prob_home": 0.5377373071927998,
+      "prob_away": 0.19408327430596056,
+      "stronger": "MLI",
+      "winner": "GUI",
+      "home_id": "MLI"
+    },
+    {
+      "date": "1985-10-11",
+      "home_rating": 1493.6558491264525,
+      "away_rating": 1586.2384471467292,
+      "prob_home": 0.22842266999047645,
+      "prob_away": 0.4887636448720716,
+      "stronger": "UGA",
+      "winner": "KEN",
+      "home_id": "KEN"
+    },
+    {
+      "date": "1985-12-15",
+      "home_rating": 1464.755140640871,
+      "away_rating": 1473.3010123898143,
+      "prob_home": 0.32503743901342463,
+      "prob_away": 0.3496294758388954,
+      "stronger": "MAS",
+      "winner": "SIN",
+      "home_id": "SIN"
+    },
+    {
+      "date": "1985-12-25",
+      "home_rating": 1396.6367485790354,
+      "away_rating": 1413.4262206828016,
+      "prob_home": 0.4332524270024518,
+      "prob_away": 0.2672593459879669,
+      "stronger": "IND",
+      "winner": "IND",
+      "home_id": "BAN"
+    },
+    {
+      "date": "1985-12-25",
+      "home_rating": 1351.2677537250318,
+      "away_rating": 1277.0170697474337,
+      "prob_home": 0.45946377819127865,
+      "prob_away": 0.2489483187694389,
+      "stronger": "PAK",
+      "winner": "NEP",
+      "home_id": "PAK"
+    },
+    {
+      "date": "1986-03-21",
+      "home_rating": 1625.8706524749655,
+      "away_rating": 1672.8602830044892,
+      "prob_home": 0.3827488720597255,
+      "prob_away": 0.30230276275483015,
+      "stronger": "CMR",
+      "winner": "EGY",
+      "home_id": "EGY"
+    },
+    {
+      "date": "1986-06-21",
+      "home_rating": 1854.9305626212056,
+      "away_rating": 1894.7449346728022,
+      "prob_home": 0.28854559724708306,
+      "prob_away": 0.4026415719830855,
+      "stronger": "FRA",
+      "winner": "FRA",
+      "home_id": "BRA"
+    },
+    {
+      "date": "1986-06-21",
+      "home_rating": 1806.3923186303214,
+      "away_rating": 1834.2042004303419,
+      "prob_home": 0.4149742159031216,
+      "prob_away": 0.2799849070310093,
+      "stronger": "GER",
+      "winner": "GER",
+      "home_id": "MEX"
+    },
+    {
+      "date": "1986-06-22",
+      "home_rating": 1829.4050424895918,
+      "away_rating": 1737.732629306023,
+      "prob_home": 0.487327058653406,
+      "prob_away": 0.2294299094243233,
+      "stronger": "ESP",
+      "winner": "BEL",
+      "home_id": "ESP"
+    },
+    {
+      "date": "1986-10-01",
+      "home_rating": 1700.6953488694226,
+      "away_rating": 1695.5494817815454,
+      "prob_home": 0.34381401901188796,
+      "prob_away": 0.3290041058657235,
+      "stronger": "KUW",
+      "winner": "KUW",
+      "home_id": "KUW"
+    },
+    {
+      "date": "1986-10-01",
+      "home_rating": 1563.9090277458065,
+      "away_rating": 1346.910706932466,
+      "prob_home": 0.6622262170206918,
+      "prob_away": 0.10792335449574408,
+      "stronger": "UAE",
+      "winner": "IDN",
+      "home_id": "UAE"
+    },
+    {
+      "date": "1986-10-01",
+      "home_rating": 1601.0231904995796,
+      "away_rating": 1646.531294280169,
+      "prob_home": 0.28193245841951686,
+      "prob_away": 0.4121713458303727,
+      "stronger": "IRQ",
+      "winner": "KSA",
+      "home_id": "KSA"
+    },
+    {
+      "date": "1986-10-01",
+      "home_rating": 1657.5873216913756,
+      "away_rating": 1715.0932608069256,
+      "prob_home": 0.3648961313280612,
+      "prob_away": 0.3145866862194917,
+      "stronger": "IRN",
+      "winner": "KOR",
+      "home_id": "KOR"
+    },
+    {
+      "date": "1986-10-03",
+      "home_rating": 1602.9767738107425,
+      "away_rating": 1700.47320017223,
+      "prob_home": 0.22300836775428304,
+      "prob_away": 0.4964846517587302,
+      "stronger": "KUW",
+      "winner": "KSA",
+      "home_id": "KSA"
+    },
+    {
+      "date": "1986-12-17",
+      "home_rating": 1449.189024606044,
+      "away_rating": 1500.160937111533,
+      "prob_home": 0.27560568988387024,
+      "prob_away": 0.42127106664171504,
+      "stronger": "GAB",
+      "winner": "CHA",
+      "home_id": "CHA"
+    },
+    {
+      "date": "1987-03-01",
+      "home_rating": 1510.7812368227496,
+      "away_rating": 1528.5624761858446,
+      "prob_home": 0.31425115278240184,
+      "prob_away": 0.3653850374525043,
+      "stronger": "SLE",
+      "winner": "MLI",
+      "home_id": "MLI"
+    },
+    {
+      "date": "1987-03-02",
+      "home_rating": 1641.2959986321448,
+      "away_rating": 1527.795467915793,
+      "prob_home": 0.521205695054971,
+      "prob_away": 0.205670523785359,
+      "stronger": "SEN",
+      "winner": "SEN",
+      "home_id": "SEN"
+    },
+    {
+      "date": "1987-06-19",
+      "home_rating": 1683.0087847246261,
+      "away_rating": 1632.1588650243464,
+      "prob_home": 0.4210684023949674,
+      "prob_away": 0.2757467164400421,
+      "stronger": "AUS",
+      "winner": "AUS",
+      "home_id": "AUS"
+    },
+    {
+      "date": "1987-06-21",
+      "home_rating": 1688.1063019499122,
+      "away_rating": 1680.8289594353023,
+      "prob_home": 0.4723851875195722,
+      "prob_away": 0.23990172766973894,
+      "stronger": "KOR",
+      "winner": "KOR",
+      "home_id": "KOR"
+    },
+    {
+      "date": "1987-07-19",
+      "home_rating": 1641.462587792733,
+      "away_rating": 1644.0694269589392,
+      "prob_home": 0.45645414167926734,
+      "prob_away": 0.2510538376901972,
+      "stronger": "SEN",
+      "winner": "COD",
+      "home_id": "COD"
+    },
+    {
+      "date": "1987-08-08",
+      "home_rating": 1667.612728270288,
+      "away_rating": 1551.853937509611,
+      "prob_home": 0.5246390154109444,
+      "prob_away": 0.20326324553016167,
+      "stronger": "CIV",
+      "winner": "CIV",
+      "home_id": "CIV"
+    },
+    {
+      "date": "1987-08-09",
+      "home_rating": 1700.5070458885198,
+      "away_rating": 1645.2438537739172,
+      "prob_home": 0.42838463676524796,
+      "prob_away": 0.2706523630347894,
+      "stronger": "CMR",
+      "winner": "EGY",
+      "home_id": "CMR"
+    },
+    {
+      "date": "1987-08-10",
+      "home_rating": 1518.6488241640195,
+      "away_rating": 1551.8628257334676,
+      "prob_home": 0.4059467449485513,
+      "prob_away": 0.28625353135163883,
+      "stronger": "MWI",
+      "winner": "MWI",
+      "home_id": "KEN"
+    },
+    {
+      "date": "1987-12-13",
+      "home_rating": 1591.3676968688535,
+      "away_rating": 1600.5450020412143,
+      "prob_home": 0.32430042285387817,
+      "prob_away": 0.3507086888775799,
+      "stronger": "ZIM",
+      "winner": "ZIM",
+      "home_id": "MWI"
+    },
+    {
+      "date": "1987-12-18",
+      "home_rating": 1414.8913545374628,
+      "away_rating": 1499.2827094822317,
+      "prob_home": 0.2375339179039575,
+      "prob_away": 0.47576492860503383,
+      "stronger": "GAB",
+      "winner": "GAB",
+      "home_id": "EQG"
+    },
+    {
+      "date": "1987-12-27",
+      "home_rating": 1530.314870760311,
+      "away_rating": 1604.4953369666987,
+      "prob_home": 0.3364046196946454,
+      "prob_away": 0.3340458161989476,
+      "stronger": "ZIM",
+      "winner": "ETH",
+      "home_id": "ETH"
+    },
+    {
+      "date": "1988-01-06",
+      "home_rating": 1668.3102236603968,
+      "away_rating": 1681.118048143839,
+      "prob_home": 0.3200612289352114,
+      "prob_away": 0.35690842149612007,
+      "stronger": "EGY",
+      "winner": "KOR",
+      "home_id": "KOR"
+    },
+    {
+      "date": "1988-03-23",
+      "home_rating": 1645.1532373522846,
+      "away_rating": 1642.7607029955952,
+      "prob_home": 0.33909971618031837,
+      "prob_away": 0.33221355759851,
+      "stronger": "ALG",
+      "winner": "NGA",
+      "home_id": "ALG"
+    },
+    {
+      "date": "1988-03-26",
+      "home_rating": 1651.0813546953639,
+      "away_rating": 1645.0499449735576,
+      "prob_home": 0.4703886130855454,
+      "prob_away": 0.24130022940788287,
+      "stronger": "MAR",
+      "winner": "ALG",
+      "home_id": "MAR"
+    },
+    {
+      "date": "1988-03-31",
+      "home_rating": 1838.7099009222245,
+      "away_rating": 1792.426467177946,
+      "prob_home": 0.5329785687600659,
+      "prob_away": 0.19741759772123646,
+      "stronger": "GER",
+      "winner": "SWE",
+      "home_id": "GER"
+    },
+    {
+      "date": "1988-05-05",
+      "home_rating": 1472.5952596390737,
+      "away_rating": 1610.8094298332483,
+      "prob_home": 0.17991095352867562,
+      "prob_away": 0.5579865319223059,
+      "stronger": "SEN",
+      "winner": "MLI",
+      "home_id": "MLI"
+    },
+    {
+      "date": "1988-05-08",
+      "home_rating": 1529.243632926944,
+      "away_rating": 1478.2663933149781,
+      "prob_home": 0.42127991591584113,
+      "prob_away": 0.2755995318807863,
+      "stronger": "GUI",
+      "winner": "GUI",
+      "home_id": "GUI"
+    },
+    {
+      "date": "1988-05-28",
+      "home_rating": 1553.232059353574,
+      "away_rating": 1645.8480872600064,
+      "prob_home": 0.31444418271886165,
+      "prob_away": 0.36510378241731567,
+      "stronger": "GRE",
+      "winner": "CAN",
+      "home_id": "CAN"
+    },
+    {
+      "date": "1988-07-19",
+      "home_rating": 1706.4428364567634,
+      "away_rating": 1514.3125208903834,
+      "prob_home": 0.631592383843609,
+      "prob_away": 0.12883047395818606,
+      "stronger": "EGY",
+      "winner": "SYR",
+      "home_id": "EGY"
+    },
+    {
+      "date": "1988-07-21",
+      "home_rating": 1684.8439123406238,
+      "away_rating": 1521.853949538665,
+      "prob_home": 0.5929951843785921,
+      "prob_away": 0.1555048843016555,
+      "stronger": "IRQ",
+      "winner": "IRQ",
+      "home_id": "IRQ"
+    },
+    {
+      "date": "1988-09-29",
+      "home_rating": 1696.5758514779554,
+      "away_rating": 1506.6224031795568,
+      "prob_home": 0.628808725101271,
+      "prob_away": 0.13074334125955675,
+      "stronger": "CHI",
+      "winner": "ECU",
+      "home_id": "CHI"
+    },
+    {
+      "date": "1988-10-16",
+      "home_rating": 1370.378511827495,
+      "away_rating": 1420.8619745557935,
+      "prob_home": 0.3768298511792941,
+      "prob_away": 0.30638247239644667,
+      "stronger": "TAN",
+      "winner": "SWZ",
+      "home_id": "SWZ"
+    },
+    {
+      "date": "1988-12-06",
+      "home_rating": 1348.0535232330833,
+      "away_rating": 1515.2002765362884,
+      "prob_home": 0.15156134107077657,
+      "prob_away": 0.5986750934495502,
+      "stronger": "GAB",
+      "winner": "GAB",
+      "home_id": "CTA"
+    },
+    {
+      "date": "1988-12-17",
+      "home_rating": 1653.7207306321807,
+      "away_rating": 1689.5047859088281,
+      "prob_home": 0.2932368444240754,
+      "prob_away": 0.39586898636740336,
+      "stronger": "IRN",
+      "winner": "IRN",
+      "home_id": "CHN"
+    },
+    {
+      "date": "1988-12-18",
+      "home_rating": 1745.30869182159,
+      "away_rating": 1628.2638893593091,
+      "prob_home": 0.5265878973701139,
+      "prob_away": 0.2018969404747175,
+      "stronger": "KOR",
+      "winner": "KSA",
+      "home_id": "KOR"
+    },
+    {
+      "date": "1989-08-30",
+      "home_rating": 1396.4479470071692,
+      "away_rating": 1421.4282748191267,
+      "prob_home": 0.30584078806572024,
+      "prob_away": 0.37761631277267554,
+      "stronger": "THA",
+      "winner": "IDN",
+      "home_id": "IDN"
+    },
+    {
+      "date": "1989-11-08",
+      "home_rating": 1693.1412586564534,
+      "away_rating": 1591.8135201601358,
+      "prob_home": 0.5024631820200713,
+      "prob_away": 0.21881531382552344,
+      "stronger": "IRN",
+      "winner": "UGA",
+      "home_id": "IRN"
+    },
+    {
+      "date": "1989-11-12",
+      "home_rating": 1672.26509328954,
+      "away_rating": 1596.068238183054,
+      "prob_home": 0.46260937604707014,
+      "prob_away": 0.24674698859438748,
+      "stronger": "IRQ",
+      "winner": "IRQ",
+      "home_id": "IRQ"
+    },
+    {
+      "date": "1989-12-11",
+      "home_rating": 1440.1009647672342,
+      "away_rating": 1736.1684783570597,
+      "prob_home": 0.05316864920570661,
+      "prob_away": 0.7453600792023694,
+      "stronger": "CMR",
+      "winner": "CMR",
+      "home_id": "CHA"
+    },
+    {
+      "date": "1989-12-16",
+      "home_rating": 1508.3492977352819,
+      "away_rating": 1611.0524149544158,
+      "prob_home": 0.21731637524875894,
+      "prob_away": 0.5046003015776093,
+      "stronger": "UGA",
+      "winner": "UGA",
+      "home_id": "MWI"
+    },
+    {
+      "date": "1990-01-28",
+      "home_rating": 1668.4321784304575,
+      "away_rating": 1651.0157757147222,
+      "prob_home": 0.48850147945159506,
+      "prob_away": 0.22860648738300882,
+      "stronger": "NGA",
+      "winner": "NGA",
+      "home_id": "NGA"
+    },
+    {
+      "date": "1990-02-04",
+      "home_rating": 1520.6203095199085,
+      "away_rating": 1708.1330160610587,
+      "prob_home": 0.206726708619294,
+      "prob_away": 0.5196994760707582,
+      "stronger": "COL",
+      "winner": "COL",
+      "home_id": "USA"
+    },
+    {
+      "date": "1990-02-20",
+      "home_rating": 1703.4384245492868,
+      "away_rating": 1839.5461799541554,
+      "prob_home": 0.1820540678185019,
+      "prob_away": 0.5549216395184082,
+      "stronger": "RUS",
+      "winner": "COL",
+      "home_id": "COL"
+    },
+    {
+      "date": "1990-05-18",
+      "home_rating": 1570.2161857806227,
+      "away_rating": 1364.9788446262753,
+      "prob_home": 0.730423061411591,
+      "prob_away": 0.0627193829861222,
+      "stronger": "ZIM",
+      "winner": "ZIM",
+      "home_id": "ZIM"
+    },
+    {
+      "date": "1990-06-25",
+      "home_rating": 1777.7943104065778,
+      "away_rating": 1772.5679442285611,
+      "prob_home": 0.3439517874366806,
+      "prob_away": 0.3289102309018076,
+      "stronger": "IRL",
+      "winner": "IRL",
+      "home_id": "IRL"
+    },
+    {
+      "date": "1990-07-03",
+      "home_rating": 1881.3853127624946,
+      "away_rating": 1734.8314348914457,
+      "prob_home": 0.6676041063138518,
+      "prob_away": 0.10428401802300669,
+      "stronger": "ITA",
+      "winner": "ARG",
+      "home_id": "ITA"
+    },
+    {
+      "date": "1990-07-04",
+      "home_rating": 1902.181668381988,
+      "away_rating": 1872.9056677212102,
+      "prob_home": 0.38488975998195996,
+      "prob_away": 0.30082552209980845,
+      "stronger": "GER",
+      "winner": "GER",
+      "home_id": "GER"
+    },
+    {
+      "date": "1990-08-03",
+      "home_rating": 1632.0508715951348,
+      "away_rating": 1737.8971628257739,
+      "prob_home": 0.2989932571207381,
+      "prob_away": 0.3875434801040957,
+      "stronger": "KOR",
+      "winner": "KOR",
+      "home_id": "CHN"
+    },
+    {
+      "date": "1990-10-01",
+      "home_rating": 1651.5839170390427,
+      "away_rating": 1593.6328721135021,
+      "prob_home": 0.4328244712178212,
+      "prob_away": 0.2675577536036101,
+      "stronger": "KSA",
+      "winner": "PRK",
+      "home_id": "KSA"
+    },
+    {
+      "date": "1990-10-06",
+      "home_rating": 1693.9183611509968,
+      "away_rating": 1606.5504099622972,
+      "prob_home": 0.48050655143739535,
+      "prob_away": 0.23421109545946694,
+      "stronger": "IRN",
+      "winner": "IRN",
+      "home_id": "IRN"
+    },
+    {
+      "date": "1990-12-17",
+      "home_rating": 1406.6725028088997,
+      "away_rating": 1596.311506404688,
+      "prob_home": 0.13102073727951602,
+      "prob_away": 0.6284052834238949,
+      "stronger": "UGA",
+      "winner": "UGA",
+      "home_id": "TAN"
+    },
+    {
+      "date": "1990-12-17",
+      "home_rating": 1337.8367752650945,
+      "away_rating": 1392.4037906148305,
+      "prob_home": 0.27145491907364083,
+      "prob_away": 0.42723267231087364,
+      "stronger": "EQG",
+      "winner": "CTA",
+      "home_id": "CTA"
+    },
+    {
+      "date": "1991-01-21",
+      "home_rating": 1632.5402559440488,
+      "away_rating": 1657.9870529954562,
+      "prob_home": 0.41891272869138624,
+      "prob_away": 0.27724644005727606,
+      "stronger": "CIV",
+      "winner": "CIV",
+      "home_id": "SEN"
+    },
+    {
+      "date": "1991-01-21",
+      "home_rating": 1656.463062617721,
+      "away_rating": 1770.7668841720963,
+      "prob_home": 0.20481306224581752,
+      "prob_away": 0.5224285749773175,
+      "stronger": "ALG",
+      "winner": "CMR",
+      "home_id": "CMR"
+    },
+    {
+      "date": "1991-01-22",
+      "home_rating": 1630.4152616145373,
+      "away_rating": 1766.0026514811238,
+      "prob_home": 0.264528869494805,
+      "prob_away": 0.4371669602931011,
+      "stronger": "ALG",
+      "winner": "SEN",
+      "home_id": "SEN"
+    },
+    {
+      "date": "1991-01-23",
+      "home_rating": 1660.1120473249678,
+      "away_rating": 1661.2272953086936,
+      "prob_home": 0.33370144298799176,
+      "prob_away": 0.33691137369114893,
+      "stronger": "CMR",
+      "winner": "CIV",
+      "home_id": "CIV"
+    },
+    {
+      "date": "1991-06-14",
+      "home_rating": 1741.746122279386,
+      "away_rating": 1668.3591571300688,
+      "prob_home": 0.5725960440510195,
+      "prob_away": 0.16970783991741445,
+      "stronger": "KOR",
+      "winner": "KOR",
+      "home_id": "KOR"
+    },
+    {
+      "date": "1991-06-16",
+      "home_rating": 1872.9187574395012,
+      "away_rating": 1835.2951034872533,
+      "prob_home": 0.39896291908822124,
+      "prob_away": 0.291094652776232,
+      "stronger": "ITA",
+      "winner": "ITA",
+      "home_id": "ITA"
+    },
+    {
+      "date": "1991-07-07",
+      "home_rating": 1633.5136982495947,
+      "away_rating": 1625.7793649749126,
+      "prob_home": 0.4731166406386639,
+      "prob_away": 0.23938932815434738,
+      "stronger": "USA",
+      "winner": "USA",
+      "home_id": "USA"
+    },
+    {
+      "date": "1991-09-20",
+      "home_rating": 1666.7876095445686,
+      "away_rating": 1517.9354586641891,
+      "prob_home": 0.5732563904885581,
+      "prob_away": 0.16924721030890233,
+      "stronger": "FIJ",
+      "winner": "FIJ",
+      "home_id": "FIJ"
+    },
+    {
+      "date": "1991-09-28",
+      "home_rating": 1632.0153893530478,
+      "away_rating": 1520.15281190355,
+      "prob_home": 0.6248283230123981,
+      "prob_away": 0.13348189157725543,
+      "stronger": "EGY",
+      "winner": "EGY",
+      "home_id": "EGY"
+    },
+    {
+      "date": "1991-12-02",
+      "home_rating": 1421.4029771311075,
+      "away_rating": 1443.2306228168952,
+      "prob_home": 0.30952348490418,
+      "prob_away": 0.3722659732477765,
+      "stronger": "SIN",
+      "winner": "IDN",
+      "home_id": "IDN"
+    },
+    {
+      "date": "1991-12-04",
+      "home_rating": 1422.3441144562614,
+      "away_rating": 1489.3606963048674,
+      "prob_home": 0.2571715582680877,
+      "prob_away": 0.44770363180007183,
+      "stronger": "THA",
+      "winner": "IDN",
+      "home_id": "IDN"
+    },
+    {
+      "date": "1992-01-23",
+      "home_rating": 1716.6871656474934,
+      "away_rating": 1723.7791439288292,
+      "prob_home": 0.326734053215194,
+      "prob_away": 0.3471435729931729,
+      "stronger": "CIV",
+      "winner": "CIV",
+      "home_id": "CMR"
+    },
+    {
+      "date": "1992-01-26",
+      "home_rating": 1662.6857260484298,
+      "away_rating": 1723.4730011321594,
+      "prob_home": 0.2642994931752974,
+      "prob_away": 0.4374956977174056,
+      "stronger": "CIV",
+      "winner": "CIV",
+      "home_id": "GHA"
+    },
+    {
+      "date": "1992-06-22",
+      "home_rating": 1863.9280634093066,
+      "away_rating": 1787.0352700100568,
+      "prob_home": 0.4637322903042968,
+      "prob_away": 0.24596099562802098,
+      "stronger": "NED",
+      "winner": "DEN",
+      "home_id": "NED"
+    },
+    {
+      "date": "1992-08-29",
+      "home_rating": 1557.8017420256815,
+      "away_rating": 1734.119945017812,
+      "prob_home": 0.14302111737551726,
+      "prob_away": 0.6110041093997637,
+      "stronger": "KOR",
+      "winner": "JPN",
+      "home_id": "JPN"
+    },
+    {
+      "date": "1992-09-15",
+      "home_rating": 1511.3086429849088,
+      "away_rating": 1647.8124178005667,
+      "prob_home": 0.2634776031017265,
+      "prob_away": 0.43867348136028605,
+      "stronger": "EGY",
+      "winner": "EGY",
+      "home_id": "SYR"
+    },
+    {
+      "date": "1992-11-08",
+      "home_rating": 1537.8785700886697,
+      "away_rating": 1555.9579726131471,
+      "prob_home": 0.3139027831159884,
+      "prob_away": 0.36589256871272596,
+      "stronger": "UAE",
+      "winner": "CHN",
+      "home_id": "CHN"
+    },
+    {
+      "date": "1992-11-25",
+      "home_rating": 1539.730774040528,
+      "away_rating": 1675.3626458678723,
+      "prob_home": 0.18253965637204816,
+      "prob_away": 0.5542273533103664,
+      "stronger": "ZAM",
+      "winner": "UGA",
+      "home_id": "UGA"
+    },
+    {
+      "date": "1993-01-23",
+      "home_rating": 1603.2153444768182,
+      "away_rating": 1750.237482458688,
+      "prob_home": 0.17106234017793803,
+      "prob_away": 0.5706546921508151,
+      "stronger": "SUI",
+      "winner": "SUI",
+      "home_id": "JPN"
+    },
+    {
+      "date": "1993-02-20",
+      "home_rating": 1542.4074260153461,
+      "away_rating": 1193.5594477955842,
+      "prob_home": 0.8396342767201121,
+      "prob_away": 0.0,
+      "stronger": "FIN",
+      "winner": "FIN",
+      "home_id": "FIN"
+    },
+    {
+      "date": "1993-02-24",
+      "home_rating": 1884.7717769568342,
+      "away_rating": 1779.77228424382,
+      "prob_home": 0.6158733582979841,
+      "prob_away": 0.13965642218286844,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "ARG"
+    },
+    {
+      "date": "1993-06-17",
+      "home_rating": 1459.067391156732,
+      "away_rating": 1422.4003005483357,
+      "prob_home": 0.518407985937868,
+      "prob_away": 0.2076323629636237,
+      "stronger": "SIN",
+      "winner": "SIN",
+      "home_id": "SIN"
+    },
+    {
+      "date": "1993-06-26",
+      "home_rating": 1743.8592035021677,
+      "away_rating": 1722.279458588234,
+      "prob_home": 0.37184485314931104,
+      "prob_away": 0.3098131034401734,
+      "stronger": "COL",
+      "winner": "COL",
+      "home_id": "COL"
+    },
+    {
+      "date": "1993-06-27",
+      "home_rating": 1856.7061488222587,
+      "away_rating": 1870.6929443894833,
+      "prob_home": 0.3186841330243744,
+      "prob_away": 0.35891963326825094,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "BRA"
+    },
+    {
+      "date": "1993-07-01",
+      "home_rating": 1742.9287272565307,
+      "away_rating": 1870.089411885825,
+      "prob_home": 0.1912690067380508,
+      "prob_away": 0.5417551498810497,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "COL"
+    },
+    {
+      "date": "1993-10-24",
+      "home_rating": 1501.0551159265042,
+      "away_rating": 1532.289660274362,
+      "prob_home": 0.2985403386546744,
+      "prob_away": 0.3881991714385954,
+      "stronger": "GUI",
+      "winner": "GUI",
+      "home_id": "BDI"
+    },
+    {
+      "date": "1993-12-26",
+      "home_rating": 1241.8055844059297,
+      "away_rating": 1347.0022102675614,
+      "prob_home": 0.21460755710906237,
+      "prob_away": 0.508462393591586,
+      "stronger": "IND",
+      "winner": "NEP",
+      "home_id": "NEP"
+    },
+    {
+      "date": "1994-01-29",
+      "home_rating": 1559.9594778431147,
+      "away_rating": 1529.4524752136545,
+      "prob_home": 0.5089419930583277,
+      "prob_away": 0.2142711750190318,
+      "stronger": "BFA",
+      "winner": "BFA",
+      "home_id": "BFA"
+    },
+    {
+      "date": "1994-04-06",
+      "home_rating": 1745.4632346422702,
+      "away_rating": 1701.318954503472,
+      "prob_home": 0.40989290803861367,
+      "prob_away": 0.2835147912678443,
+      "stronger": "NGA",
+      "winner": "NGA",
+      "home_id": "NGA"
+    },
+    {
+      "date": "1994-07-05",
+      "home_rating": 1780.384974126851,
+      "away_rating": 1712.6023163039677,
+      "prob_home": 0.4489539198734118,
+      "prob_away": 0.25629784311786935,
+      "stronger": "MEX",
+      "winner": "BUL",
+      "home_id": "MEX"
+    },
+    {
+      "date": "1994-07-10",
+      "home_rating": 1814.1987656389751,
+      "away_rating": 1838.8379462143034,
+      "prob_home": 0.306239228062802,
+      "prob_away": 0.3770378420407481,
+      "stronger": "SWE",
+      "winner": "SWE",
+      "home_id": "ROU"
+    },
+    {
+      "date": "1994-07-17",
+      "home_rating": 1930.812899165707,
+      "away_rating": 1897.6810300580341,
+      "prob_home": 0.39140085452431594,
+      "prob_away": 0.296327685791477,
+      "stronger": "BRA",
+      "winner": "BRA",
+      "home_id": "BRA"
+    },
+    {
+      "date": "1994-12-08",
+      "home_rating": 1501.5853249722893,
+      "away_rating": 1547.3441835504157,
+      "prob_home": 0.2816416551436635,
+      "prob_away": 0.4125899639602635,
+      "stronger": "UGA",
+      "winner": "TAN",
+      "home_id": "TAN"
+    },
+    {
+      "date": "1995-01-10",
+      "home_rating": 1800.6376874871505,
+      "away_rating": 1798.4904101629463,
+      "prob_home": 0.33867958701069434,
+      "prob_away": 0.33249930475307626,
+      "stronger": "DEN",
+      "winner": "DEN",
+      "home_id": "DEN"
+    },
+    {
+      "date": "1995-01-13",
+      "home_rating": 1798.5831143968105,
+      "away_rating": 1755.3928314718423,
+      "prob_home": 0.4082975234417292,
+      "prob_away": 0.2846223077791088,
+      "stronger": "MEX",
+      "winner": "MEX",
+      "home_id": "MEX"
+    },
+    {
+      "date": "1995-02-26",
+      "home_rating": 1639.2021802669337,
+      "away_rating": 1671.2491635737108,
+      "prob_home": 0.29759273302948375,
+      "prob_away": 0.38957066505690385,
+      "stronger": "KOR",
+      "winner": "JPN",
+      "home_id": "JPN"
+    },
+    {
+      "date": "1995-03-31",
+      "home_rating": 1324.798927088228,
+      "away_rating": 1272.1585172997527,
+      "prob_home": 0.42404049896989254,
+      "prob_away": 0.2736780204608912,
+      "stronger": "IND",
+      "winner": "IND",
+      "home_id": "IND"
+    },
+    {
+      "date": "1995-05-21",
+      "home_rating": 1440.305157026518,
+      "away_rating": 1453.8639243799053,
+      "prob_home": 0.4385707115431796,
+      "prob_away": 0.26354932443861917,
+      "stronger": "SKN",
+      "winner": "ATG",
+      "home_id": "ATG"
+    },
+    {
+      "date": "1995-06-09",
+      "home_rating": 1653.1979316031977,
+      "away_rating": 1607.1638632275033,
+      "prob_home": 0.5326039986451305,
+      "prob_away": 0.19768009478297482,
+      "stronger": "PAR",
+      "winner": "PAR",
+      "home_id": "PAR"
+    },
+    {
+      "date": "1995-07-16",
+      "home_rating": 1696.3479536261627,
+      "away_rating": 1805.0850582853006,
+      "prob_home": 0.2107810755047941,
+      "prob_away": 0.5139181716734607,
+      "stronger": "COL",
+      "winner": "COL",
+      "home_id": "PAR"
+    },
+    {
+      "date": "1995-07-17",
+      "home_rating": 1975.940606037697,
+      "away_rating": 1830.2566089173702,
+      "prob_home": 0.568745619701396,
+      "prob_away": 0.1723947381518509,
+      "stronger": "BRA",
+      "winner": "BRA",
+      "home_id": "BRA"
+    },
+    {
+      "date": "1995-07-17",
+      "home_rating": 1659.2598006382284,
+      "away_rating": 1761.0524311729496,
+      "prob_home": 0.21830827968951177,
+      "prob_away": 0.5031860915266876,
+      "stronger": "MEX",
+      "winner": "USA",
+      "home_id": "USA"
+    },
+    {
+      "date": "1995-07-23",
+      "home_rating": 1750.7880199734832,
+      "away_rating": 1974.3835234159221,
+      "prob_home": 0.16950127878481838,
+      "prob_away": 0.5728921554674635,
+      "stronger": "BRA",
+      "winner": "URU",
+      "home_id": "URU"
+    },
+    {
+      "date": "1995-08-24",
+      "home_rating": 1647.2349892876514,
+      "away_rating": 1614.787503016459,
+      "prob_home": 0.3902464734068038,
+      "prob_away": 0.29712567497831155,
+      "stronger": "FIJ",
+      "winner": "SOL",
+      "home_id": "FIJ"
+    },
+    {
+      "date": "1995-11-28",
+      "home_rating": 1353.9278977661504,
+      "away_rating": 1574.4525400638047,
+      "prob_home": 0.17255369692519013,
+      "prob_away": 0.5685179009101415,
+      "stronger": "SLE",
+      "winner": "SLE",
+      "home_id": "MTN"
+    },
+    {
+      "date": "1995-12-02",
+      "home_rating": 1535.4074057718321,
+      "away_rating": 1606.5853603219982,
+      "prob_home": 0.34154786560347383,
+      "prob_away": 0.330547578240213,
+      "stronger": "CMR",
+      "winner": "CMR",
+      "home_id": "GAB"
+    },
+    {
+      "date": "1995-12-02",
+      "home_rating": 1680.1378870441868,
+      "away_rating": 1689.2105650384271,
+      "prob_home": 0.3244225514477492,
+      "prob_away": 0.3505298838763513,
+      "stronger": "CIV",
+      "winner": "CIV",
+      "home_id": "ALG"
+    },
+    {
+      "date": "1995-12-07",
+      "home_rating": 1576.1883468452804,
+      "away_rating": 1578.9440796698502,
+      "prob_home": 0.33179035371777205,
+      "prob_away": 0.3397218240459243,
+      "stronger": "CRC",
+      "winner": "HON",
+      "home_id": "HON"
+    },
+    {
+      "date": "1995-12-25",
+      "home_rating": 1308.129899489516,
+      "away_rating": 1172.3348639345925,
+      "prob_home": 0.5544654767047005,
+      "prob_away": 0.18237310670527973,
+      "stronger": "BAN",
+      "winner": "BAN",
+      "home_id": "BAN"
+    },
+    {
+      "date": "1995-12-27",
+      "home_rating": 1177.916249484584,
+      "away_rating": 1209.6025072173063,
+      "prob_home": 0.2980134476516653,
+      "prob_away": 0.3889618136142359,
+      "stronger": "NEP",
+      "winner": "SRI",
+      "home_id": "SRI"
+    },
+    {
+      "date": "1996-01-28",
+      "home_rating": 1574.9867822088975,
+      "away_rating": 1623.4379095040797,
+      "prob_home": 0.2785220149056586,
+      "prob_away": 0.41707854834106295,
+      "stronger": "TUN",
+      "winner": "TUN",
+      "home_id": "GAB"
+    },
+    {
+      "date": "1996-02-22",
+      "home_rating": 1696.7378114208698,
+      "away_rating": 1773.3525295887619,
+      "prob_home": 0.2462749778607253,
+      "prob_away": 0.46328373171090914,
+      "stronger": "SWE",
+      "winner": "SWE",
+      "home_id": "JPN"
+    },
+    {
+      "date": "1996-06-22",
+      "home_rating": 1925.9434071570147,
+      "away_rating": 1799.9327450826856,
+      "prob_home": 0.5400456543492708,
+      "prob_away": 0.1924662978185479,
+      "stronger": "FRA",
+      "winner": "FRA",
+      "home_id": "FRA"
+    },
+    {
+      "date": "1996-06-22",
+      "home_rating": 1848.0301744245435,
+      "away_rating": 1876.7265471707053,
+      "prob_home": 0.4134990948086811,
+      "prob_away": 0.28101002002692305,
+      "stronger": "ESP",
+      "winner": "ENG",
+      "home_id": "ENG"
+    },
+    {
+      "date": "1996-06-26",
+      "home_rating": 1846.042838302817,
+      "away_rating": 1965.54407107252,
+      "prob_home": 0.28310053738600083,
+      "prob_away": 0.41048950588885913,
+      "stronger": "GER",
+      "winner": "GER",
+      "home_id": "ENG"
+    },
+    {
+      "date": "1996-06-26",
+      "home_rating": 1920.7297168090538,
+      "away_rating": 1740.4649752535602,
+      "prob_home": 0.6162224323687974,
+      "prob_away": 0.13941539996435168,
+      "stronger": "FRA",
+      "winner": "CZE",
+      "home_id": "FRA"
+    },
+    {
+      "date": "1996-08-25",
+      "home_rating": 1441.418764281963,
+      "away_rating": 1461.3381147134883,
+      "prob_home": 0.4280826624580205,
+      "prob_away": 0.2708627591580495,
+      "stronger": "UGA",
+      "winner": "ETH",
+      "home_id": "ETH"
+    },
+    {
+      "date": "1996-11-29",
+      "home_rating": 1507.2061556790236,
+      "away_rating": 1524.129263303431,
+      "prob_home": 0.43303204153958536,
+      "prob_away": 0.26741302024671654,
+      "stronger": "KEN",
+      "winner": "SDN",
+      "home_id": "SDN"
+    },
+    {
+      "date": "1996-12-11",
+      "home_rating": 1700.8224700552196,
+      "away_rating": 1759.626914367506,
+      "prob_home": 0.36268461677016794,
+      "prob_away": 0.3161037942612604,
+      "stronger": "CRO",
+      "winner": "CRO",
+      "home_id": "MAR"
+    },
+    {
+      "date": "1996-12-12",
+      "home_rating": 1760.3256267051397,
+      "away_rating": 1748.2589528769042,
+      "prob_home": 0.3556435509214139,
+      "prob_away": 0.32092682936919004,
+      "stronger": "CRO",
+      "winner": "CRO",
+      "home_id": "CRO"
+    },
+    {
+      "date": "1996-12-19",
+      "home_rating": 1720.963421557533,
+      "away_rating": 1673.3909386626674,
+      "prob_home": 0.415614874875949,
+      "prob_away": 0.2795395970531892,
+      "stronger": "IRN",
+      "winner": "KSA",
+      "home_id": "IRN"
+    },
+    {
+      "date": "1996-12-21",
+      "home_rating": 1656.968876130567,
+      "away_rating": 1675.4320678300087,
+      "prob_home": 0.4304899632048813,
+      "prob_away": 0.26918521127823986,
+      "stronger": "KSA",
+      "winner": "KSA",
+      "home_id": "UAE"
+    },
+    {
+      "date": "1996-12-21",
+      "home_rating": 1718.9222923901916,
+      "away_rating": 1619.9894418584631,
+      "prob_home": 0.4987304293830667,
+      "prob_away": 0.22143333192929826,
+      "stronger": "IRN",
+      "winner": "IRN",
+      "home_id": "IRN"
+    },
+    {
+      "date": "1996-12-27",
+      "home_rating": 1303.2898949177732,
+      "away_rating": 1491.1556733187247,
+      "prob_home": 0.2063489827459755,
+      "prob_away": 0.5202381399468068,
+      "stronger": "BFA",
+      "winner": "BEN",
+      "home_id": "BEN"
+    },
+    {
+      "date": "1997-02-07",
+      "home_rating": 1821.527138064915,
+      "away_rating": 1668.213230127888,
+      "prob_home": 0.5795551497169091,
+      "prob_away": 0.16485615980580448,
+      "stronger": "RUS",
+      "winner": "RUS",
+      "home_id": "RUS"
+    },
+    {
+      "date": "1997-04-10",
+      "home_rating": 1307.0730812488296,
+      "away_rating": 1745.6809719340306,
+      "prob_home": 0.01975869838531634,
+      "prob_away": 0.8002192228236062,
+      "stronger": "IRQ",
+      "winner": "IRQ",
+      "home_id": "IND"
+    },
+    {
+      "date": "1997-06-22",
+      "home_rating": 1707.3302916124405,
+      "away_rating": 1748.5288431286608,
+      "prob_home": 0.2869362378608568,
+      "prob_away": 0.40496253086714185,
+      "stronger": "MEX",
+      "winner": "MEX",
+      "home_id": "ECU"
+    },
+    {
+      "date": "1997-07-10",
+      "home_rating": 1525.075849608008,
+      "away_rating": 1614.9148385473209,
+      "prob_home": 0.23146284716648724,
+      "prob_away": 0.4844272894579942,
+      "stronger": "JAM",
+      "winner": "TRI",
+      "home_id": "TRI"
+    },
+    {
+      "date": "1997-10-18",
+      "home_rating": 1459.8668283980803,
+      "away_rating": 1584.5032992670194,
+      "prob_home": 0.27715009886069053,
+      "prob_away": 0.419051233952367,
+      "stronger": "THA",
+      "winner": "THA",
+      "home_id": "IDN"
+    },
+    {
+      "date": "1997-10-20",
+      "home_rating": 1443.976033581384,
+      "away_rating": 1533.0950026749272,
+      "prob_home": 0.31852973717556626,
+      "prob_away": 0.35914504170691985,
+      "stronger": "CUB",
+      "winner": "HAI",
+      "home_id": "HAI"
+    },
+    {
+      "date": "1997-10-22",
+      "home_rating": 1532.485773106957,
+      "away_rating": 1598.0510186739205,
+      "prob_home": 0.2588285979816596,
+      "prob_away": 0.44533185242154666,
+      "stronger": "CMR",
+      "winner": "CUB",
+      "home_id": "CUB"
+    },
+    {
+      "date": "1997-12-07",
+      "home_rating": 1393.009838561058,
+      "away_rating": 1536.0984894168614,
+      "prob_home": 0.25594904025373033,
+      "prob_away": 0.44945300259212023,
+      "stronger": "GUI",
+      "winner": "GUI",
+      "home_id": "GAM"
+    },
+    {
+      "date": "1998-01-31",
+      "home_rating": 1639.5070843283283,
+      "away_rating": 1794.6438103152466,
+      "prob_home": 0.16307643655873694,
+      "prob_away": 0.5821101807939877,
+      "stronger": "KOR",
+      "winner": "KOR",
+      "home_id": "EGY"
+    },
+    {
+      "date": "1998-01-31",
+      "home_rating": 1710.9472848158105,
+      "away_rating": 1716.4800630614268,
+      "prob_home": 0.32855288541464933,
+      "prob_away": 0.3444761553143978,
+      "stronger": "CHI",
+      "winner": "IRN",
+      "home_id": "IRN"
+    },
+    {
+      "date": "1998-02-21",
+      "home_rating": 1535.5253418102761,
+      "away_rating": 1697.7418239375604,
+      "prob_home": 0.23437986177485148,
+      "prob_away": 0.48026575694692186,
+      "stronger": "TUN",
+      "winner": "BFA",
+      "home_id": "BFA"
+    },
+    {
+      "date": "1998-02-21",
+      "home_rating": 1675.546538558142,
+      "away_rating": 1670.5378335244566,
+      "prob_home": 0.343579267376349,
+      "prob_away": 0.329164054054616,
+      "stronger": "CIV",
+      "winner": "EGY",
+      "home_id": "CIV"
+    },
+    {
+      "date": "1998-02-27",
+      "home_rating": 1526.1725260595429,
+      "away_rating": 1548.4303014272516,
+      "prob_home": 0.4242093483752619,
+      "prob_away": 0.2735604612731984,
+      "stronger": "COD",
+      "winner": "COD",
+      "home_id": "BFA"
+    },
+    {
+      "date": "1998-04-22",
+      "home_rating": 1588.5450033197976,
+      "away_rating": 1554.9155144648646,
+      "prob_home": 0.39223985676630735,
+      "prob_away": 0.29574756358953735,
+      "stronger": "HUN",
+      "winner": "HUN",
+      "home_id": "HUN"
+    },
+    {
+      "date": "1998-05-29",
+      "home_rating": 1733.8221240359635,
+      "away_rating": 1886.2811081813916,
+      "prob_home": 0.1656937250701617,
+      "prob_away": 0.5783531434525555,
+      "stronger": "ENG",
+      "winner": "BEL",
+      "home_id": "BEL"
+    },
+    {
+      "date": "1998-05-29",
+      "home_rating": 1747.6752830556172,
+      "away_rating": 1912.6984292407217,
+      "prob_home": 0.23125841004341022,
+      "prob_away": 0.4847189146833552,
+      "stronger": "FRA",
+      "winner": "MAR",
+      "home_id": "MAR"
+    },
+    {
+      "date": "1998-06-30",
+      "home_rating": 1879.4493436481307,
+      "away_rating": 1877.5377520287677,
+      "prob_home": 0.3382758248871345,
+      "prob_away": 0.33277387744711023,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "ARG"
+    },
+    {
+      "date": "1998-07-03",
+      "home_rating": 1936.5569565862454,
+      "away_rating": 1887.3577576332243,
+      "prob_home": 0.5373451555779943,
+      "prob_away": 0.19435800172905415,
+      "stronger": "FRA",
+      "winner": "FRA",
+      "home_id": "FRA"
+    },
+    {
+      "date": "1998-07-07",
+      "home_rating": 2024.221063659081,
+      "away_rating": 1904.9444486155724,
+      "prob_home": 0.5299591466876199,
+      "prob_away": 0.19953376672327167,
+      "stronger": "BRA",
+      "winner": "BRA",
+      "home_id": "BRA"
+    },
+    {
+      "date": "1998-09-05",
+      "home_rating": 1453.0955358726128,
+      "away_rating": 1550.957200592049,
+      "prob_home": 0.22260754882220268,
+      "prob_away": 0.49705617191158846,
+      "stronger": "THA",
+      "winner": "IDN",
+      "home_id": "IDN"
+    },
+    {
+      "date": "1998-11-17",
+      "home_rating": 1572.3270737789146,
+      "away_rating": 1577.7235436827466,
+      "prob_home": 0.32871185542125675,
+      "prob_away": 0.3442428954207174,
+      "stronger": "HON",
+      "winner": "GUA",
+      "home_id": "GUA"
+    },
+    {
+      "date": "1998-11-18",
+      "home_rating": 1572.5600393789066,
+      "away_rating": 1795.3590009784036,
+      "prob_home": 0.10329970192024988,
+      "prob_away": 0.6690612955824377,
+      "stronger": "MEX",
+      "winner": "GUA",
+      "home_id": "GUA"
+    },
+    {
+      "date": "1998-12-02",
+      "home_rating": 1644.8148228324026,
+      "away_rating": 1610.5409327679304,
+      "prob_home": 0.39332588583046846,
+      "prob_away": 0.2949964567791181,
+      "stronger": "UAE",
+      "winner": "UAE",
+      "home_id": "UAE"
+    },
+    {
+      "date": "1998-12-14",
+      "home_rating": 1596.2509904208598,
+      "away_rating": 1714.6774105073325,
+      "prob_home": 0.20043280044030257,
+      "prob_away": 0.5286765350032914,
+      "stronger": "KUW",
+      "winner": "KUW",
+      "home_id": "QAT"
+    },
+    {
+      "date": "1999-05-22",
+      "home_rating": 1408.4480804868515,
+      "away_rating": 1432.9894456053812,
+      "prob_home": 0.4204182081916597,
+      "prob_away": 0.27619912675667846,
+      "stronger": "NAM",
+      "winner": "NAM",
+      "home_id": "MWI"
+    },
+    {
+      "date": "1999-06-16",
+      "home_rating": 1537.0600681342144,
+      "away_rating": 1630.997095607529,
+      "prob_home": 0.312900740839407,
+      "prob_away": 0.3673519765296969,
+      "stronger": "NZL",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "1999-06-19",
+      "home_rating": 1630.1803270721746,
+      "away_rating": 1718.8296908496482,
+      "prob_home": 0.23278475222531417,
+      "prob_away": 0.48254151852269406,
+      "stronger": "POL",
+      "winner": "POL",
+      "home_id": "NZL"
+    },
+    {
+      "date": "1999-07-10",
+      "home_rating": 1723.050090706104,
+      "away_rating": 1685.1546490463843,
+      "prob_home": 0.520283380226801,
+      "prob_away": 0.2063172593267335,
+      "stronger": "PAR",
+      "winner": "URU",
+      "home_id": "PAR"
+    },
+    {
+      "date": "1999-07-10",
+      "home_rating": 1799.1251904038982,
+      "away_rating": 1666.670261715018,
+      "prob_home": 0.5495749204745451,
+      "prob_away": 0.18579459894628086,
+      "stronger": "MEX",
+      "winner": "MEX",
+      "home_id": "MEX"
+    },
+    {
+      "date": "1999-07-13",
+      "home_rating": 1689.8641408598853,
+      "away_rating": 1745.946197906916,
+      "prob_home": 0.2697089031179752,
+      "prob_away": 0.4297385632658114,
+      "stronger": "CHI",
+      "winner": "URU",
+      "home_id": "URU"
+    },
+    {
+      "date": "1999-07-18",
+      "home_rating": 1351.6688109571223,
+      "away_rating": 1564.5862217694646,
+      "prob_home": 0.1802122628816089,
+      "prob_away": 0.5575555548716039,
+      "stronger": "ZIM",
+      "winner": "SWZ",
+      "home_id": "SWZ"
+    },
+    {
+      "date": "1999-07-31",
+      "home_rating": 1430.029502278354,
+      "away_rating": 1636.2546730420486,
+      "prob_home": 0.1870606615253887,
+      "prob_away": 0.5477659159616537,
+      "stronger": "ZAF",
+      "winner": "NAM",
+      "home_id": "NAM"
+    },
+    {
+      "date": "1999-08-03",
+      "home_rating": 1422.0650132861424,
+      "away_rating": 1545.678688130781,
+      "prob_home": 0.2783338231670555,
+      "prob_away": 0.4173491945476855,
+      "stronger": "KEN",
+      "winner": "KEN",
+      "home_id": "RWA"
+    },
+    {
+      "date": "1999-08-07",
+      "home_rating": 1710.5126030736449,
+      "away_rating": 1415.4553925845623,
+      "prob_home": 0.804757239176249,
+      "prob_away": 0.017145352750629284,
+      "stronger": "ZAM",
+      "winner": "ZAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "1999-08-07",
+      "home_rating": 1424.1502438568518,
+      "away_rating": 1536.4684188757897,
+      "prob_home": 0.29145027735647067,
+      "prob_away": 0.3984494528597529,
+      "stronger": "BDI",
+      "winner": "RWA",
+      "home_id": "RWA"
+    },
+    {
+      "date": "1999-08-14",
+      "home_rating": 1467.850536669974,
+      "away_rating": 1441.296950084979,
+      "prob_home": 0.3802824625256213,
+      "prob_away": 0.3040035575726783,
+      "stronger": "IDN",
+      "winner": "IDN",
+      "home_id": "IDN"
+    },
+    {
+      "date": "1999-08-28",
+      "home_rating": 1435.4400810948978,
+      "away_rating": 1378.0519283040478,
+      "prob_home": 0.5494768070708802,
+      "prob_away": 0.18586325914769475,
+      "stronger": "NAM",
+      "winner": "NAM",
+      "home_id": "NAM"
+    },
+    {
+      "date": "1999-11-26",
+      "home_rating": 1580.8065809326677,
+      "away_rating": 1442.0340927279485,
+      "prob_home": 0.6583741494844207,
+      "prob_away": 0.11053632908252065,
+      "stronger": "GAB",
+      "winner": "TOG",
+      "home_id": "GAB"
+    },
+    {
+      "date": "2000-02-04",
+      "home_rating": 1819.1252743790399,
+      "away_rating": 1473.8099132300747,
+      "prob_home": 0.7867121486311335,
+      "prob_away": 0.027692819407263897,
+      "stronger": "ROU",
+      "winner": "ROU",
+      "home_id": "ROU"
+    },
+    {
+      "date": "2000-02-12",
+      "home_rating": 1693.109911283103,
+      "away_rating": 1668.1015348783446,
+      "prob_home": 0.37766386840552957,
+      "prob_away": 0.30580802972513177,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2000-02-13",
+      "home_rating": 1694.8472646500506,
+      "away_rating": 1704.5140120879025,
+      "prob_home": 0.4449523555545709,
+      "prob_away": 0.2590936848880449,
+      "stronger": "CMR",
+      "winner": "CMR",
+      "home_id": "NGA"
+    },
+    {
+      "date": "2000-02-19",
+      "home_rating": 1772.2374114900672,
+      "away_rating": 1689.0061928971902,
+      "prob_home": 0.5864232153021981,
+      "prob_away": 0.16007421577295144,
+      "stronger": "USA",
+      "winner": "COL",
+      "home_id": "USA"
+    },
+    {
+      "date": "2000-04-30",
+      "home_rating": 1249.2195512086776,
+      "away_rating": 1400.7135654550157,
+      "prob_home": 0.2464112994553389,
+      "prob_away": 0.4630889752341665,
+      "stronger": "ATG",
+      "winner": "ATG",
+      "home_id": "VGB"
+    },
+    {
+      "date": "2000-05-10",
+      "home_rating": 1183.637878488742,
+      "away_rating": 1170.6188104068538,
+      "prob_home": 0.4815410446073322,
+      "prob_away": 0.2334860213015998,
+      "stronger": "MDV",
+      "winner": "SRI",
+      "home_id": "MDV"
+    },
+    {
+      "date": "2000-05-11",
+      "home_rating": 1575.548460275374,
+      "away_rating": 1533.4650485711318,
+      "prob_home": 0.4064448493620746,
+      "prob_away": 0.28590796200247587,
+      "stronger": "SEN",
+      "winner": "SEN",
+      "home_id": "SEN"
+    },
+    {
+      "date": "2000-05-20",
+      "home_rating": 1422.2247707808838,
+      "away_rating": 1586.2674767795693,
+      "prob_home": 0.23234742902648975,
+      "prob_away": 0.48316540422405363,
+      "stronger": "ANG",
+      "winner": "ANG",
+      "home_id": "MWI"
+    },
+    {
+      "date": "2000-05-21",
+      "home_rating": 1497.3885045440336,
+      "away_rating": 1566.6822848644047,
+      "prob_home": 0.34477294407464676,
+      "prob_away": 0.32835060018148027,
+      "stronger": "CUB",
+      "winner": "BRB",
+      "home_id": "BRB"
+    },
+    {
+      "date": "2000-06-04",
+      "home_rating": 1971.9590432038367,
+      "away_rating": 1638.8232889128562,
+      "prob_home": 0.7771794031565438,
+      "prob_away": 0.0334196088249997,
+      "stronger": "FRA",
+      "winner": "FRA",
+      "home_id": "FRA"
+    },
+    {
+      "date": "2000-06-07",
+      "home_rating": 1752.38907610364,
+      "away_rating": 1661.1352231381431,
+      "prob_home": 0.597459825422179,
+      "prob_away": 0.15240464243922602,
+      "stronger": "IRN",
+      "winner": "EGY",
+      "home_id": "IRN"
+    },
+    {
+      "date": "2000-06-11",
+      "home_rating": 1286.5778205632616,
+      "away_rating": 1601.291140666607,
+      "prob_home": 0.09036926697159249,
+      "prob_away": 0.688319400577976,
+      "stronger": "ZAM",
+      "winner": "LES",
+      "home_id": "LES"
+    },
+    {
+      "date": "2000-06-29",
+      "home_rating": 1917.2346428379935,
+      "away_rating": 1879.8428361114618,
+      "prob_home": 0.5195149474112428,
+      "prob_away": 0.20685610668533805,
+      "stronger": "NED",
+      "winner": "ITA",
+      "home_id": "NED"
+    },
+    {
+      "date": "2000-10-04",
+      "home_rating": 1618.456382200704,
+      "away_rating": 1780.1507170486002,
+      "prob_home": 0.23496190296370964,
+      "prob_away": 0.47943527931698965,
+      "stronger": "KOR",
+      "winner": "UAE",
+      "home_id": "UAE"
+    },
+    {
+      "date": "2000-10-28",
+      "home_rating": 1475.6956545102064,
+      "away_rating": 1505.7231824273197,
+      "prob_home": 0.4112768326126539,
+      "prob_away": 0.28255377021150935,
+      "stronger": "UGA",
+      "winner": "UGA",
+      "home_id": "KEN"
+    },
+    {
+      "date": "2000-12-02",
+      "home_rating": 1474.0320465355805,
+      "away_rating": 1506.137979519659,
+      "prob_home": 0.2975239838993426,
+      "prob_away": 0.38967014870508,
+      "stronger": "RWA",
+      "winner": "ETH",
+      "home_id": "ETH"
+    },
+    {
+      "date": "2001-01-17",
+      "home_rating": 1711.0221820163276,
+      "away_rating": 1726.5752587864717,
+      "prob_home": 0.31685439949337413,
+      "prob_away": 0.3615898745303078,
+      "stronger": "EGY",
+      "winner": "EGY",
+      "home_id": "CHN"
+    },
+    {
+      "date": "2001-01-27",
+      "home_rating": 1773.7655190821297,
+      "away_rating": 1794.5052208018626,
+      "prob_home": 0.31079454226226183,
+      "prob_away": 0.37041740039594795,
+      "stronger": "PAR",
+      "winner": "KOR",
+      "home_id": "KOR"
+    },
+    {
+      "date": "2001-02-11",
+      "home_rating": 1362.4975006570166,
+      "away_rating": 1522.9724668767699,
+      "prob_home": 0.2363227375882106,
+      "prob_away": 0.4774934293057901,
+      "stronger": "ZAM",
+      "winner": "SWZ",
+      "home_id": "SWZ"
+    },
+    {
+      "date": "2001-07-29",
+      "home_rating": 1726.7857857629808,
+      "away_rating": 1730.3631503575878,
+      "prob_home": 0.33083278874911337,
+      "prob_away": 0.34112890787988603,
+      "stronger": "HON",
+      "winner": "HON",
+      "home_id": "URU"
+    },
+    {
+      "date": "2001-08-03",
+      "home_rating": 1716.0071209144921,
+      "away_rating": 1546.4006669597234,
+      "prob_home": 0.6937041132890878,
+      "prob_away": 0.08678205806344971,
+      "stronger": "CHN",
+      "winner": "PRK",
+      "home_id": "CHN"
+    },
+    {
+      "date": "2001-08-03",
+      "home_rating": 1649.5388328683077,
+      "away_rating": 1645.880875218414,
+      "prob_home": 0.34126690789666103,
+      "prob_away": 0.33073884845504864,
+      "stronger": "KUW",
+      "winner": "KUW",
+      "home_id": "KUW"
+    },
+    {
+      "date": "2001-08-05",
+      "home_rating": 1649.3809119766836,
+      "away_rating": 1555.504497788108,
+      "prob_home": 0.4908023041690919,
+      "prob_away": 0.22699320183701938,
+      "stronger": "KUW",
+      "winner": "PRK",
+      "home_id": "KUW"
+    },
+    {
+      "date": "2001-08-18",
+      "home_rating": 1559.363058012938,
+      "away_rating": 1583.5671010731007,
+      "prob_home": 0.42097874752676717,
+      "prob_away": 0.2758091022601461,
+      "stronger": "ANG",
+      "winner": "ANG",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2001-10-24",
+      "home_rating": 1349.6099301900215,
+      "away_rating": 1563.6679314481091,
+      "prob_home": 0.17905530237948392,
+      "prob_away": 0.5592105410570337,
+      "stronger": "COD",
+      "winner": "TAN",
+      "home_id": "TAN"
+    },
+    {
+      "date": "2001-10-24",
+      "home_rating": 1511.938512576339,
+      "away_rating": 1480.8656632272293,
+      "prob_home": 0.3879261183702886,
+      "prob_away": 0.29872895925569676,
+      "stronger": "KEN",
+      "winner": "KEN",
+      "home_id": "KEN"
+    },
+    {
+      "date": "2001-12-18",
+      "home_rating": 1474.6066209805817,
+      "away_rating": 1479.4145658144994,
+      "prob_home": 0.3293981542865434,
+      "prob_away": 0.34323564862936945,
+      "stronger": "BDI",
+      "winner": "ETH",
+      "home_id": "ETH"
+    },
+    {
+      "date": "2002-01-27",
+      "home_rating": 1784.3948532357128,
+      "away_rating": 1770.3637518467085,
+      "prob_home": 0.3589951938404516,
+      "prob_away": 0.31863237829000357,
+      "stronger": "MEX",
+      "winner": "KOR",
+      "home_id": "MEX"
+    },
+    {
+      "date": "2002-01-30",
+      "home_rating": 1762.0085020455313,
+      "away_rating": 1613.539833302453,
+      "prob_home": 0.6698428443954065,
+      "prob_away": 0.10277209713435889,
+      "stronger": "USA",
+      "winner": "USA",
+      "home_id": "USA"
+    },
+    {
+      "date": "2002-02-10",
+      "home_rating": 1703.3007843782761,
+      "away_rating": 1816.6741393039658,
+      "prob_home": 0.20580639282482507,
+      "prob_away": 0.5210119286584074,
+      "stronger": "CMR",
+      "winner": "CMR",
+      "home_id": "SEN"
+    },
+    {
+      "date": "2002-02-12",
+      "home_rating": 1517.2437102409294,
+      "away_rating": 1626.9853683260658,
+      "prob_home": 0.2944513285044066,
+      "prob_away": 0.3941139074795546,
+      "stronger": "SUI",
+      "winner": "CYP",
+      "home_id": "CYP"
+    },
+    {
+      "date": "2002-02-15",
+      "home_rating": 1750.0721270887655,
+      "away_rating": 1669.8608444926374,
+      "prob_home": 0.46907251607047595,
+      "prob_away": 0.24222197063127254,
+      "stronger": "CHN",
+      "winner": "SVN",
+      "home_id": "CHN"
+    },
+    {
+      "date": "2002-02-16",
+      "home_rating": 1575.776648560915,
+      "away_rating": 1572.9141350057807,
+      "prob_home": 0.4652952437094953,
+      "prob_away": 0.24486685705814393,
+      "stronger": "THA",
+      "winner": "PRK",
+      "home_id": "THA"
+    },
+    {
+      "date": "2002-03-30",
+      "home_rating": 1345.7534619522999,
+      "away_rating": 1633.2628715454669,
+      "prob_home": 0.11156754097244542,
+      "prob_away": 0.6568559514697472,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "BOT"
+    },
+    {
+      "date": "2002-05-17",
+      "home_rating": 1745.0351738052584,
+      "away_rating": 1519.8950574638473,
+      "prob_home": 0.7490696134747404,
+      "prob_away": 0.05082200503413464,
+      "stronger": "RUS",
+      "winner": "BLR",
+      "home_id": "RUS"
+    },
+    {
+      "date": "2002-05-19",
+      "home_rating": 1734.5614596786493,
+      "away_rating": 1742.5044037268647,
+      "prob_home": 0.44776971672119265,
+      "prob_away": 0.25712538086218983,
+      "stronger": "SRB",
+      "winner": "SRB",
+      "home_id": "RUS"
+    },
+    {
+      "date": "2002-06-16",
+      "home_rating": 1904.42011971133,
+      "away_rating": 1816.3338271881603,
+      "prob_home": 0.48164779462281193,
+      "prob_away": 0.23341119807466065,
+      "stronger": "ESP",
+      "winner": "ESP",
+      "home_id": "ESP"
+    },
+    {
+      "date": "2002-06-22",
+      "home_rating": 1793.111093670614,
+      "away_rating": 1900.6965707631077,
+      "prob_home": 0.2969647652166315,
+      "prob_away": 0.3904792745245543,
+      "stronger": "ESP",
+      "winner": "KOR",
+      "home_id": "KOR"
+    },
+    {
+      "date": "2002-07-21",
+      "home_rating": 1685.2585980558586,
+      "away_rating": 1511.7377769157467,
+      "prob_home": 0.6979517202602001,
+      "prob_away": 0.08396188598853066,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2002-09-05",
+      "home_rating": 1670.889228923431,
+      "away_rating": 1759.2978115919925,
+      "prob_home": 0.23305257390836054,
+      "prob_away": 0.48215943382052173,
+      "stronger": "IRN",
+      "winner": "IRQ",
+      "home_id": "IRQ"
+    },
+    {
+      "date": "2002-09-07",
+      "home_rating": 1488.1401241088058,
+      "away_rating": 1755.5612086933102,
+      "prob_home": 0.1285759640403236,
+      "prob_away": 0.631962968317466,
+      "stronger": "IRN",
+      "winner": "IRN",
+      "home_id": "SYR"
+    },
+    {
+      "date": "2002-09-17",
+      "home_rating": 1748.010403629153,
+      "away_rating": 1697.1808061507434,
+      "prob_home": 0.5397761535410435,
+      "prob_away": 0.19265506542029337,
+      "stronger": "IRN",
+      "winner": "IRN",
+      "home_id": "IRN"
+    },
+    {
+      "date": "2002-09-19",
+      "home_rating": 1742.8035873073418,
+      "away_rating": 1752.5557995298416,
+      "prob_home": 0.4448125255066843,
+      "prob_away": 0.2591913558643739,
+      "stronger": "PAR",
+      "winner": "IRN",
+      "home_id": "IRN"
+    },
+    {
+      "date": "2002-10-23",
+      "home_rating": 1564.1928455966377,
+      "away_rating": 1699.0504815008894,
+      "prob_home": 0.18333078847273646,
+      "prob_away": 0.5530963278967527,
+      "stronger": "ZAF",
+      "winner": "KEN",
+      "home_id": "KEN"
+    },
+    {
+      "date": "2002-10-26",
+      "home_rating": 1326.3949475994016,
+      "away_rating": 1693.5039984095292,
+      "prob_home": 0.055492549946473124,
+      "prob_away": 0.7417025899487333,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "TAN"
+    },
+    {
+      "date": "2002-10-26",
+      "home_rating": 1569.7393286879978,
+      "away_rating": 1507.1577142717567,
+      "prob_home": 0.4404434733947611,
+      "prob_away": 0.2622421863617375,
+      "stronger": "KEN",
+      "winner": "KEN",
+      "home_id": "KEN"
+    },
+    {
+      "date": "2002-11-19",
+      "home_rating": 1683.2108478094954,
+      "away_rating": 1751.7076237000501,
+      "prob_home": 0.3461365286325029,
+      "prob_away": 0.32742093067169226,
+      "stronger": "SEN",
+      "winner": "SEN",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2002-12-27",
+      "home_rating": 1443.1604506920319,
+      "away_rating": 1493.2450123196375,
+      "prob_home": 0.37750629136889047,
+      "prob_away": 0.30591657379938697,
+      "stronger": "BFA",
+      "winner": "BFA",
+      "home_id": "NIG"
+    },
+    {
+      "date": "2002-12-29",
+      "home_rating": 1442.0866049284894,
+      "away_rating": 1579.7498013716734,
+      "prob_home": 0.2621487250026307,
+      "prob_away": 0.4405773578498343,
+      "stronger": "MLI",
+      "winner": "NIG",
+      "home_id": "NIG"
+    },
+    {
+      "date": "2003-01-20",
+      "home_rating": 1313.6321844445615,
+      "away_rating": 1215.493806388864,
+      "prob_home": 0.6067613840194908,
+      "prob_away": 0.14595678778065804,
+      "stronger": "BAN",
+      "winner": "BAN",
+      "home_id": "BAN"
+    },
+    {
+      "date": "2003-02-04",
+      "home_rating": 1740.964466427694,
+      "away_rating": 1740.0192697627072,
+      "prob_home": 0.33661996844204123,
+      "prob_away": 0.33389948046513146,
+      "stronger": "URU",
+      "winner": "URU",
+      "home_id": "URU"
+    },
+    {
+      "date": "2003-03-07",
+      "home_rating": 1387.750132920433,
+      "away_rating": 1444.7630344211975,
+      "prob_home": 0.3657354577206553,
+      "prob_away": 0.3140106300222161,
+      "stronger": "NIG",
+      "winner": "BEN",
+      "home_id": "BEN"
+    },
+    {
+      "date": "2003-03-22",
+      "home_rating": 1395.6062149787804,
+      "away_rating": 1313.8245593249408,
+      "prob_home": 0.5844066969546984,
+      "prob_away": 0.1614775471596852,
+      "stronger": "MOZ",
+      "winner": "MOZ",
+      "home_id": "MOZ"
+    },
+    {
+      "date": "2003-03-27",
+      "home_rating": 1683.0033965054686,
+      "away_rating": 1552.520432911069,
+      "prob_home": 0.6483085649002716,
+      "prob_away": 0.11738705295613244,
+      "stronger": "TUN",
+      "winner": "TUN",
+      "home_id": "TUN"
+    },
+    {
+      "date": "2003-03-30",
+      "home_rating": 1560.4842555902312,
+      "away_rating": 1543.3473187819927,
+      "prob_home": 0.364288047553124,
+      "prob_away": 0.3150039392036823,
+      "stronger": "GHA",
+      "winner": "GHA",
+      "home_id": "GHA"
+    },
+    {
+      "date": "2003-05-24",
+      "home_rating": 1355.3473822888855,
+      "away_rating": 1436.5853976660765,
+      "prob_home": 0.3277303062825077,
+      "prob_away": 0.3456828287733752,
+      "stronger": "MWI",
+      "winner": "MWI",
+      "home_id": "BOT"
+    },
+    {
+      "date": "2003-07-09",
+      "home_rating": 1590.1520269391015,
+      "away_rating": 1505.6095720923493,
+      "prob_home": 0.4760061122931878,
+      "prob_away": 0.23736492598559927,
+      "stronger": "NCL",
+      "winner": "NCL",
+      "home_id": "NCL"
+    },
+    {
+      "date": "2003-08-16",
+      "home_rating": 1422.2136540111871,
+      "away_rating": 1561.1543088474232,
+      "prob_home": 0.26068614449245775,
+      "prob_away": 0.442672190159191,
+      "stronger": "ZAM",
+      "winner": "MWI",
+      "home_id": "MWI"
+    },
+    {
+      "date": "2003-09-24",
+      "home_rating": 1606.664732350205,
+      "away_rating": 1515.2701420326318,
+      "prob_home": 0.5976515488020355,
+      "prob_away": 0.15227158453283662,
+      "stronger": "ALG",
+      "winner": "ALG",
+      "home_id": "ALG"
+    },
+    {
+      "date": "2003-09-26",
+      "home_rating": 1599.984032886167,
+      "away_rating": 1551.0405401616254,
+      "prob_home": 0.5369631901570204,
+      "prob_away": 0.19462560082534447,
+      "stronger": "ALG",
+      "winner": "ALG",
+      "home_id": "ALG"
+    },
+    {
+      "date": "2003-12-08",
+      "home_rating": 1603.9474168498716,
+      "away_rating": 1462.9252394521243,
+      "prob_home": 0.5620512100692907,
+      "prob_away": 0.17707005241731288,
+      "stronger": "KEN",
+      "winner": "RWA",
+      "home_id": "KEN"
+    },
+    {
+      "date": "2003-12-08",
+      "home_rating": 1497.7680992418007,
+      "away_rating": 1521.295727075624,
+      "prob_home": 0.42210222047210516,
+      "prob_away": 0.27502726556401635,
+      "stronger": "UGA",
+      "winner": "UGA",
+      "home_id": "SDN"
+    },
+    {
+      "date": "2004-02-11",
+      "home_rating": 1726.6952840947667,
+      "away_rating": 1755.3644100851627,
+      "prob_home": 0.41354455355864045,
+      "prob_away": 0.2809784336878741,
+      "stronger": "NGA",
+      "winner": "TUN",
+      "home_id": "TUN"
+    },
+    {
+      "date": "2004-02-19",
+      "home_rating": 1464.125723216351,
+      "away_rating": 1451.9650016327516,
+      "prob_home": 0.35580407832701216,
+      "prob_away": 0.320816994373485,
+      "stronger": "KAZ",
+      "winner": "KAZ",
+      "home_id": "KAZ"
+    },
+    {
+      "date": "2004-02-28",
+      "home_rating": 1328.25423351277,
+      "away_rating": 1373.8711812585475,
+      "prob_home": 0.38507076166622156,
+      "prob_away": 0.30070058987987436,
+      "stronger": "BOT",
+      "winner": "BOT",
+      "home_id": "LES"
+    },
+    {
+      "date": "2004-06-23",
+      "home_rating": 1672.7688590730686,
+      "away_rating": 1564.4559327569182,
+      "prob_home": 0.513266271521529,
+      "prob_away": 0.21123827914787408,
+      "stronger": "JOR",
+      "winner": "SYR",
+      "home_id": "JOR"
+    },
+    {
+      "date": "2004-06-24",
+      "home_rating": 1840.2006880822423,
+      "away_rating": 1867.3177386451318,
+      "prob_home": 0.4161321954785451,
+      "prob_away": 0.2791799762083574,
+      "stronger": "ENG",
+      "winner": "POR",
+      "home_id": "POR"
+    },
+    {
+      "date": "2004-06-26",
+      "home_rating": 1787.930211175657,
+      "away_rating": 1886.0521650450933,
+      "prob_home": 0.222322042379683,
+      "prob_away": 0.4974632661319591,
+      "stronger": "NED",
+      "winner": "NED",
+      "home_id": "SWE"
+    },
+    {
+      "date": "2004-07-18",
+      "home_rating": 1601.0513986418457,
+      "away_rating": 1387.0333718163934,
+      "prob_home": 0.7388107643310391,
+      "prob_away": 0.05733688856334182,
+      "stronger": "ANG",
+      "winner": "ANG",
+      "home_id": "ANG"
+    },
+    {
+      "date": "2004-07-21",
+      "home_rating": 1738.1747473634089,
+      "away_rating": 1948.7689109052828,
+      "prob_home": 0.11313988047224127,
+      "prob_away": 0.6545432209199773,
+      "stronger": "BRA",
+      "winner": "BRA",
+      "home_id": "URU"
+    },
+    {
+      "date": "2004-07-25",
+      "home_rating": 1952.158990041952,
+      "away_rating": 1940.6478607985669,
+      "prob_home": 0.3546951756176694,
+      "prob_away": 0.32157560003487756,
+      "stronger": "ARG",
+      "winner": "BRA",
+      "home_id": "ARG"
+    },
+    {
+      "date": "2004-07-30",
+      "home_rating": 1629.4491138185372,
+      "away_rating": 1624.4137309154294,
+      "prob_home": 0.3436249271601978,
+      "prob_away": 0.3291329447988479,
+      "stronger": "UZB",
+      "winner": "BHR",
+      "home_id": "UZB"
+    },
+    {
+      "date": "2004-07-31",
+      "home_rating": 1817.3109319498674,
+      "away_rating": 1682.416649222335,
+      "prob_home": 0.5531499033264543,
+      "prob_away": 0.18329331106622526,
+      "stronger": "JPN",
+      "winner": "JPN",
+      "home_id": "JPN"
+    },
+    {
+      "date": "2004-08-03",
+      "home_rating": 1699.8182162683654,
+      "away_rating": 1777.005088628025,
+      "prob_home": 0.33245317451164025,
+      "prob_away": 0.3387474160085518,
+      "stronger": "IRN",
+      "winner": "CHN",
+      "home_id": "CHN"
+    },
+    {
+      "date": "2004-10-22",
+      "home_rating": 1796.6701788428459,
+      "away_rating": 1634.9483673542486,
+      "prob_home": 0.5912510539246476,
+      "prob_away": 0.15671688599017924,
+      "stronger": "NGA",
+      "winner": "ECU",
+      "home_id": "NGA"
+    },
+    {
+      "date": "2004-10-24",
+      "home_rating": 1594.1440412130364,
+      "away_rating": 1585.872189463476,
+      "prob_home": 0.4739763891986343,
+      "prob_away": 0.23878701985006617,
+      "stronger": "ZIM",
+      "winner": "ZAM",
+      "home_id": "ZIM"
+    },
+    {
+      "date": "2004-11-20",
+      "home_rating": 1579.9285446449026,
+      "away_rating": 1620.8511286986468,
+      "prob_home": 0.3929948162626893,
+      "prob_away": 0.29522544864661504,
+      "stronger": "ANG",
+      "winner": "ANG",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2004-11-30",
+      "home_rating": 1473.5992004866052,
+      "away_rating": 1453.003882075949,
+      "prob_home": 0.49350448651141127,
+      "prob_away": 0.22509833335689888,
+      "stronger": "THA",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "2004-11-30",
+      "home_rating": 1349.4410435277537,
+      "away_rating": 1363.7231632089836,
+      "prob_home": 0.4373815771041893,
+      "prob_away": 0.2643791220395333,
+      "stronger": "HKG",
+      "winner": "HKG",
+      "home_id": "SIN"
+    },
+    {
+      "date": "2004-12-02",
+      "home_rating": 1469.5731081892875,
+      "away_rating": 1633.675162567074,
+      "prob_home": 0.23228146551649098,
+      "prob_away": 0.4832595060960937,
+      "stronger": "SVK",
+      "winner": "SVK",
+      "home_id": "THA"
+    },
+    {
+      "date": "2004-12-03",
+      "home_rating": 1663.0269037753224,
+      "away_rating": 1638.3339932079073,
+      "prob_home": 0.3771289579236341,
+      "prob_away": 0.30617647344421667,
+      "stronger": "FIN",
+      "winner": "OMA",
+      "home_id": "FIN"
+    },
+    {
+      "date": "2004-12-03",
+      "home_rating": 1611.5796728943747,
+      "away_rating": 1476.547632673829,
+      "prob_home": 0.6538620035132022,
+      "prob_away": 0.11360334464705846,
+      "stronger": "BHR",
+      "winner": "BHR",
+      "home_id": "BHR"
+    },
+    {
+      "date": "2004-12-22",
+      "home_rating": 1432.2895863894253,
+      "away_rating": 1558.3318540163293,
+      "prob_home": 0.2755243628469661,
+      "prob_away": 0.42138793538245833,
+      "stronger": "KEN",
+      "winner": "ETH",
+      "home_id": "ETH"
+    },
+    {
+      "date": "2004-12-24",
+      "home_rating": 1595.004439261086,
+      "away_rating": 1660.9091085538232,
+      "prob_home": 0.35056859736742585,
+      "prob_away": 0.324396109740351,
+      "stronger": "OMA",
+      "winner": "QAT",
+      "home_id": "QAT"
+    },
+    {
+      "date": "2005-02-08",
+      "home_rating": 1471.6954678533416,
+      "away_rating": 1628.2101295916639,
+      "prob_home": 0.24075754176879022,
+      "prob_away": 0.4711634188162256,
+      "stronger": "AUT",
+      "winner": "CYP",
+      "home_id": "CYP"
+    },
+    {
+      "date": "2005-02-09",
+      "home_rating": 1624.7540414359523,
+      "away_rating": 1476.7046913967354,
+      "prob_home": 0.5721163608534977,
+      "prob_away": 0.17004247880682744,
+      "stronger": "AUT",
+      "winner": "LVA",
+      "home_id": "AUT"
+    },
+    {
+      "date": "2005-02-27",
+      "home_rating": 1705.8797232976544,
+      "away_rating": 1661.7712126517986,
+      "prob_home": 0.4098331139453364,
+      "prob_away": 0.28355630706439605,
+      "stronger": "CRC",
+      "winner": "CRC",
+      "home_id": "CRC"
+    },
+    {
+      "date": "2005-04-16",
+      "home_rating": 1320.6232851192583,
+      "away_rating": 1426.4929486030596,
+      "prob_home": 0.29896599084996256,
+      "prob_away": 0.3875829567082749,
+      "stronger": "BOT",
+      "winner": "BOT",
+      "home_id": "NAM"
+    },
+    {
+      "date": "2005-06-26",
+      "home_rating": 1894.6668653741872,
+      "away_rating": 1981.6816104003153,
+      "prob_home": 0.23460469062282124,
+      "prob_away": 0.4799449676914087,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "MEX"
+    },
+    {
+      "date": "2005-07-17",
+      "home_rating": 1686.412331821251,
+      "away_rating": 1540.3473249964495,
+      "prob_home": 0.5692897623677872,
+      "prob_away": 0.17201492336409852,
+      "stronger": "ZAF",
+      "winner": "PAN",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2005-07-24",
+      "home_rating": 1859.8538710447701,
+      "away_rating": 1569.8714776236943,
+      "prob_home": 0.8011959936513333,
+      "prob_away": 0.019193856945409093,
+      "stronger": "USA",
+      "winner": "USA",
+      "home_id": "USA"
+    },
+    {
+      "date": "2005-07-28",
+      "home_rating": 1561.324327839765,
+      "away_rating": 1529.785591333878,
+      "prob_home": 0.3887127752219872,
+      "prob_away": 0.2981855135925966,
+      "stronger": "KUW",
+      "winner": "UAE",
+      "home_id": "KUW"
+    },
+    {
+      "date": "2005-07-30",
+      "home_rating": 1785.863966100315,
+      "away_rating": 1531.143500258319,
+      "prob_home": 0.704570374148282,
+      "prob_away": 0.07958506029867984,
+      "stronger": "EGY",
+      "winner": "EGY",
+      "home_id": "EGY"
+    },
+    {
+      "date": "2005-08-13",
+      "home_rating": 1680.4532092361956,
+      "away_rating": 1605.331140392172,
+      "prob_home": 0.5750555984714764,
+      "prob_away": 0.1679924248176966,
+      "stronger": "ZAF",
+      "winner": "ZAM",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2005-08-15",
+      "home_rating": 1718.4956901325575,
+      "away_rating": 1687.735187945303,
+      "prob_home": 0.5093335181170433,
+      "prob_away": 0.21399656749228424,
+      "stronger": "UKR",
+      "winner": "ISR",
+      "home_id": "UKR"
+    },
+    {
+      "date": "2005-12-10",
+      "home_rating": 1550.1080668406235,
+      "away_rating": 1650.0451543827776,
+      "prob_home": 0.22033430764516782,
+      "prob_away": 0.5002974317700872,
+      "stronger": "IRQ",
+      "winner": "IRQ",
+      "home_id": "SYR"
+    },
+    {
+      "date": "2006-02-04",
+      "home_rating": 1799.0406262056545,
+      "away_rating": 1747.3949245130957,
+      "prob_home": 0.4223899887965513,
+      "prob_away": 0.27482697860760924,
+      "stronger": "NGA",
+      "winner": "NGA",
+      "home_id": "NGA"
+    },
+    {
+      "date": "2006-02-04",
+      "home_rating": 1820.960488751044,
+      "away_rating": 1777.960986971491,
+      "prob_home": 0.4079783197739796,
+      "prob_away": 0.28484385407780405,
+      "stronger": "CMR",
+      "winner": "CIV",
+      "home_id": "CMR"
+    },
+    {
+      "date": "2006-02-10",
+      "home_rating": 1782.8953550338265,
+      "away_rating": 1795.5421937510594,
+      "prob_home": 0.44006849321434904,
+      "prob_away": 0.26250394100015023,
+      "stronger": "CIV",
+      "winner": "EGY",
+      "home_id": "EGY"
+    },
+    {
+      "date": "2006-02-28",
+      "home_rating": 1638.835240764473,
+      "away_rating": 1369.5885001792342,
+      "prob_home": 0.719559753080022,
+      "prob_away": 0.06975862632035956,
+      "stronger": "FIN",
+      "winner": "KAZ",
+      "home_id": "FIN"
+    },
+    {
+      "date": "2006-03-01",
+      "home_rating": 1629.088223863078,
+      "away_rating": 1597.0495722990267,
+      "prob_home": 0.3895566040498124,
+      "prob_away": 0.29760244988294265,
+      "stronger": "FIN",
+      "winner": "FIN",
+      "home_id": "FIN"
+    },
+    {
+      "date": "2006-04-29",
+      "home_rating": 1295.5892745359574,
+      "away_rating": 1435.4032838301664,
+      "prob_home": 0.2596872077869184,
+      "prob_away": 0.44410260163129345,
+      "stronger": "MOZ",
+      "winner": "LES",
+      "home_id": "LES"
+    },
+    {
+      "date": "2006-04-30",
+      "home_rating": 1450.006724699796,
+      "away_rating": 1432.6370529225007,
+      "prob_home": 0.3646843434042689,
+      "prob_away": 0.3147320191780388,
+      "stronger": "MRI",
+      "winner": "MOZ",
+      "home_id": "MRI"
+    },
+    {
+      "date": "2006-05-21",
+      "home_rating": 1446.3146318228346,
+      "away_rating": 1585.7369516849653,
+      "prob_home": 0.2601351198596076,
+      "prob_away": 0.4434612557582864,
+      "stronger": "ZAF",
+      "winner": "BOT",
+      "home_id": "BOT"
+    },
+    {
+      "date": "2006-06-26",
+      "home_rating": 1795.5791376713523,
+      "away_rating": 1755.318568550044,
+      "prob_home": 0.40339003228022835,
+      "prob_away": 0.2880267038795824,
+      "stronger": "SUI",
+      "winner": "UKR",
+      "home_id": "SUI"
+    },
+    {
+      "date": "2006-06-30",
+      "home_rating": 1898.7311682309164,
+      "away_rating": 1936.6540550858779,
+      "prob_home": 0.39804417633298617,
+      "prob_away": 0.2917309399316351,
+      "stronger": "ARG",
+      "winner": "GER",
+      "home_id": "GER"
+    },
+    {
+      "date": "2006-07-01",
+      "home_rating": 1927.4633574340164,
+      "away_rating": 1912.4409226661382,
+      "prob_home": 0.36068544071944353,
+      "prob_away": 0.3174743225545345,
+      "stronger": "ENG",
+      "winner": "POR",
+      "home_id": "ENG"
+    },
+    {
+      "date": "2006-07-09",
+      "home_rating": 1958.1137233373713,
+      "away_rating": 1970.3494623004597,
+      "prob_home": 0.3207293832568749,
+      "prob_away": 0.3559321186490054,
+      "stronger": "FRA",
+      "winner": "ITA",
+      "home_id": "ITA"
+    },
+    {
+      "date": "2006-07-22",
+      "home_rating": 1321.952539607133,
+      "away_rating": 1350.710584173797,
+      "prob_home": 0.413396196829615,
+      "prob_away": 0.28108151609378107,
+      "stronger": "SEY",
+      "winner": "SEY",
+      "home_id": "NAM"
+    },
+    {
+      "date": "2007-04-29",
+      "home_rating": 1436.0639751666602,
+      "away_rating": 1561.4775521162228,
+      "prob_home": 0.2762512309055596,
+      "prob_away": 0.42034332019485526,
+      "stronger": "ZIM",
+      "winner": "MOZ",
+      "home_id": "MOZ"
+    },
+    {
+      "date": "2007-05-26",
+      "home_rating": 1295.2999591786781,
+      "away_rating": 1387.2596933115442,
+      "prob_home": 0.31521097572096557,
+      "prob_away": 0.36398627985107984,
+      "stronger": "MRI",
+      "winner": "MRI",
+      "home_id": "SWZ"
+    },
+    {
+      "date": "2007-05-26",
+      "home_rating": 1443.1366918565575,
+      "away_rating": 1588.8407064104342,
+      "prob_home": 0.17237477479055432,
+      "prob_away": 0.5687742190947749,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "MWI"
+    },
+    {
+      "date": "2007-07-10",
+      "home_rating": 1821.5619093371045,
+      "away_rating": 1996.9259549766093,
+      "prob_home": 0.14389917037205377,
+      "prob_away": 0.6097345808139139,
+      "stronger": "BRA",
+      "winner": "BRA",
+      "home_id": "URU"
+    },
+    {
+      "date": "2007-07-21",
+      "home_rating": 1763.1152035184841,
+      "away_rating": 1797.0086716329865,
+      "prob_home": 0.29543985396586636,
+      "prob_away": 0.3926848109459189,
+      "stronger": "AUS",
+      "winner": "JPN",
+      "home_id": "JPN"
+    },
+    {
+      "date": "2007-07-22",
+      "home_rating": 1810.4977172991723,
+      "away_rating": 1705.0459401927046,
+      "prob_home": 0.5088566760403217,
+      "prob_away": 0.21433101470197258,
+      "stronger": "IRN",
+      "winner": "KOR",
+      "home_id": "IRN"
+    },
+    {
+      "date": "2007-07-25",
+      "home_rating": 1656.6622924312862,
+      "away_rating": 1709.46382511278,
+      "prob_home": 0.27349198582455436,
+      "prob_away": 0.4243076968191238,
+      "stronger": "KOR",
+      "winner": "IRQ",
+      "home_id": "IRQ"
+    },
+    {
+      "date": "2007-07-28",
+      "home_rating": 1707.2015894478614,
+      "away_rating": 1747.4314060674249,
+      "prob_home": 0.28806246344564945,
+      "prob_away": 0.40333845612989905,
+      "stronger": "JPN",
+      "winner": "KOR",
+      "home_id": "KOR"
+    },
+    {
+      "date": "2007-07-29",
+      "home_rating": 1476.1887236476898,
+      "away_rating": 1635.923023026203,
+      "prob_home": 0.2371504130342889,
+      "prob_away": 0.47631225759266427,
+      "stronger": "ANG",
+      "winner": "BOT",
+      "home_id": "BOT"
+    },
+    {
+      "date": "2007-10-24",
+      "home_rating": 1583.059747802482,
+      "away_rating": 1634.5492986668435,
+      "prob_home": 0.3751230498685516,
+      "prob_away": 0.30755763423011234,
+      "stronger": "ZAM",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2008-06-20",
+      "home_rating": 1882.9022883072598,
+      "away_rating": 1788.8833267263087,
+      "prob_home": 0.4910266677167167,
+      "prob_away": 0.22683587618357404,
+      "stronger": "CRO",
+      "winner": "TUR",
+      "home_id": "CRO"
+    },
+    {
+      "date": "2008-06-22",
+      "home_rating": 1983.997924682768,
+      "away_rating": 1923.6102286832972,
+      "prob_home": 0.4368384656806768,
+      "prob_away": 0.2647580650614264,
+      "stronger": "ESP",
+      "winner": "ESP",
+      "home_id": "ESP"
+    },
+    {
+      "date": "2008-07-27",
+      "home_rating": 1580.5312186464155,
+      "away_rating": 1511.7400247639137,
+      "prob_home": 0.4505981763085991,
+      "prob_away": 0.25514861090053725,
+      "stronger": "ZAM",
+      "winner": "ZAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2009-07-23",
+      "home_rating": 1779.409083068357,
+      "away_rating": 1790.0907862762117,
+      "prob_home": 0.32254411015111173,
+      "prob_away": 0.3532788402959531,
+      "stronger": "MEX",
+      "winner": "MEX",
+      "home_id": "CRC"
+    },
+    {
+      "date": "2009-10-28",
+      "home_rating": 1480.5762198491761,
+      "away_rating": 1622.2792388854966,
+      "prob_home": 0.2575293675389915,
+      "prob_away": 0.4471915486115805,
+      "stronger": "ZAF",
+      "winner": "ZIM",
+      "home_id": "ZIM"
+    },
+    {
+      "date": "2010-01-25",
+      "home_rating": 1603.0396026313606,
+      "away_rating": 1781.607812705617,
+      "prob_home": 0.14096026618125646,
+      "prob_away": 0.613985641535862,
+      "stronger": "NGA",
+      "winner": "NGA",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2010-06-29",
+      "home_rating": 1776.605572128513,
+      "away_rating": 1757.622461884729,
+      "prob_home": 0.3674303764218048,
+      "prob_away": 0.31284689807195953,
+      "stronger": "PAR",
+      "winner": "PAR",
+      "home_id": "PAR"
+    },
+    {
+      "date": "2010-07-02",
+      "home_rating": 1875.7049258505274,
+      "away_rating": 1734.807780891948,
+      "prob_home": 0.5618707363658181,
+      "prob_away": 0.1771961566145584,
+      "stronger": "URU",
+      "winner": "URU",
+      "home_id": "URU"
+    },
+    {
+      "date": "2010-09-29",
+      "home_rating": 1593.0688523792892,
+      "away_rating": 1493.414429844704,
+      "prob_home": 0.4998566206842794,
+      "prob_away": 0.22064347500502696,
+      "stronger": "NCL",
+      "winner": "TAH",
+      "home_id": "NCL"
+    },
+    {
+      "date": "2011-01-25",
+      "home_rating": 1820.331670247028,
+      "away_rating": 1800.341853904487,
+      "prob_home": 0.3691425915661938,
+      "prob_away": 0.31167067784016905,
+      "stronger": "JPN",
+      "winner": "JPN",
+      "home_id": "JPN"
+    },
+    {
+      "date": "2011-02-08",
+      "home_rating": 1719.0527888898946,
+      "away_rating": 1807.5100828291827,
+      "prob_home": 0.23299838497596484,
+      "prob_away": 0.4822367424560649,
+      "stronger": "UKR",
+      "winner": "UKR",
+      "home_id": "ROU"
+    },
+    {
+      "date": "2011-02-09",
+      "home_rating": 1815.951052363598,
+      "away_rating": 1803.7715074669811,
+      "prob_home": 0.35583620651396886,
+      "prob_away": 0.32079501113201264,
+      "stronger": "SWE",
+      "winner": "UKR",
+      "home_id": "SWE"
+    },
+    {
+      "date": "2011-06-08",
+      "home_rating": 1842.834906383234,
+      "away_rating": 2037.3314504947932,
+      "prob_home": 0.19930144637416264,
+      "prob_away": 0.5302906028190097,
+      "stronger": "NED",
+      "winner": "URU",
+      "home_id": "URU"
+    },
+    {
+      "date": "2011-06-18",
+      "home_rating": 1686.0270316054837,
+      "away_rating": 1656.0970956507028,
+      "prob_home": 0.3859952240349447,
+      "prob_away": 0.3000624078997461,
+      "stronger": "CRC",
+      "winner": "HON",
+      "home_id": "CRC"
+    },
+    {
+      "date": "2011-06-19",
+      "home_rating": 1693.662586842322,
+      "away_rating": 1574.4082840134372,
+      "prob_home": 0.529925512236564,
+      "prob_away": 0.19955734163366445,
+      "stronger": "PAN",
+      "winner": "PAN",
+      "home_id": "PAN"
+    },
+    {
+      "date": "2011-07-16",
+      "home_rating": 1905.51625902861,
+      "away_rating": 1861.4159490532743,
+      "prob_home": 0.5296933381886063,
+      "prob_away": 0.19972007725904184,
+      "stronger": "ARG",
+      "winner": "URU",
+      "home_id": "ARG"
+    },
+    {
+      "date": "2011-07-17",
+      "home_rating": 2013.536446585794,
+      "away_rating": 1793.8153365105595,
+      "prob_home": 0.6654492394885672,
+      "prob_away": 0.1057410260473709,
+      "stronger": "BRA",
+      "winner": "PAR",
+      "home_id": "BRA"
+    },
+    {
+      "date": "2011-07-20",
+      "home_rating": 1802.2109597121776,
+      "away_rating": 1782.1339004992,
+      "prob_home": 0.36929093158974186,
+      "prob_away": 0.31156874572021054,
+      "stronger": "PAR",
+      "winner": "PAR",
+      "home_id": "PAR"
+    },
+    {
+      "date": "2011-08-13",
+      "home_rating": 1306.6924139200335,
+      "away_rating": 1247.041315872196,
+      "prob_home": 0.5527943065090843,
+      "prob_away": 0.18354206461203665,
+      "stronger": "SEY",
+      "winner": "SEY",
+      "home_id": "SEY"
+    },
+    {
+      "date": "2012-02-05",
+      "home_rating": 1632.2932040960068,
+      "away_rating": 1599.0240529369473,
+      "prob_home": 0.513198968271466,
+      "prob_away": 0.21128548190374025,
+      "stronger": "GAB",
+      "winner": "MLI",
+      "home_id": "GAB"
+    },
+    {
+      "date": "2012-02-12",
+      "home_rating": 1642.6764557843646,
+      "away_rating": 1871.098224406316,
+      "prob_home": 0.09890997685386504,
+      "prob_away": 0.675574339568583,
+      "stronger": "CIV",
+      "winner": "ZAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2012-06-03",
+      "home_rating": 1643.8090691558618,
+      "away_rating": 1541.4040906425505,
+      "prob_home": 0.5041374527314308,
+      "prob_away": 0.2176410107553562,
+      "stronger": "FIN",
+      "winner": "LVA",
+      "home_id": "FIN"
+    },
+    {
+      "date": "2012-06-17",
+      "home_rating": 1451.6296750115598,
+      "away_rating": 1398.0542666523106,
+      "prob_home": 0.5438528255541077,
+      "prob_away": 0.18980008461481324,
+      "stronger": "MOZ",
+      "winner": "MOZ",
+      "home_id": "MOZ"
+    },
+    {
+      "date": "2012-06-24",
+      "home_rating": 1954.3991767686837,
+      "away_rating": 1849.864449723869,
+      "prob_home": 0.5074387774189806,
+      "prob_away": 0.21532550525829386,
+      "stronger": "ENG",
+      "winner": "ITA",
+      "home_id": "ENG"
+    },
+    {
+      "date": "2012-06-27",
+      "home_rating": 1866.5608497974763,
+      "away_rating": 2071.6132515313852,
+      "prob_home": 0.11774821568886898,
+      "prob_away": 0.6477792042739265,
+      "stronger": "ESP",
+      "winner": "ESP",
+      "home_id": "POR"
+    },
+    {
+      "date": "2012-09-02",
+      "home_rating": 1347.24687463196,
+      "away_rating": 1713.0837518658843,
+      "prob_home": 0.05624846294087625,
+      "prob_away": 0.7405162157909133,
+      "stronger": "CMR",
+      "winner": "IND",
+      "home_id": "IND"
+    },
+    {
+      "date": "2013-01-23",
+      "home_rating": 1877.5429298451936,
+      "away_rating": 1676.0267950352911,
+      "prob_home": 0.6434070758253178,
+      "prob_away": 0.12073433435015743,
+      "stronger": "SWE",
+      "winner": "SWE",
+      "home_id": "SWE"
+    },
+    {
+      "date": "2013-02-02",
+      "home_rating": 1634.1344402606774,
+      "away_rating": 1632.825646394718,
+      "prob_home": 0.4627900611898527,
+      "prob_away": 0.2466205222071156,
+      "stronger": "ZAF",
+      "winner": "MLI",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2013-02-06",
+      "home_rating": 1582.4102770519894,
+      "away_rating": 1775.3122185013992,
+      "prob_home": 0.12815558632853163,
+      "prob_away": 0.6325751799788528,
+      "stronger": "GHA",
+      "winner": "BFA",
+      "home_id": "BFA"
+    },
+    {
+      "date": "2013-06-27",
+      "home_rating": 2100.9815095121344,
+      "away_rating": 1868.276066809484,
+      "prob_home": 0.6804619296372385,
+      "prob_away": 0.09562671244461265,
+      "stronger": "ESP",
+      "winner": "ESP",
+      "home_id": "ESP"
+    },
+    {
+      "date": "2013-06-30",
+      "home_rating": 1867.8372961172247,
+      "away_rating": 1877.0485950673735,
+      "prob_home": 0.3242607422481636,
+      "prob_away": 0.3507667817417693,
+      "stronger": "ITA",
+      "winner": "ITA",
+      "home_id": "URU"
+    },
+    {
+      "date": "2013-07-13",
+      "home_rating": 1472.3443230923858,
+      "away_rating": 1461.60781303864,
+      "prob_home": 0.35337244405751683,
+      "prob_away": 0.32248011690647205,
+      "stronger": "ZIM",
+      "winner": "ZIM",
+      "home_id": "ZIM"
+    },
+    {
+      "date": "2013-07-14",
+      "home_rating": 1557.6864571536219,
+      "away_rating": 1313.9890255743849,
+      "prob_home": 0.69271007767249,
+      "prob_away": 0.08744326998692392,
+      "stronger": "ANG",
+      "winner": "LES",
+      "home_id": "ANG"
+    },
+    {
+      "date": "2013-07-17",
+      "home_rating": 1619.3295855209672,
+      "away_rating": 1635.3803839982604,
+      "prob_home": 0.4344700468967108,
+      "prob_away": 0.26641020598307197,
+      "stronger": "ZAF",
+      "winner": "ZAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2014-05-29",
+      "home_rating": 1475.2257931556508,
+      "away_rating": 1541.5673956841786,
+      "prob_home": 0.3498218182314885,
+      "prob_away": 0.3249061048006095,
+      "stronger": "EST",
+      "winner": "LVA",
+      "home_id": "LVA"
+    },
+    {
+      "date": "2014-06-28",
+      "home_rating": 2072.1817633254404,
+      "away_rating": 1912.6017934937108,
+      "prob_home": 0.6825805311241455,
+      "prob_away": 0.09420656585392315,
+      "stronger": "BRA",
+      "winner": "BRA",
+      "home_id": "BRA"
+    },
+    {
+      "date": "2014-06-29",
+      "home_rating": 1760.397520053175,
+      "away_rating": 1820.3519175821434,
+      "prob_home": 0.26525550935917647,
+      "prob_away": 0.436125447274316,
+      "stronger": "GRE",
+      "winner": "CRC",
+      "home_id": "CRC"
+    },
+    {
+      "date": "2014-07-05",
+      "home_rating": 1987.7798878732724,
+      "away_rating": 1762.9605691219022,
+      "prob_home": 0.6714142747698384,
+      "prob_away": 0.101711953787677,
+      "stronger": "NED",
+      "winner": "NED",
+      "home_id": "NED"
+    },
+    {
+      "date": "2014-07-09",
+      "home_rating": 1979.23435305854,
+      "away_rating": 2028.928828540106,
+      "prob_home": 0.27708299036557693,
+      "prob_away": 0.41914771056789696,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "NED"
+    },
+    {
+      "date": "2015-01-23",
+      "home_rating": 1776.6377935227997,
+      "away_rating": 1588.1289218571912,
+      "prob_home": 0.6269524881809185,
+      "prob_away": 0.13201997161090698,
+      "stronger": "IRN",
+      "winner": "IRQ",
+      "home_id": "IRN"
+    },
+    {
+      "date": "2015-01-23",
+      "home_rating": 1817.5250421466626,
+      "away_rating": 1711.1970979585374,
+      "prob_home": 0.5102093110388392,
+      "prob_away": 0.21338230776323425,
+      "stronger": "JPN",
+      "winner": "UAE",
+      "home_id": "JPN"
+    },
+    {
+      "date": "2015-01-30",
+      "home_rating": 1299.2412989427557,
+      "away_rating": 1233.2571215015976,
+      "prob_home": 0.44601688654960436,
+      "prob_away": 0.2583500527861726,
+      "stronger": "CUW",
+      "winner": "ARU",
+      "home_id": "CUW"
+    },
+    {
+      "date": "2015-02-07",
+      "home_rating": 1445.405540937501,
+      "away_rating": 1577.1006513422951,
+      "prob_home": 0.26900295328014634,
+      "prob_away": 0.4307514475041628,
+      "stronger": "COD",
+      "winner": "COD",
+      "home_id": "EQG"
+    },
+    {
+      "date": "2015-02-08",
+      "home_rating": 1766.9942184397948,
+      "away_rating": 1772.8178508576962,
+      "prob_home": 0.3282136559365789,
+      "prob_away": 0.344973847827536,
+      "stronger": "GHA",
+      "winner": "CIV",
+      "home_id": "CIV"
+    },
+    {
+      "date": "2015-05-24",
+      "home_rating": 1672.7710925048316,
+      "away_rating": 1475.6006462135215,
+      "prob_home": 0.7224894846306755,
+      "prob_away": 0.06785301597959284,
+      "stronger": "ZAF",
+      "winner": "BOT",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2015-05-24",
+      "home_rating": 1605.2811840186469,
+      "away_rating": 1430.8078841323113,
+      "prob_home": 0.6085466587889927,
+      "prob_away": 0.14472107128798387,
+      "stronger": "ZAM",
+      "winner": "NAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2015-05-25",
+      "home_rating": 1503.5778065420536,
+      "away_rating": 1445.6935252716396,
+      "prob_home": 0.43271434131060904,
+      "prob_away": 0.26763454235952266,
+      "stronger": "MOZ",
+      "winner": "MOZ",
+      "home_id": "MOZ"
+    },
+    {
+      "date": "2015-05-27",
+      "home_rating": 1662.9515454750654,
+      "away_rating": 1448.169722255906,
+      "prob_home": 0.7395282711700415,
+      "prob_away": 0.05687871943425804,
+      "stronger": "ZAF",
+      "winner": "MWI",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2015-06-26",
+      "home_rating": 2023.5122943104489,
+      "away_rating": 1960.1169426251256,
+      "prob_home": 0.44177834892560164,
+      "prob_away": 0.26131026378641564,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "ARG"
+    },
+    {
+      "date": "2015-06-27",
+      "home_rating": 2070.9885290929965,
+      "away_rating": 1755.6227428441853,
+      "prob_home": 0.7624650636256769,
+      "prob_away": 0.04244064041335896,
+      "stronger": "BRA",
+      "winner": "PAR",
+      "home_id": "BRA"
+    },
+    {
+      "date": "2015-07-04",
+      "home_rating": 1919.4180018827376,
+      "away_rating": 2029.8539853683146,
+      "prob_home": 0.29364233040553084,
+      "prob_away": 0.3952830922446704,
+      "stronger": "ARG",
+      "winner": "CHI",
+      "home_id": "CHI"
+    },
+    {
+      "date": "2015-07-19",
+      "home_rating": 1598.3441407044952,
+      "away_rating": 1710.7260459682675,
+      "prob_home": 0.2068667054061666,
+      "prob_away": 0.519499833108459,
+      "stronger": "PAN",
+      "winner": "PAN",
+      "home_id": "TRI"
+    },
+    {
+      "date": "2015-07-25",
+      "home_rating": 1843.3437985313124,
+      "away_rating": 1695.8678811580062,
+      "prob_home": 0.6686837410046278,
+      "prob_away": 0.10355466105554195,
+      "stronger": "USA",
+      "winner": "PAN",
+      "home_id": "USA"
+    },
+    {
+      "date": "2015-10-13",
+      "home_rating": 1585.9164404757048,
+      "away_rating": 1522.505855593404,
+      "prob_home": 0.4418033261514501,
+      "prob_away": 0.2612928246476215,
+      "stronger": "SLV",
+      "winner": "GUA",
+      "home_id": "SLV"
+    },
+    {
+      "date": "2016-06-03",
+      "home_rating": 1436.5002036290678,
+      "away_rating": 1400.988756162741,
+      "prob_home": 0.39541013053239876,
+      "prob_away": 0.29355441453400133,
+      "stronger": "VIE",
+      "winner": "VIE",
+      "home_id": "VIE"
+    },
+    {
+      "date": "2016-06-03",
+      "home_rating": 1548.1779531212533,
+      "away_rating": 1581.968213326422,
+      "prob_home": 0.4049812803158297,
+      "prob_away": 0.28692323356262994,
+      "stronger": "SYR",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "2016-06-03",
+      "home_rating": 1751.8937191962964,
+      "away_rating": 1713.1150832234696,
+      "prob_home": 0.40090316482136545,
+      "prob_away": 0.2897504630505721,
+      "stronger": "BIH",
+      "winner": "BIH",
+      "home_id": "BIH"
+    },
+    {
+      "date": "2016-06-11",
+      "home_rating": 1464.701795262528,
+      "away_rating": 1700.3862627124115,
+      "prob_home": 0.15771137382792055,
+      "prob_away": 0.589820449267731,
+      "stronger": "NZL",
+      "winner": "NZL",
+      "home_id": "PNG"
+    },
+    {
+      "date": "2016-06-17",
+      "home_rating": 1803.2237076477797,
+      "away_rating": 1942.8868211756837,
+      "prob_home": 0.17844273520656473,
+      "prob_away": 0.5600869394172945,
+      "stronger": "COL",
+      "winner": "COL",
+      "home_id": "PER"
+    },
+    {
+      "date": "2016-06-18",
+      "home_rating": 1452.0727116943456,
+      "away_rating": 1443.7591581517681,
+      "prob_home": 0.47404306325575574,
+      "prob_away": 0.23874030890062675,
+      "stronger": "NAM",
+      "winner": "BOT",
+      "home_id": "NAM"
+    },
+    {
+      "date": "2016-06-18",
+      "home_rating": 1679.8561463584047,
+      "away_rating": 1344.1831081211449,
+      "prob_home": 0.7792017286665087,
+      "prob_away": 0.03219653233306288,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2016-06-19",
+      "home_rating": 1548.2523006331103,
+      "away_rating": 1406.587103045759,
+      "prob_home": 0.5629785943320922,
+      "prob_away": 0.17642210221841148,
+      "stronger": "ZAM",
+      "winner": "SWZ",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2016-06-22",
+      "home_rating": 1447.288699467095,
+      "away_rating": 1642.4970618713664,
+      "prob_home": 0.12614820766122942,
+      "prob_away": 0.6355005524064523,
+      "stronger": "COD",
+      "winner": "BOT",
+      "home_id": "BOT"
+    },
+    {
+      "date": "2016-06-25",
+      "home_rating": 1783.5305617414435,
+      "away_rating": 1813.652153279113,
+      "prob_home": 0.2998387757538819,
+      "prob_away": 0.3863191215121893,
+      "stronger": "POL",
+      "winner": "POL",
+      "home_id": "SUI"
+    },
+    {
+      "date": "2016-06-26",
+      "home_rating": 2064.1514689117666,
+      "away_rating": 1974.1968535601375,
+      "prob_home": 0.48461040090036667,
+      "prob_away": 0.23133448145591112,
+      "stronger": "ARG",
+      "winner": "CHI",
+      "home_id": "ARG"
+    },
+    {
+      "date": "2016-06-30",
+      "home_rating": 1812.3549480927384,
+      "away_rating": 1870.7078964788166,
+      "prob_home": 0.26709558755958596,
+      "prob_away": 0.43348726576107505,
+      "stronger": "POR",
+      "winner": "POR",
+      "home_id": "POL"
+    },
+    {
+      "date": "2016-07-02",
+      "home_rating": 1966.7898447118682,
+      "away_rating": 1874.8820931471794,
+      "prob_home": 0.4876986940772893,
+      "prob_away": 0.22916934880987128,
+      "stronger": "GER",
+      "winner": "GER",
+      "home_id": "GER"
+    },
+    {
+      "date": "2016-11-12",
+      "home_rating": 1163.373467285522,
+      "away_rating": 1101.9487029438908,
+      "prob_home": 0.4385436495024515,
+      "prob_away": 0.2635682104036506,
+      "stronger": "NEP",
+      "winner": "NEP",
+      "home_id": "NEP"
+    },
+    {
+      "date": "2016-11-12",
+      "home_rating": 1074.152684855696,
+      "away_rating": 982.862585943628,
+      "prob_home": 0.48672304391902643,
+      "prob_away": 0.22985338689082102,
+      "stronger": "MAC",
+      "winner": "MAC",
+      "home_id": "MAC"
+    },
+    {
+      "date": "2017-01-11",
+      "home_rating": 1960.0293836172013,
+      "away_rating": 1888.019074260023,
+      "prob_home": 0.4558329525052771,
+      "prob_away": 0.2514883323036206,
+      "stronger": "CHI",
+      "winner": "CHI",
+      "home_id": "CHI"
+    },
+    {
+      "date": "2017-01-14",
+      "home_rating": 1600.6915299042287,
+      "away_rating": 1891.084243563048,
+      "prob_home": 0.1092202028531376,
+      "prob_away": 0.6603134624572615,
+      "stronger": "CRO",
+      "winner": "CHN",
+      "home_id": "CHN"
+    },
+    {
+      "date": "2017-01-28",
+      "home_rating": 1780.628151059711,
+      "away_rating": 1690.9481264823858,
+      "prob_home": 0.4841754945768581,
+      "prob_away": 0.23163935983679662,
+      "stronger": "SEN",
+      "winner": "CMR",
+      "home_id": "SEN"
+    },
+    {
+      "date": "2017-02-01",
+      "home_rating": 1608.4895214170083,
+      "away_rating": 1756.7728348667677,
+      "prob_home": 0.16981054834162068,
+      "prob_away": 0.5724488140473158,
+      "stronger": "EGY",
+      "winner": "EGY",
+      "home_id": "BFA"
+    },
+    {
+      "date": "2017-06-28",
+      "home_rating": 1904.0583252856043,
+      "away_rating": 1933.2982423522405,
+      "prob_home": 0.30086763332879385,
+      "prob_away": 0.3848287473142767,
+      "stronger": "CHI",
+      "winner": "CHI",
+      "home_id": "POR"
+    },
+    {
+      "date": "2017-07-01",
+      "home_rating": 1462.9730409280385,
+      "away_rating": 1362.5565916336618,
+      "prob_home": 0.5010445264950989,
+      "prob_away": 0.21981032121515143,
+      "stronger": "NAM",
+      "winner": "LES",
+      "home_id": "NAM"
+    },
+    {
+      "date": "2017-07-07",
+      "home_rating": 1453.2284111689378,
+      "away_rating": 1360.1762887207287,
+      "prob_home": 0.48950393904266953,
+      "prob_away": 0.22790360247203406,
+      "stronger": "TAN",
+      "winner": "TAN",
+      "home_id": "TAN"
+    },
+    {
+      "date": "2017-07-16",
+      "home_rating": 1548.0580006339308,
+      "away_rating": 1640.7267845306365,
+      "prob_home": 0.3143825436924386,
+      "prob_away": 0.36519359647910954,
+      "stronger": "BLR",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "2018-03-21",
+      "home_rating": 1604.8329750775665,
+      "away_rating": 1421.944970405602,
+      "prob_home": 0.6196618476317355,
+      "prob_away": 0.13704202967538462,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2018-03-21",
+      "home_rating": 1580.157556712842,
+      "away_rating": 1589.8624210501446,
+      "prob_home": 0.44488999371023197,
+      "prob_away": 0.2591372447229641,
+      "stronger": "ZIM",
+      "winner": "ZAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2018-03-22",
+      "home_rating": 1549.077044200782,
+      "away_rating": 1494.425016327821,
+      "prob_home": 0.5454452439340243,
+      "prob_away": 0.18868516182977024,
+      "stronger": "THA",
+      "winner": "THA",
+      "home_id": "THA"
+    },
+    {
+      "date": "2018-03-24",
+      "home_rating": 1429.1842676749473,
+      "away_rating": 1592.6487122849535,
+      "prob_home": 0.1550524772045912,
+      "prob_away": 0.5936463997597613,
+      "stronger": "ZIM",
+      "winner": "ANG",
+      "home_id": "ANG"
+    },
+    {
+      "date": "2018-06-02",
+      "home_rating": 1558.488814089367,
+      "away_rating": 1491.5109412839126,
+      "prob_home": 0.44764042585748753,
+      "prob_away": 0.25721572359813744,
+      "stronger": "ZAM",
+      "winner": "ZAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2018-06-03",
+      "home_rating": 1561.5867029682877,
+      "away_rating": 1457.982659629078,
+      "prob_home": 0.5059975649322328,
+      "prob_away": 0.2163363527787398,
+      "stronger": "ZIM",
+      "winner": "ZIM",
+      "home_id": "ZIM"
+    },
+    {
+      "date": "2018-06-03",
+      "home_rating": 1140.4993349275435,
+      "away_rating": 1573.4566921857959,
+      "prob_home": 0.0,
+      "prob_away": 0.847200918799446,
+      "stronger": "CPV",
+      "winner": "CPV",
+      "home_id": "AND"
+    },
+    {
+      "date": "2018-06-03",
+      "home_rating": 1616.4761291968873,
+      "away_rating": 1449.8681375148128,
+      "prob_home": 0.6904143182346467,
+      "prob_away": 0.08897210087947183,
+      "stronger": "ZAF",
+      "winner": "MAD",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2018-06-06",
+      "home_rating": 1370.3386203041728,
+      "away_rating": 1557.2417847859854,
+      "prob_home": 0.13344576025117824,
+      "prob_away": 0.6248808029040702,
+      "stronger": "ZIM",
+      "winner": "ZIM",
+      "home_id": "LES"
+    },
+    {
+      "date": "2018-07-01",
+      "home_rating": 1731.018433897744,
+      "away_rating": 2026.8755758897923,
+      "prob_home": 0.10483677197801651,
+      "prob_away": 0.6667863089539159,
+      "stronger": "ESP",
+      "winner": "RUS",
+      "home_id": "RUS"
+    },
+    {
+      "date": "2018-07-01",
+      "home_rating": 1907.4801883254024,
+      "away_rating": 1840.173475834755,
+      "prob_home": 0.4481772785363109,
+      "prob_away": 0.25684058495177264,
+      "stronger": "CRO",
+      "winner": "CRO",
+      "home_id": "CRO"
+    },
+    {
+      "date": "2018-07-03",
+      "home_rating": 1921.858195953186,
+      "away_rating": 1947.759440149907,
+      "prob_home": 0.30476530262688434,
+      "prob_away": 0.3791772747839601,
+      "stronger": "ENG",
+      "winner": "ENG",
+      "home_id": "COL"
+    },
+    {
+      "date": "2018-07-07",
+      "home_rating": 1739.4476769523824,
+      "away_rating": 1904.6101379216343,
+      "prob_home": 0.23110378892835218,
+      "prob_away": 0.484939475738941,
+      "stronger": "CRO",
+      "winner": "CRO",
+      "home_id": "RUS"
+    },
+    {
+      "date": "2019-01-20",
+      "home_rating": 1575.8567393598012,
+      "away_rating": 1515.4271514865227,
+      "prob_home": 0.4369073833833721,
+      "prob_away": 0.2647099810988822,
+      "stronger": "JOR",
+      "winner": "VIE",
+      "home_id": "JOR"
+    },
+    {
+      "date": "2019-01-21",
+      "home_rating": 1786.0606414941706,
+      "away_rating": 1660.0103725156646,
+      "prob_home": 0.5401045935141608,
+      "prob_away": 0.1924250153600101,
+      "stronger": "AUS",
+      "winner": "AUS",
+      "home_id": "AUS"
+    },
+    {
+      "date": "2019-03-23",
+      "home_rating": 1599.036293120084,
+      "away_rating": 1296.0066323988146,
+      "prob_home": 0.7516689221682245,
+      "prob_away": 0.04918408292337062,
+      "stronger": "OMA",
+      "winner": "OMA",
+      "home_id": "OMA"
+    },
+    {
+      "date": "2019-06-01",
+      "home_rating": 1400.1620814846,
+      "away_rating": 1537.9317506666832,
+      "prob_home": 0.1803623458042577,
+      "prob_away": 0.557340892981594,
+      "stronger": "UGA",
+      "winner": "LES",
+      "home_id": "LES"
+    },
+    {
+      "date": "2019-06-02",
+      "home_rating": 1627.3729096411137,
+      "away_rating": 1431.5514775677207,
+      "prob_home": 0.7211412975120739,
+      "prob_away": 0.06872928786741356,
+      "stronger": "ZAF",
+      "winner": "BOT",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2019-06-02",
+      "home_rating": 1548.7602793467927,
+      "away_rating": 1444.575142701189,
+      "prob_home": 0.5068976816242723,
+      "prob_away": 0.2157050224104642,
+      "stronger": "ZAM",
+      "winner": "ZAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2019-06-04",
+      "home_rating": 1617.5867294964437,
+      "away_rating": 1532.2770724590232,
+      "prob_home": 0.5893026832468393,
+      "prob_away": 0.1580713777423436,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2019-06-05",
+      "home_rating": 1580.6848636815207,
+      "away_rating": 1544.3923894585855,
+      "prob_home": 0.39672450844963203,
+      "prob_away": 0.2926446515679772,
+      "stronger": "ZIM",
+      "winner": "ZAM",
+      "home_id": "ZIM"
+    },
+    {
+      "date": "2019-06-07",
+      "home_rating": 1392.3449992113547,
+      "away_rating": 1579.123665828296,
+      "prob_home": 0.1335566049253315,
+      "prob_away": 0.6247198066488209,
+      "stronger": "ZIM",
+      "winner": "ZIM",
+      "home_id": "LES"
+    },
+    {
+      "date": "2019-06-07",
+      "home_rating": 1611.1182599138763,
+      "away_rating": 1458.1750907701467,
+      "prob_home": 0.6750242769001997,
+      "prob_away": 0.09928008161116986,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2019-06-09",
+      "home_rating": 1865.5422730676135,
+      "away_rating": 1961.6417414772552,
+      "prob_home": 0.22454350665549008,
+      "prob_away": 0.49429565788473956,
+      "stronger": "ENG",
+      "winner": "ENG",
+      "home_id": "SUI"
+    },
+    {
+      "date": "2019-06-27",
+      "home_rating": 2117.205597705366,
+      "away_rating": 1705.5804699973266,
+      "prob_home": 0.8854855257449057,
+      "prob_away": 0.0,
+      "stronger": "BRA",
+      "winner": "BRA",
+      "home_id": "BRA"
+    },
+    {
+      "date": "2019-06-28",
+      "home_rating": 1993.6546769105485,
+      "away_rating": 1860.4505847145324,
+      "prob_home": 0.5506747493256204,
+      "prob_away": 0.18502498306425952,
+      "stronger": "COL",
+      "winner": "CHI",
+      "home_id": "COL"
+    },
+    {
+      "date": "2019-06-29",
+      "home_rating": 1883.8042890705362,
+      "away_rating": 1720.446264460588,
+      "prob_home": 0.5935004050316248,
+      "prob_away": 0.15515389553711434,
+      "stronger": "MEX",
+      "winner": "MEX",
+      "home_id": "MEX"
+    },
+    {
+      "date": "2019-06-29",
+      "home_rating": 1912.5654781666915,
+      "away_rating": 1826.7426898127403,
+      "prob_home": 0.4780476844868965,
+      "prob_away": 0.23593433611547365,
+      "stronger": "URU",
+      "winner": "PER",
+      "home_id": "URU"
+    },
+    {
+      "date": "2019-07-05",
+      "home_rating": 1737.2650264559647,
+      "away_rating": 1565.4487432650224,
+      "prob_home": 0.604987379099768,
+      "prob_away": 0.14718530854423978,
+      "stronger": "MAR",
+      "winner": "BEN",
+      "home_id": "MAR"
+    },
+    {
+      "date": "2019-07-07",
+      "home_rating": 1466.7902438979363,
+      "away_rating": 1606.4917309525304,
+      "prob_home": 0.17840391776045034,
+      "prob_away": 0.5601424788928495,
+      "stronger": "COD",
+      "winner": "MAD",
+      "home_id": "MAD"
+    },
+    {
+      "date": "2019-07-08",
+      "home_rating": 1700.7340260494727,
+      "away_rating": 1717.2922684589782,
+      "prob_home": 0.315680057446021,
+      "prob_away": 0.3633024602099251,
+      "stronger": "TUN",
+      "winner": "TUN",
+      "home_id": "GHA"
+    },
+    {
+      "date": "2019-07-11",
+      "home_rating": 1704.1961028988524,
+      "away_rating": 1708.6945412472369,
+      "prob_home": 0.32975903326017464,
+      "prob_away": 0.34270585615772814,
+      "stronger": "ALG",
+      "winner": "ALG",
+      "home_id": "CIV"
+    },
+    {
+      "date": "2019-09-08",
+      "home_rating": 1438.1949482867597,
+      "away_rating": 1429.6662826459487,
+      "prob_home": 0.4743869289157043,
+      "prob_away": 0.2384993977363823,
+      "stronger": "TAN",
+      "winner": "TAN",
+      "home_id": "TAN"
+    },
+    {
+      "date": "2019-10-13",
+      "home_rating": 1429.2094224647064,
+      "away_rating": 1078.5710966162715,
+      "prob_home": 0.84114793306831,
+      "prob_away": 0.0,
+      "stronger": "GAM",
+      "winner": "GAM",
+      "home_id": "GAM"
+    },
+    {
+      "date": "2020-10-08",
+      "home_rating": 1687.4188271068642,
+      "away_rating": 1575.981947957543,
+      "prob_home": 0.6242775463898873,
+      "prob_away": 0.13386112913569004,
+      "stronger": "SCO",
+      "winner": "SCO",
+      "home_id": "SCO"
+    },
+    {
+      "date": "2020-10-08",
+      "home_rating": 1732.7164396890198,
+      "away_rating": 1683.6857395328682,
+      "prob_home": 0.5370934788493055,
+      "prob_away": 0.19453432171830898,
+      "stronger": "BIH",
+      "winner": "NIR",
+      "home_id": "BIH"
+    },
+    {
+      "date": "2020-10-08",
+      "home_rating": 1725.9037807962889,
+      "away_rating": 1723.7995882579635,
+      "prob_home": 0.4640731850373386,
+      "prob_away": 0.24572236719378482,
+      "stronger": "SVK",
+      "winner": "SVK",
+      "home_id": "SVK"
+    },
+    {
+      "date": "2020-11-12",
+      "home_rating": 1778.6661604239425,
+      "away_rating": 1708.079559741037,
+      "prob_home": 0.5686064491670473,
+      "prob_away": 0.17249188526395348,
+      "stronger": "SRB",
+      "winner": "SCO",
+      "home_id": "SRB"
+    },
+    {
+      "date": "2021-06-03",
+      "home_rating": 1938.3257901246552,
+      "away_rating": 1651.7797246724444,
+      "prob_home": 0.7364753776793129,
+      "prob_away": 0.05883068420862278,
+      "stronger": "MEX",
+      "winner": "MEX",
+      "home_id": "MEX"
+    },
+    {
+      "date": "2021-06-06",
+      "home_rating": 1649.4412510699242,
+      "away_rating": 1661.9443950745049,
+      "prob_home": 0.3204170797472139,
+      "prob_away": 0.3563884939591751,
+      "stronger": "CRC",
+      "winner": "HON",
+      "home_id": "HON"
+    },
+    {
+      "date": "2021-06-28",
+      "home_rating": 2042.94884111307,
+      "away_rating": 1884.288481598035,
+      "prob_home": 0.5870188967503502,
+      "prob_away": 0.1596597833762481,
+      "stronger": "FRA",
+      "winner": "SUI",
+      "home_id": "FRA"
+    },
+    {
+      "date": "2021-07-02",
+      "home_rating": 1831.532727503356,
+      "away_rating": 1770.5881309884012,
+      "prob_home": 0.43775438268486877,
+      "prob_away": 0.2641189879702045,
+      "stronger": "PER",
+      "winner": "PER",
+      "home_id": "PER"
+    },
+    {
+      "date": "2021-07-02",
+      "home_rating": 1890.6988682986466,
+      "away_rating": 2015.0236268924239,
+      "prob_home": 0.19422665339939457,
+      "prob_away": 0.5375326434587051,
+      "stronger": "ESP",
+      "winner": "ESP",
+      "home_id": "SUI"
+    },
+    {
+      "date": "2021-07-03",
+      "home_rating": 1921.9796727023036,
+      "away_rating": 1908.3059606413,
+      "prob_home": 0.3583856470419601,
+      "prob_away": 0.319049847113055,
+      "stronger": "URU",
+      "winner": "COL",
+      "home_id": "URU"
+    },
+    {
+      "date": "2021-07-06",
+      "home_rating": 2017.6188550637405,
+      "away_rating": 1908.8959976402336,
+      "prob_home": 0.5138962835230505,
+      "prob_away": 0.21079642645309887,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "ARG"
+    },
+    {
+      "date": "2021-07-06",
+      "home_rating": 2023.6292577765014,
+      "away_rating": 2009.8740370415342,
+      "prob_home": 0.3585246732199861,
+      "prob_away": 0.3189546376339928,
+      "stronger": "ITA",
+      "winner": "ITA",
+      "home_id": "ITA"
+    },
+    {
+      "date": "2021-07-11",
+      "home_rating": 2016.122081809254,
+      "away_rating": 2023.0357072427114,
+      "prob_home": 0.4494492905783274,
+      "prob_away": 0.2559516346151263,
+      "stronger": "ITA",
+      "winner": "ITA",
+      "home_id": "ENG"
+    },
+    {
+      "date": "2021-07-16",
+      "home_rating": 1775.6381967476138,
+      "away_rating": 1347.3186507786788,
+      "prob_home": 0.8433903746740228,
+      "prob_away": 0.0,
+      "stronger": "SEN",
+      "winner": "SEN",
+      "home_id": "SEN"
+    },
+    {
+      "date": "2021-07-18",
+      "home_rating": 1603.0324859932828,
+      "away_rating": 1762.9873411275034,
+      "prob_home": 0.23690386319118095,
+      "prob_away": 0.4766641171743927,
+      "stronger": "SEN",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2021-07-18",
+      "home_rating": 1359.9695063987892,
+      "away_rating": 1455.907490321839,
+      "prob_home": 0.2247211770018791,
+      "prob_away": 0.4940423054989713,
+      "stronger": "MOZ",
+      "winner": "SWZ",
+      "home_id": "SWZ"
+    },
+    {
+      "date": "2021-11-19",
+      "home_rating": 1006.5398632300365,
+      "away_rating": 1138.3028899249482,
+      "prob_home": 0.26892476601787463,
+      "prob_away": 0.430863618788379,
+      "stronger": "SEY",
+      "winner": "SEY",
+      "home_id": "SRI"
+    },
+    {
+      "date": "2021-12-11",
+      "home_rating": 1791.9562607692358,
+      "away_rating": 1816.732714942195,
+      "prob_home": 0.30607889847429703,
+      "prob_away": 0.3772706261672562,
+      "stronger": "ALG",
+      "winner": "ALG",
+      "home_id": "MAR"
+    },
+    {
+      "date": "2021-12-18",
+      "home_rating": 1692.4844191520656,
+      "away_rating": 1726.6712599549899,
+      "prob_home": 0.4043165797207007,
+      "prob_away": 0.2873842256894004,
+      "stronger": "EGY",
+      "winner": "QAT",
+      "home_id": "QAT"
+    },
+    {
+      "date": "2022-01-23",
+      "home_rating": 1636.8281250692767,
+      "away_rating": 1530.5553856244903,
+      "prob_home": 0.5101241448391991,
+      "prob_away": 0.21344204103664244,
+      "stronger": "BFA",
+      "winner": "BFA",
+      "home_id": "BFA"
+    },
+    {
+      "date": "2022-01-26",
+      "home_rating": 1685.0254669612154,
+      "away_rating": 1532.4851835728086,
+      "prob_home": 0.578467549077502,
+      "prob_away": 0.16561399842206187,
+      "stronger": "MLI",
+      "winner": "EQG",
+      "home_id": "MLI"
+    },
+    {
+      "date": "2022-01-26",
+      "home_rating": 1733.0145319692808,
+      "away_rating": 1721.7901123794877,
+      "prob_home": 0.35420564328557425,
+      "prob_away": 0.3219104015779574,
+      "stronger": "CIV",
+      "winner": "EGY",
+      "home_id": "CIV"
+    },
+    {
+      "date": "2022-02-03",
+      "home_rating": 1709.4212370780856,
+      "away_rating": 1740.532869823221,
+      "prob_home": 0.4094650701644904,
+      "prob_away": 0.28381183305050905,
+      "stronger": "EGY",
+      "winner": "EGY",
+      "home_id": "CMR"
+    },
+    {
+      "date": "2022-02-05",
+      "home_rating": 1707.5364385213759,
+      "away_rating": 1640.2192883540333,
+      "prob_home": 0.5639175585728218,
+      "prob_away": 0.17576614817252745,
+      "stronger": "CMR",
+      "winner": "CMR",
+      "home_id": "CMR"
+    },
+    {
+      "date": "2022-02-06",
+      "home_rating": 1780.5041288363439,
+      "away_rating": 1742.4176683799308,
+      "prob_home": 0.39974059661882383,
+      "prob_away": 0.2905559553519206,
+      "stronger": "SEN",
+      "winner": "SEN",
+      "home_id": "SEN"
+    },
+    {
+      "date": "2022-03-25",
+      "home_rating": 1411.6894149733978,
+      "away_rating": 1540.1182195947624,
+      "prob_home": 0.18995210135775276,
+      "prob_away": 0.5436357217282441,
+      "stronger": "UGA",
+      "winner": "UGA",
+      "home_id": "TJK"
+    },
+    {
+      "date": "2022-06-13",
+      "home_rating": 1777.4168826725931,
+      "away_rating": 1854.744095122389,
+      "prob_home": 0.24547068509801978,
+      "prob_away": 0.46443271603856695,
+      "stronger": "PER",
+      "winner": "AUS",
+      "home_id": "AUS"
+    },
+    {
+      "date": "2022-06-14",
+      "home_rating": 1773.662207927065,
+      "away_rating": 1629.3920878338395,
+      "prob_home": 0.5667224140695303,
+      "prob_away": 0.1738072316710056,
+      "stronger": "CHI",
+      "winner": "GHA",
+      "home_id": "CHI"
+    },
+    {
+      "date": "2022-07-12",
+      "home_rating": 1537.8251569353756,
+      "away_rating": 1458.490671971342,
+      "prob_home": 0.46766385305485975,
+      "prob_away": 0.24320843138301396,
+      "stronger": "ZAM",
+      "winner": "ZAM",
+      "home_id": "ZAM"
+    },
+    {
+      "date": "2022-07-13",
+      "home_rating": 1619.8871122805162,
+      "away_rating": 1431.946568764932,
+      "prob_home": 0.7131413983907205,
+      "prob_away": 0.07395097041937312,
+      "stronger": "ZAF",
+      "winner": "MOZ",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2022-07-13",
+      "home_rating": 1784.6551867894136,
+      "away_rating": 1423.0301815763507,
+      "prob_home": 0.7988008633785143,
+      "prob_away": 0.02058113505944964,
+      "stronger": "SEN",
+      "winner": "SEN",
+      "home_id": "SEN"
+    },
+    {
+      "date": "2022-07-17",
+      "home_rating": 1428.976753344096,
+      "away_rating": 1749.0457067187597,
+      "prob_home": 0.03997451911653212,
+      "prob_away": 0.7664544753469132,
+      "stronger": "SEN",
+      "winner": "SEN",
+      "home_id": "MOZ"
+    },
+    {
+      "date": "2022-09-22",
+      "home_rating": 1543.6631152114421,
+      "away_rating": 1388.1850264923198,
+      "prob_home": 0.677928577842354,
+      "prob_away": 0.09732730305920614,
+      "stronger": "THA",
+      "winner": "MAS",
+      "home_id": "THA"
+    },
+    {
+      "date": "2022-09-23",
+      "home_rating": 1669.907680840154,
+      "away_rating": 1640.0017145613208,
+      "prob_home": 0.3859547123837145,
+      "prob_away": 0.30009037747240536,
+      "stronger": "IRQ",
+      "winner": "OMA",
+      "home_id": "IRQ"
+    },
+    {
+      "date": "2022-09-25",
+      "home_rating": 1396.894045614067,
+      "away_rating": 1464.310281339628,
+      "prob_home": 0.25671566818578184,
+      "prob_away": 0.44835603605119567,
+      "stronger": "TJK",
+      "winner": "TJK",
+      "home_id": "MAS"
+    },
+    {
+      "date": "2022-11-16",
+      "home_rating": 1427.0085731162944,
+      "away_rating": 1515.161822302769,
+      "prob_home": 0.31965777489659214,
+      "prob_away": 0.3574977931167834,
+      "stronger": "EST",
+      "winner": "LVA",
+      "home_id": "LVA"
+    },
+    {
+      "date": "2022-11-16",
+      "home_rating": 1349.750282262182,
+      "away_rating": 1618.8951210979158,
+      "prob_home": 0.1270719954462048,
+      "prob_away": 0.6341539030273693,
+      "stronger": "ISL",
+      "winner": "ISL",
+      "home_id": "LTU"
+    },
+    {
+      "date": "2022-11-19",
+      "home_rating": 1427.5761733895972,
+      "away_rating": 1611.2888924841982,
+      "prob_home": 0.21080735041824575,
+      "prob_away": 0.5138807075921736,
+      "stronger": "ISL",
+      "winner": "ISL",
+      "home_id": "LVA"
+    },
+    {
+      "date": "2022-12-05",
+      "home_rating": 1853.1375943061364,
+      "away_rating": 1917.4375811382151,
+      "prob_home": 0.26027504569103005,
+      "prob_away": 0.44326089050981055,
+      "stronger": "CRO",
+      "winner": "CRO",
+      "home_id": "JPN"
+    },
+    {
+      "date": "2022-12-06",
+      "home_rating": 1846.0237144399232,
+      "away_rating": 2008.2637675184517,
+      "prob_home": 0.15622109002474954,
+      "prob_away": 0.5919644450633792,
+      "stronger": "ESP",
+      "winner": "MAR",
+      "home_id": "MAR"
+    },
+    {
+      "date": "2022-12-09",
+      "home_rating": 1914.6927934659334,
+      "away_rating": 2122.0150281550714,
+      "prob_home": 0.11585015743440151,
+      "prob_away": 0.6505626094632424,
+      "stronger": "BRA",
+      "winner": "CRO",
+      "home_id": "CRO"
+    },
+    {
+      "date": "2022-12-09",
+      "home_rating": 2014.04592524723,
+      "away_rating": 2084.7516153812335,
+      "prob_home": 0.25297026376892606,
+      "prob_away": 0.4537139382021236,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "NED"
+    },
+    {
+      "date": "2022-12-18",
+      "home_rating": 2092.8287488566502,
+      "away_rating": 2018.5395535105004,
+      "prob_home": 0.45952610070629674,
+      "prob_away": 0.24890471140245812,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "ARG"
+    },
+    {
+      "date": "2023-06-16",
+      "home_rating": 1490.7094466849128,
+      "away_rating": 1402.5879529317801,
+      "prob_home": 0.4817036887287657,
+      "prob_away": 0.23337202060153694,
+      "stronger": "CUW",
+      "winner": "SKN",
+      "home_id": "CUW"
+    },
+    {
+      "date": "2023-06-17",
+      "home_rating": 1501.6762998868478,
+      "away_rating": 1339.8499116737064,
+      "prob_home": 0.5913950809275826,
+      "prob_away": 0.15661678297148407,
+      "stronger": "SUR",
+      "winner": "PUR",
+      "home_id": "SUR"
+    },
+    {
+      "date": "2023-06-17",
+      "home_rating": 1417.9518440015283,
+      "away_rating": 1296.1239029533556,
+      "prob_home": 0.5337958552897322,
+      "prob_away": 0.19684486896605524,
+      "stronger": "GUY",
+      "winner": "GUY",
+      "home_id": "GUY"
+    },
+    {
+      "date": "2023-06-18",
+      "home_rating": 1949.6350743725175,
+      "away_rating": 1998.4936642627915,
+      "prob_home": 0.27805030458157454,
+      "prob_away": 0.4177569074632322,
+      "stronger": "ESP",
+      "winner": "ESP",
+      "home_id": "CRO"
+    },
+    {
+      "date": "2023-07-01",
+      "home_rating": 1412.5553523656702,
+      "away_rating": 1450.5472236923713,
+      "prob_home": 0.3979281847600241,
+      "prob_away": 0.2918112616212048,
+      "stronger": "LIB",
+      "winner": "IND",
+      "home_id": "IND"
+    },
+    {
+      "date": "2023-07-04",
+      "home_rating": 1410.9635985185878,
+      "away_rating": 1489.0040898816728,
+      "prob_home": 0.33145851304013857,
+      "prob_away": 0.34020952725494336,
+      "stronger": "KUW",
+      "winner": "IND",
+      "home_id": "IND"
+    },
+    {
+      "date": "2023-07-09",
+      "home_rating": 1861.7333875740367,
+      "away_rating": 1770.998581825988,
+      "prob_home": 0.596752173288442,
+      "prob_away": 0.1528958140302083,
+      "stronger": "USA",
+      "winner": "USA",
+      "home_id": "USA"
+    },
+    {
+      "date": "2023-07-12",
+      "home_rating": 1855.0755421851632,
+      "away_rating": 1735.9076638227964,
+      "prob_home": 0.6341831174132465,
+      "prob_away": 0.1270519496214126,
+      "stronger": "USA",
+      "winner": "PAN",
+      "home_id": "USA"
+    },
+    {
+      "date": "2023-07-14",
+      "home_rating": 1456.73317274333,
+      "away_rating": 1360.5367919389755,
+      "prob_home": 0.4944476725363075,
+      "prob_away": 0.22443690161963425,
+      "stronger": "MWI",
+      "winner": "LES",
+      "home_id": "MWI"
+    },
+    {
+      "date": "2023-07-16",
+      "home_rating": 1634.6126568240375,
+      "away_rating": 1452.6830111795798,
+      "prob_home": 0.7068967381439122,
+      "prob_away": 0.07805196743254711,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "ZAF"
+    },
+    {
+      "date": "2023-09-07",
+      "home_rating": 1697.2585732122106,
+      "away_rating": 1411.09486373181,
+      "prob_home": 0.7361123369666045,
+      "prob_away": 0.05906324009998734,
+      "stronger": "IRQ",
+      "winner": "IRQ",
+      "home_id": "IRQ"
+    },
+    {
+      "date": "2023-09-10",
+      "home_rating": 1524.2453128600241,
+      "away_rating": 1687.1028367592114,
+      "prob_home": 0.23366585411193141,
+      "prob_away": 0.4812844752676315,
+      "stronger": "IRQ",
+      "winner": "IRQ",
+      "home_id": "THA"
+    },
+    {
+      "date": "2023-10-13",
+      "home_rating": 1683.388557441876,
+      "away_rating": 1636.1518321902947,
+      "prob_home": 0.41505524656539405,
+      "prob_away": 0.27992858726387376,
+      "stronger": "IRQ",
+      "winner": "QAT",
+      "home_id": "IRQ"
+    },
+    {
+      "date": "2023-12-02",
+      "home_rating": 1592.1069096463964,
+      "away_rating": 1548.4596701040984,
+      "prob_home": 0.5290098602851558,
+      "prob_away": 0.20019915336346628,
+      "stronger": "SOL",
+      "winner": "NCL",
+      "home_id": "SOL"
+    },
+    {
+      "date": "2024-01-28",
+      "home_rating": 1503.084457445169,
+      "away_rating": 1607.345527919263,
+      "prob_home": 0.2156225692917631,
+      "prob_away": 0.5070152389194237,
+      "stronger": "UAE",
+      "winner": "TJK",
+      "home_id": "TJK"
+    },
+    {
+      "date": "2024-01-28",
+      "home_rating": 1745.5649000815163,
+      "away_rating": 1560.2816643291653,
+      "prob_home": 0.6227818244482735,
+      "prob_away": 0.13489136751907693,
+      "stronger": "EGY",
+      "winner": "COD",
+      "home_id": "EGY"
+    },
+    {
+      "date": "2024-01-29",
+      "home_rating": 1662.4154323037806,
+      "away_rating": 1802.486717454943,
+      "prob_home": 0.25939309163175056,
+      "prob_away": 0.44452370344359615,
+      "stronger": "SEN",
+      "winner": "CIV",
+      "home_id": "CIV"
+    },
+    {
+      "date": "2024-01-30",
+      "home_rating": 1654.1964574978574,
+      "away_rating": 1831.9560103648407,
+      "prob_home": 0.14169937000480695,
+      "prob_away": 0.612916040450018,
+      "stronger": "KOR",
+      "winner": "KOR",
+      "home_id": "KSA"
+    },
+    {
+      "date": "2024-01-31",
+      "home_rating": 1880.2810647097049,
+      "away_rating": 1526.2355271876836,
+      "prob_home": 0.7932774910379607,
+      "prob_away": 0.02380838795283044,
+      "stronger": "IRN",
+      "winner": "IRN",
+      "home_id": "IRN"
+    },
+    {
+      "date": "2024-02-03",
+      "home_rating": 1662.777636798535,
+      "away_rating": 1732.1669389138065,
+      "prob_home": 0.3446094916922664,
+      "prob_away": 0.32846200871159653,
+      "stronger": "UZB",
+      "winner": "QAT",
+      "home_id": "QAT"
+    },
+    {
+      "date": "2024-02-03",
+      "home_rating": 1619.8136089849554,
+      "away_rating": 1640.4392096065178,
+      "prob_home": 0.31092785180610066,
+      "prob_away": 0.37022346164169817,
+      "stronger": "ZAF",
+      "winner": "ZAF",
+      "home_id": "CPV"
+    },
+    {
+      "date": "2024-02-07",
+      "home_rating": 1682.6205570413754,
+      "away_rating": 1639.5497754589837,
+      "prob_home": 0.4080975870052067,
+      "prob_away": 0.2847610773038139,
+      "stronger": "NGA",
+      "winner": "NGA",
+      "home_id": "NGA"
+    },
+    {
+      "date": "2024-03-23",
+      "home_rating": 1753.0059773668556,
+      "away_rating": 1916.0069637597805,
+      "prob_home": 0.15549436697288144,
+      "prob_away": 0.5930103223855371,
+      "stronger": "CRO",
+      "winner": "CRO",
+      "home_id": "TUN"
+    },
+    {
+      "date": "2024-03-26",
+      "home_rating": 1760.7299202933982,
+      "away_rating": 1770.9157374656304,
+      "prob_home": 0.4441028857082291,
+      "prob_away": 0.2596870093806512,
+      "stronger": "POL",
+      "winner": "POL",
+      "home_id": "WAL"
+    },
+    {
+      "date": "2024-03-26",
+      "home_rating": 1682.0711955210684,
+      "away_rating": 1742.1066919806065,
+      "prob_home": 0.3605866881340537,
+      "prob_away": 0.31754199930648835,
+      "stronger": "GRE",
+      "winner": "GEO",
+      "home_id": "GEO"
+    },
+    {
+      "date": "2024-03-26",
+      "home_rating": 1624.2172858737604,
+      "away_rating": 1759.5687166980454,
+      "prob_home": 0.18282605932540724,
+      "prob_away": 0.5538178860592804,
+      "stronger": "TUN",
+      "winner": "TUN",
+      "home_id": "NZL"
+    },
+    {
+      "date": "2024-06-11",
+      "home_rating": 1424.4213060927232,
+      "away_rating": 1478.6336968805615,
+      "prob_home": 0.3704988256038514,
+      "prob_away": 0.31073856993226434,
+      "stronger": "EST",
+      "winner": "EST",
+      "home_id": "LTU"
+    },
+    {
+      "date": "2024-07-01",
+      "home_rating": 1962.1269881582025,
+      "away_rating": 1772.0066631498214,
+      "prob_home": 0.6290226947588062,
+      "prob_away": 0.1305962375697595,
+      "stronger": "POR",
+      "winner": "POR",
+      "home_id": "POR"
+    },
+    {
+      "date": "2024-07-04",
+      "home_rating": 2126.7598987704037,
+      "away_rating": 1868.5375571834247,
+      "prob_home": 0.7082501974442565,
+      "prob_away": 0.07716133593304694,
+      "stronger": "ARG",
+      "winner": "ARG",
+      "home_id": "ARG"
+    },
+    {
+      "date": "2024-07-05",
+      "home_rating": 1954.6505913003668,
+      "away_rating": 2023.0334516328749,
+      "prob_home": 0.25561376962192933,
+      "prob_away": 0.4499326936641632,
+      "stronger": "FRA",
+      "winner": "FRA",
+      "home_id": "POR"
+    },
+    {
+      "date": "2024-07-05",
+      "home_rating": 1830.2636119950052,
+      "away_rating": 1781.183030188502,
+      "prob_home": 0.4181263792832989,
+      "prob_away": 0.2777933591767642,
+      "stronger": "VEN",
+      "winner": "CAN",
+      "home_id": "VEN"
+    },
+    {
+      "date": "2024-07-06",
+      "home_rating": 1957.6603238616224,
+      "away_rating": 1868.7452163869243,
+      "prob_home": 0.4829630580465377,
+      "prob_away": 0.23248926853281443,
+      "stronger": "ENG",
+      "winner": "ENG",
+      "home_id": "ENG"
+    },
+    {
+      "date": "2024-07-06",
+      "home_rating": 1982.6334689946507,
+      "away_rating": 2032.3530827752575,
+      "prob_home": 0.2770539073490468,
+      "prob_away": 0.41918952039028223,
+      "stronger": "BRA",
+      "winner": "URU",
+      "home_id": "URU"
+    },
+    {
+      "date": "2024-07-13",
+      "home_rating": 1779.6379518468354,
+      "away_rating": 1972.6147788593707,
+      "prob_home": 0.1280901773010051,
+      "prob_away": 0.6326704501617055,
+      "stronger": "URU",
+      "winner": "URU",
+      "home_id": "CAN"
+    },
+    {
+      "date": "2024-09-08",
+      "home_rating": 1473.3573043176693,
+      "away_rating": 1266.2687984224742,
+      "prob_home": 0.6502768266856322,
+      "prob_away": 0.11604492904943237,
+      "stronger": "TJK",
+      "winner": "TJK",
+      "home_id": "TJK"
+    },
+    {
+      "date": "2024-09-10",
+      "home_rating": 1093.5188862354903,
+      "away_rating": 996.5156035892476,
+      "prob_home": 0.6052386525377508,
+      "prob_away": 0.14701126235845197,
+      "stronger": "CAM",
+      "winner": "SRI",
+      "home_id": "CAM"
+    },
+    {
+      "date": "2025-06-08",
+      "home_rating": 1995.7959976930483,
+      "away_rating": 2108.0840193502486,
+      "prob_home": 0.20696720979923316,
+      "prob_away": 0.5193565092050331,
+      "stronger": "ESP",
+      "winner": "POR",
+      "home_id": "POR"
+    },
+    {
+      "date": "2025-06-28",
+      "home_rating": 1781.6674987398471,
+      "away_rating": 1640.3601600020804,
+      "prob_home": 0.5624626361311229,
+      "prob_away": 0.1767825844470543,
+      "stronger": "PAN",
+      "winner": "HON",
+      "home_id": "PAN"
+    },
+    {
+      "date": "2025-06-29",
+      "home_rating": 1762.7896747803172,
+      "away_rating": 1737.6855033202723,
+      "prob_home": 0.5005579013212964,
+      "prob_away": 0.22015162383535536,
+      "stronger": "USA",
+      "winner": "USA",
+      "home_id": "USA"
+    },
+    {
+      "date": "2025-06-29",
+      "home_rating": 1833.537572635191,
+      "away_rating": 1613.5701822133324,
+      "prob_home": 0.6657394864745461,
+      "prob_away": 0.10554467868990408,
+      "stronger": "CAN",
+      "winner": "GUA",
+      "home_id": "CAN"
+    },
+    {
+      "date": "2025-11-13",
+      "home_rating": 1851.7968783469441,
+      "away_rating": 1640.8845920933154,
+      "prob_home": 0.6549282535398966,
+      "prob_away": 0.11287799067361615,
+      "stronger": "IRN",
+      "winner": "IRN",
+      "home_id": "IRN"
+    },
+    {
+      "date": "2025-11-16",
+      "home_rating": 1695.683131671195,
+      "away_rating": 1667.8170933057015,
+      "prob_home": 0.38250461496272065,
+      "prob_away": 0.3024712493295647,
+      "stronger": "NGA",
+      "winner": "COD",
+      "home_id": "NGA"
+    },
+    {
+      "date": "2025-11-17",
+      "home_rating": 1649.0153460363097,
+      "away_rating": 1741.7249491238767,
+      "prob_home": 0.22828222838664636,
+      "prob_away": 0.488963944758943,
+      "stronger": "EGY",
+      "winner": "EGY",
+      "home_id": "CPV"
+    },
+    {
+      "date": "2025-11-18",
+      "home_rating": 1843.6661244039499,
+      "away_rating": 1782.366349511579,
+      "prob_home": 0.43833824073283645,
+      "prob_away": 0.26371155791836903,
+      "stronger": "IRN",
+      "winner": "UZB",
+      "home_id": "IRN"
+    },
+    {
+      "date": "2025-11-23",
+      "home_rating": 1465.11542611792,
+      "away_rating": 1429.7727000946866,
+      "prob_home": 0.5163814283167447,
+      "prob_away": 0.20905354862007453,
+      "stronger": "PNG",
+      "winner": "VAN",
+      "home_id": "PNG"
+    },
+    {
+      "date": "2025-11-25",
+      "home_rating": 1535.2991317523363,
+      "away_rating": 1549.685031119334,
+      "prob_home": 0.3182179220456975,
+      "prob_away": 0.35960022220964905,
+      "stronger": "LBY",
+      "winner": "PLE",
+      "home_id": "PLE"
+    },
+    {
+      "date": "2025-11-26",
+      "home_rating": 1594.845584851498,
+      "away_rating": 1099.2160092237723,
+      "prob_home": 0.8909546443929877,
+      "prob_away": 0.0,
+      "stronger": "OMA",
+      "winner": "OMA",
+      "home_id": "OMA"
+    },
+    {
+      "date": "2025-11-26",
+      "home_rating": 1513.7734242842062,
+      "away_rating": 1312.581693947408,
+      "prob_home": 0.6430038149002901,
+      "prob_away": 0.1210100381589446,
+      "stronger": "COM",
+      "winner": "COM",
+      "home_id": "COM"
+    },
+    {
+      "date": "2025-12-12",
+      "home_rating": 1814.9526366610037,
+      "away_rating": 1635.9929825794072,
+      "prob_home": 0.6145026055314373,
+      "prob_away": 0.14060312497178282,
+      "stronger": "ALG",
+      "winner": "UAE",
+      "home_id": "ALG"
+    },
+    {
+      "date": "2026-01-03",
+      "home_rating": 1688.0583212037375,
+      "away_rating": 1707.8222102479858,
+      "prob_home": 0.3119346460161003,
+      "prob_away": 0.3687584124330791,
+      "stronger": "TUN",
+      "winner": "MLI",
+      "home_id": "MLI"
+    },
+    {
+      "date": "2026-01-14",
+      "home_rating": 1899.72965642439,
+      "away_rating": 1752.715347090911,
+      "prob_home": 0.6681436070521585,
+      "prob_away": 0.10391949994402697,
+      "stronger": "MAR",
+      "winner": "MAR",
+      "home_id": "MAR"
+    },
+    {
+      "date": "2026-01-17",
+      "home_rating": 1726.7141254693368,
+      "away_rating": 1761.178708697533,
+      "prob_home": 0.2947742164497533,
+      "prob_away": 0.39364716841768144,
+      "stronger": "NGA",
+      "winner": "NGA",
+      "home_id": "EGY"
+    },
+    {
+      "date": "2026-03-26",
+      "home_rating": 1741.1479703814969,
+      "away_rating": 1621.7081411273357,
+      "prob_home": 0.6345278157953833,
+      "prob_away": 0.12681544727816443,
+      "stronger": "WAL",
+      "winner": "BIH",
+      "home_id": "WAL"
+    },
+    {
+      "date": "2026-03-26",
+      "home_rating": 1757.8289315222344,
+      "away_rating": 1706.2810898548369,
+      "prob_home": 0.5408446447741169,
+      "prob_away": 0.19190668208951955,
+      "stronger": "CZE",
+      "winner": "CZE",
+      "home_id": "CZE"
+    },
+    {
+      "date": "2026-03-27",
+      "home_rating": 1473.4685859221377,
+      "away_rating": 1458.918910296957,
+      "prob_home": 0.3598794724094938,
+      "prob_away": 0.31802660274245964,
+      "stronger": "KEN",
+      "winner": "EST",
+      "home_id": "KEN"
+    },
+    {
+      "date": "2026-03-28",
+      "home_rating": 1430.538609016623,
+      "away_rating": 1492.8400509527244,
+      "prob_home": 0.26256320678923384,
+      "prob_away": 0.4399835883879481,
+      "stronger": "COM",
+      "winner": "NAM",
+      "home_id": "NAM"
+    },
+    {
+      "date": "2026-03-30",
+      "home_rating": 1442.351642495206,
+      "away_rating": 1454.846573034697,
+      "prob_home": 0.4403178441392919,
+      "prob_away": 0.26232988334263385,
+      "stronger": "SLE",
+      "winner": "AZE",
+      "home_id": "AZE"
+    },
+    {
+      "date": "2026-03-30",
+      "home_rating": 1643.2843548117626,
+      "away_rating": 1603.5315985514042,
+      "prob_home": 0.4025381950173882,
+      "prob_away": 0.2886172596728572,
+      "stronger": "CPV",
+      "winner": "CPV",
+      "home_id": "CPV"
+    },
+    {
+      "date": "2026-03-30",
+      "home_rating": 1521.3173122794647,
+      "away_rating": 1522.0984793813834,
+      "prob_home": 0.33409049323797146,
+      "prob_away": 0.33633886910432037,
+      "stronger": "TRI",
+      "winner": "GAB",
+      "home_id": "GAB"
+    },
+    {
+      "date": "2026-03-30",
+      "home_rating": 1779.3288009897988,
+      "away_rating": 1772.420841464859,
+      "prob_home": 0.4717936190635921,
+      "prob_away": 0.24031611439232553,
+      "stronger": "UZB",
+      "winner": "UZB",
+      "home_id": "UZB"
+    },
+    {
+      "date": "2026-03-31",
+      "home_rating": 1629.323826655094,
+      "away_rating": 1902.8568453982987,
+      "prob_home": 0.12328077973336328,
+      "prob_away": 0.6396850545496704,
+      "stronger": "ITA",
+      "winner": "BIH",
+      "home_id": "BIH"
+    },
+    {
+      "date": "2026-03-31",
+      "home_rating": 1752.5948620819654,
+      "away_rating": 1886.8964348277239,
+      "prob_home": 0.2660053183880919,
+      "prob_away": 0.43505055156985895,
+      "stronger": "DEN",
+      "winner": "CZE",
+      "home_id": "CZE"
+    },
+    {
+      "date": "2026-06-06",
+      "home_rating": 1382.8293720402596,
+      "away_rating": 1378.1936614126587,
+      "prob_home": 0.46814799069807944,
+      "prob_away": 0.2428694117889722,
+      "stronger": "LTU",
+      "winner": "LTU",
+      "home_id": "LTU"
+    },
+    {
+      "date": "2026-06-29",
+      "home_rating": 1959.279051346019,
+      "away_rating": 1938.7668413988572,
+      "prob_home": 0.37003071837661045,
+      "prob_away": 0.3110603319309696,
+      "stronger": "NED",
+      "winner": "MAR",
+      "home_id": "NED"
+    },
+    {
+      "date": "2026-06-29",
+      "home_rating": 1959.729024189442,
+      "away_rating": 1837.4858371079877,
+      "prob_home": 0.5344185576373635,
+      "prob_away": 0.19640851941040505,
+      "stronger": "GER",
+      "winner": "PAR",
+      "home_id": "GER"
+    }
+  ]
+}

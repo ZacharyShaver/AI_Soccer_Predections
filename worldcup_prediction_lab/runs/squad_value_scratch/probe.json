@@ -1,0 +1,258 @@
+{
+  "tables": [
+    "appearances",
+    "clubs",
+    "club_games",
+    "competitions",
+    "countries",
+    "games",
+    "game_events",
+    "game_lineups",
+    "national_teams",
+    "players",
+    "player_valuations",
+    "transfers",
+    "version"
+  ],
+  "player_valuations_columns": [
+    "player_id:INTEGER",
+    "date:DATE",
+    "market_value_in_eur:INTEGER",
+    "current_club_name:VARCHAR",
+    "current_club_id:INTEGER",
+    "player_club_domestic_competition_id:VARCHAR"
+  ],
+  "players_columns": [
+    "player_id:INTEGER",
+    "first_name:VARCHAR",
+    "last_name:VARCHAR",
+    "name:VARCHAR",
+    "last_season:VARCHAR",
+    "current_club_id:VARCHAR",
+    "player_code:VARCHAR",
+    "country_of_birth:VARCHAR",
+    "city_of_birth:VARCHAR",
+    "country_of_citizenship:VARCHAR",
+    "date_of_birth:TIMESTAMP",
+    "sub_position:VARCHAR",
+    "position:VARCHAR",
+    "foot:VARCHAR",
+    "height_in_cm:INTEGER",
+    "contract_expiration_date:TIMESTAMP",
+    "agent_name:VARCHAR",
+    "image_url:VARCHAR",
+    "international_caps:INTEGER",
+    "international_goals:INTEGER",
+    "current_national_team_id:VARCHAR",
+    "url:VARCHAR",
+    "current_club_domestic_competition_id:VARCHAR",
+    "current_club_name:VARCHAR",
+    "market_value_in_eur:INTEGER",
+    "highest_market_value_in_eur:INTEGER"
+  ],
+  "valuations_summary": {
+    "rows": 656301,
+    "min_date": "2000-01-20 00:00:00",
+    "max_date": "2026-06-12 00:00:00",
+    "players": 41528
+  },
+  "players_rows": 48380,
+  "coverage_by_country": [
+    {
+      "country": "Brazil",
+      "valued_players": 2150,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 6083.0
+    },
+    {
+      "country": "Argentina",
+      "valued_players": 1418,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 5808.0
+    },
+    {
+      "country": "Japan",
+      "valued_players": 686,
+      "earliest_valuation": "2006-03-07 00:00:00",
+      "rows_since_2024": 3599.0
+    },
+    {
+      "country": "United States",
+      "valued_players": 483,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 2127.0
+    },
+    {
+      "country": "Mexico",
+      "valued_players": 359,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 1898.0
+    },
+    {
+      "country": "Morocco",
+      "valued_players": 348,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 1167.0
+    },
+    {
+      "country": "Ghana",
+      "valued_players": 344,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 942.0
+    },
+    {
+      "country": "DR Congo",
+      "valued_players": 145,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 329.0
+    },
+    {
+      "country": "Cape Verde",
+      "valued_players": 111,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 235.0
+    },
+    {
+      "country": "New Zealand",
+      "valued_players": 88,
+      "earliest_valuation": "2005-01-07 00:00:00",
+      "rows_since_2024": 433.0
+    },
+    {
+      "country": "Curacao",
+      "valued_players": 79,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 158.0
+    },
+    {
+      "country": "Uzbekistan",
+      "valued_players": 56,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 244.0
+    },
+    {
+      "country": "Iran",
+      "valued_players": 54,
+      "earliest_valuation": "2004-10-04 00:00:00",
+      "rows_since_2024": 158.0
+    },
+    {
+      "country": "Jordan",
+      "valued_players": 45,
+      "earliest_valuation": "2010-09-21 00:00:00",
+      "rows_since_2024": 194.0
+    },
+    {
+      "country": "Haiti",
+      "valued_players": 39,
+      "earliest_valuation": "2005-09-03 00:00:00",
+      "rows_since_2024": 94.0
+    }
+  ],
+  "rows_by_year": [
+    {
+      "yr": 2000,
+      "rows": 1
+    },
+    {
+      "yr": 2001,
+      "rows": 1
+    },
+    {
+      "yr": 2003,
+      "rows": 2
+    },
+    {
+      "yr": 2004,
+      "rows": 2305
+    },
+    {
+      "yr": 2005,
+      "rows": 2439
+    },
+    {
+      "yr": 2006,
+      "rows": 2673
+    },
+    {
+      "yr": 2007,
+      "rows": 5617
+    },
+    {
+      "yr": 2008,
+      "rows": 9305
+    },
+    {
+      "yr": 2009,
+      "rows": 12067
+    },
+    {
+      "yr": 2010,
+      "rows": 13795
+    },
+    {
+      "yr": 2011,
+      "rows": 17788
+    },
+    {
+      "yr": 2012,
+      "rows": 19714
+    },
+    {
+      "yr": 2013,
+      "rows": 22636
+    },
+    {
+      "yr": 2014,
+      "rows": 23707
+    },
+    {
+      "yr": 2015,
+      "rows": 30479
+    },
+    {
+      "yr": 2016,
+      "rows": 34653
+    },
+    {
+      "yr": 2017,
+      "rows": 35923
+    },
+    {
+      "yr": 2018,
+      "rows": 41097
+    },
+    {
+      "yr": 2019,
+      "rows": 46088
+    },
+    {
+      "yr": 2020,
+      "rows": 48749
+    },
+    {
+      "yr": 2021,
+      "rows": 58412
+    },
+    {
+      "yr": 2022,
+      "rows": 59564
+    },
+    {
+      "yr": 2023,
+      "rows": 57576
+    },
+    {
+      "yr": 2024,
+      "rows": 45376
+    },
+    {
+      "yr": 2025,
+      "rows": 45482
+    },
+    {
+      "yr": 2026,
+      "rows": 20852
+    }
+  ]
+}
