@@ -1,6 +1,6 @@
 # Walk-forward backtest — played WC 2026 matches
 
-Generated: `2026-07-03 11:32 UTC`
+Generated: `2026-07-03 13:16 UTC`
 
 Leak-free walk-forward: each variant is trained only on results strictly before each match's date, then scored on the actual outcome. Lower RPS/log loss/Brier is better; accuracy = share of matches whose argmax pick was correct.
 

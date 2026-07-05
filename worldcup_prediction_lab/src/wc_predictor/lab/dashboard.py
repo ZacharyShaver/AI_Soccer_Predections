@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import html
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from types import SimpleNamespace
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 
@@ -30,6 +32,14 @@ OUT_PATH = settings.RESEARCH_DIR / "dashboard.html"
 PAGES_OUT_PATH = settings.PROJECT_DIR.parent / "docs" / "index.html"
 _OUTCOMES = ("home", "draw", "away")
 PREFERRED_FORECAST_VARIANT = "ensemble_top_k"
+DISPLAY_TZ = ZoneInfo("America/New_York")
+
+
+def _format_dashboard_generated(dt: datetime) -> str:
+    """Human display timestamp for the report header/live badge."""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(DISPLAY_TZ).strftime("%Y-%m-%d %H:%M %Z")
 
 
 def _outcome(home_score: int, away_score: int) -> str:
@@ -110,6 +120,8 @@ def _select_upcoming_match_ids(
     fixture_date,
     today: str,
     limit: int = 14,
+    mandatory_days: int = 1,
+    horizon_days: int | None = None,
 ) -> list[str]:
     """Today's and future fixtures, soonest first.
 
@@ -120,8 +132,24 @@ def _select_upcoming_match_ids(
     matches are removed. String dates compare correctly as YYYY-MM-DD.
     """
 
-    upcoming = [m for m in match_ids if fixture_date(m) and fixture_date(m) >= today]
-    return sorted(upcoming, key=lambda m: (fixture_date(m), m))[:limit]
+    today_dt = datetime.strptime(today, "%Y-%m-%d").date()
+    mandatory_through = (today_dt + timedelta(days=mandatory_days)).strftime("%Y-%m-%d")
+    horizon_through = (
+        (today_dt + timedelta(days=horizon_days)).strftime("%Y-%m-%d")
+        if horizon_days is not None
+        else None
+    )
+    upcoming = [
+        m for m in match_ids
+        if fixture_date(m)
+        and fixture_date(m) >= today
+        and (horizon_through is None or fixture_date(m) <= horizon_through)
+    ]
+    upcoming = sorted(upcoming, key=lambda m: (fixture_date(m), m))
+    mandatory = [m for m in upcoming if fixture_date(m) <= mandatory_through]
+    future = [m for m in upcoming if fixture_date(m) > mandatory_through]
+    remaining = max(0, limit - len(mandatory))
+    return mandatory + future[:remaining]
 
 
 def _fixture_day(fixture: object) -> str:
@@ -130,6 +158,16 @@ def _fixture_day(fixture: object) -> str:
         return pd.to_datetime(value).strftime("%Y-%m-%d")
     except Exception:
         return ""
+
+
+def _fixture_team_name(fixture: object, key: str, names: dict[str, str]) -> str:
+    try:
+        value = fixture.get(key) if isinstance(fixture, dict) else fixture[key]
+    except Exception:
+        return "TBD"
+    if pd.isna(value):
+        return "TBD"
+    return names.get(str(value), str(value))
 
 
 def _accuracy_timeline(
@@ -515,26 +553,158 @@ def _analyst_section() -> str:
             f'<td>{_esc(f.mode)}</td></tr>'
         )
 
+    def _history_row(row: dict) -> str:
+        as_of = str(row.get("as_of") or row.get("snapshot_date") or "")
+        match_date = str(row.get("match_date", ""))
+        match = f'{row.get("home_team_name", "")} v {row.get("away_team_name", "")}'
+        actual = str(row.get("actual") or "").upper()
+        if row.get("resolved"):
+            status_cls = "hit" if row.get("correct") else "miss"
+            status = f'{"✓" if row.get("correct") else "✕"} {actual}'
+        else:
+            status_cls = ""
+            status = "pending"
+        rps = _fmt(row.get("rps")) if row.get("rps") is not None else "—"
+        rationale = _esc(row.get("rationale", ""))
+        return (
+            f'<tr><td class="dt">{_esc(as_of)}</td>'
+            f'<td class="vname" title="{rationale}">{_esc(match)}</td>'
+            f'<td class="dt">{_esc(match_date)}</td>'
+            f'<td>{_esc(row.get("pick_team", ""))}</td>'
+            f'<td class="num" data-sort="{row.get("p_home", 0)}">{_pct(float(row.get("p_home", 0)))}</td>'
+            f'<td class="num" data-sort="{row.get("p_draw", 0)}">{_pct(float(row.get("p_draw", 0)))}</td>'
+            f'<td class="num" data-sort="{row.get("p_away", 0)}">{_pct(float(row.get("p_away", 0)))}</td>'
+            f'<td class="num strong" data-sort="{row.get("confidence", 0)}">{_pct(float(row.get("confidence", 0)))}</td>'
+            f'<td>{_esc(row.get("mode", ""))}</td>'
+            f'<td class="num {status_cls}">{_esc(status)}</td>'
+            f'<td class="num">{rps}</td></tr>'
+        )
+
+    def _history_block() -> str:
+        try:
+            from wc_predictor.lab.analyst_ledger import load_ledger, resolve_forecasts
+
+            results_df = load_results()
+            results = {
+                str(r["match_id"]): (int(r["home_score"]), int(r["away_score"]))
+                for _, r in results_df.iterrows()
+            } if not results_df.empty else {}
+            rows = resolve_forecasts(load_ledger(), results)
+        except Exception:
+            return '<p class="muted">Prediction history unavailable right now.</p>'
+        if not rows:
+            return '<p class="muted">No saved analyst predictions yet.</p>'
+        rows.sort(
+            key=lambda r: (
+                str(r.get("as_of") or r.get("snapshot_date") or ""),
+                str(r.get("match_date", "")),
+                str(r.get("fixture_id", "")),
+                str(r.get("mode", "")),
+            ),
+            reverse=True,
+        )
+        return (
+            '<table class="lb sortable"><thead><tr><th>as of</th><th>match</th>'
+            '<th>match date</th><th>pick</th><th class="num">H</th>'
+            '<th class="num">D</th><th class="num">A</th><th class="num">conf</th>'
+            '<th>mode</th><th class="num">status</th><th class="num">RPS</th></tr></thead>'
+            f'<tbody>{"".join(_history_row(r) for r in rows)}</tbody></table>'
+        )
+
+    def _pending_agent_forecasts() -> list[SimpleNamespace]:
+        try:
+            from wc_predictor.lab.analyst_ledger import load_ledger, resolve_forecasts
+
+            results_df = load_results()
+            results = {
+                str(r["match_id"]): (int(r["home_score"]), int(r["away_score"]))
+                for _, r in results_df.iterrows()
+            } if not results_df.empty else {}
+            rows = resolve_forecasts(load_ledger(), results)
+        except Exception:
+            return []
+
+        pending = []
+        for row in rows:
+            if row.get("resolved"):
+                continue
+            if str(row.get("mode", "")) != "agent":
+                continue
+            pending.append(SimpleNamespace(
+                fixture_id=str(row.get("fixture_id", "")),
+                as_of=str(row.get("as_of", "")),
+                match_date=str(row.get("match_date", "")),
+                home_team_name=str(row.get("home_team_name", "")),
+                away_team_name=str(row.get("away_team_name", "")),
+                p_home=float(row.get("p_home", 0.0)),
+                p_draw=float(row.get("p_draw", 0.0)),
+                p_away=float(row.get("p_away", 0.0)),
+                pick=str(row.get("pick", "")),
+                pick_team=str(row.get("pick_team", "")),
+                confidence=float(row.get("confidence", 0.0)),
+                rationale=str(row.get("rationale", "")),
+                sources=list(row.get("sources", [])),
+                mode="agent",
+            ))
+        return pending
+
+    display_forecasts = list(forecasts)
+    seen_forecasts = {
+        (str(getattr(f, "fixture_id", "")), str(getattr(f, "mode", "")))
+        for f in display_forecasts
+    }
+    for agent_forecast in _pending_agent_forecasts():
+        key = (
+            str(getattr(agent_forecast, "fixture_id", "")),
+            str(getattr(agent_forecast, "mode", "")),
+        )
+        if key in seen_forecasts:
+            continue
+        seen_forecasts.add(key)
+        display_forecasts.append(agent_forecast)
+    display_forecasts.sort(
+        key=lambda f: (
+            str(getattr(f, "match_date", "")),
+            0 if str(getattr(f, "mode", "")) == "agent" else 1,
+            str(getattr(f, "home_team_name", "")),
+        )
+    )
+
     picks_block = (
         '<table class="lb sortable"><thead><tr><th>match</th><th>date</th><th>pick</th>'
         '<th class="num">H</th><th class="num">D</th><th class="num">A</th>'
         '<th class="num">conf</th><th>mode</th></tr></thead>'
-        f'<tbody>{"".join(_pick_row(f) for f in forecasts)}</tbody></table>'
-        if forecasts
+        f'<tbody>{"".join(_pick_row(f) for f in display_forecasts)}</tbody></table>'
+        if display_forecasts
         else '<p class="muted">No upcoming fixtures with a model forecast right now.</p>'
     )
+    history_block = _history_block()
 
     return (
         '<details class="sec"><summary>Match-Analyst agent '
-        f'<span class="h2sub">· {len(forecasts)} upcoming forecast(s) · click a column to sort</span></summary>'
+        f'<span class="h2sub">· {len(display_forecasts)} upcoming forecast(s) · click a column to sort</span></summary>'
         '<div class="secbody">'
         '<div class="note">A market-anchored agent: it starts from the de-vigged market '
         '(which out-predicts our Elo) and deviates only on a tracked signal. The <b>deterministic</b> '
         'rows are the backtestable floor; the live <b>agent</b> mode (a Claude subagent that reads '
         'news/lineups/odds) is logged here as it makes calls.</div>'
         f"{_track_record_block()}"
+        '<div class="analyst-tabs lab-tabs">'
+        '<input class="lab-tab-input" type="radio" name="analyst-tab" id="analyst-tab-upcoming" checked>'
+        '<input class="lab-tab-input" type="radio" name="analyst-tab" id="analyst-tab-history">'
+        '<div class="lab-tab-labels">'
+        '<label for="analyst-tab-upcoming">Upcoming picks</label>'
+        '<label for="analyst-tab-history">History</label>'
+        '</div>'
+        '<div class="lab-panel analyst-panel-upcoming">'
         '<h3 class="subh">🔮 Upcoming picks <span class="h2sub">· market-anchored H/D/A + chosen winner</span></h3>'
         f"{picks_block}"
+        '</div>'
+        '<div class="lab-panel analyst-panel-history">'
+        '<h3 class="subh">Prediction history <span class="h2sub">Â· saved analyst calls, newest first</span></h3>'
+        f"{history_block}"
+        '</div>'
+        '</div>'
         "</div></details>"
     )
 
@@ -683,7 +853,8 @@ def build_dashboard(
 
     # ---- Summary numbers (using the baseline as the reference model) ----
     scored_match_ids = sorted(mid for mid in pred_match_ids if mid in results)
-    upcoming_match_ids = [mid for mid in pred_match_ids if mid not in results]
+    scheduled_match_ids = [str(r["fixture_id"]) for _, r in fixtures.iterrows()]
+    upcoming_match_ids = [mid for mid in scheduled_match_ids if mid not in results]
     baseline_hits = 0
     for mid in scored_match_ids:
         probs = pred_lookup.get((BASELINE_VARIANT, mid))
@@ -709,7 +880,7 @@ def build_dashboard(
         if settings.EXPERIMENTS_DIR.exists() else []
     leader = next((s for s in standings if s.n_scored > 0), None)
 
-    generated = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    generated = _format_dashboard_generated(datetime.now(timezone.utc))
 
     # ---- Leaderboard rows ----
     max_abs_edge = max(
@@ -800,8 +971,8 @@ def build_dashboard(
     )
     for mid in scored_by_date:
         fx = fixture_info.get(mid, {})
-        home = names.get(str(fx.get("home_team_id")), str(fx.get("home_team_id")))
-        away = names.get(str(fx.get("away_team_id")), str(fx.get("away_team_id")))
+        home = _fixture_team_name(fx, "home_team_id", names)
+        away = _fixture_team_name(fx, "away_team_id", names)
         hs, a = results[mid]
         actual = _outcome(hs, a)
         match_day = _fixture_day(fx)
@@ -838,7 +1009,12 @@ def build_dashboard(
 
     today_utc = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     upcoming_sorted = _select_upcoming_match_ids(
-        upcoming_match_ids, fixture_date=_fixture_date, today=today_utc, limit=60
+        upcoming_match_ids,
+        fixture_date=_fixture_date,
+        today=today_utc,
+        limit=60,
+        mandatory_days=1,
+        horizon_days=3,
     )
     # One record per upcoming match carrying *every* model's prediction, so the
     # browser can re-render the table by model / consensus and sort it client-side.
@@ -849,11 +1025,9 @@ def build_dashboard(
             for vid in variant_ids
             if pred_lookup.get((vid, mid)) is not None
         }
-        if not picks:
-            continue
         fx = fixture_info.get(mid, {})
-        home = names.get(str(fx.get("home_team_id")), str(fx.get("home_team_id")))
-        away = names.get(str(fx.get("away_team_id")), str(fx.get("away_team_id")))
+        home = _fixture_team_name(fx, "home_team_id", names)
+        away = _fixture_team_name(fx, "away_team_id", names)
         upcoming_payload.append(
             {
                 "id": mid,
@@ -888,7 +1062,6 @@ def build_dashboard(
     # JSON artifact the page re-fetches on load / on a timer ("pull" live updates).
     lb_rows_html = "".join(lb_rows)
     model_compare_rows_html = _model_compare_rows(standings)
-    betting_html = _betting_section()
     analyst_html = _analyst_section()
     standings_html = _standings_section()
     trust_snapshot_html = _trust_snapshot_section(
@@ -914,7 +1087,6 @@ def build_dashboard(
         result_cards=("".join(result_cards) or '<p class="muted">No matches scored yet.</p>'),
         n_upcoming=len(upcoming_payload),
         upcoming_json=upcoming_json,
-        betting_section=betting_html,
         analyst_section=analyst_html,
         standings_section=standings_html,
         script=_SCRIPT,
@@ -922,7 +1094,7 @@ def build_dashboard(
 
     _write_live_json(
         generated,
-        {"sec-standings": standings_html, "sec-betting": betting_html, "sec-analyst": analyst_html},
+        {"sec-standings": standings_html, "sec-analyst": analyst_html},
         lb_rows_html,
         out_path=out_path,
         pages_path=pages_path,
@@ -965,9 +1137,13 @@ h2{{font-size:16px;margin:30px 0 12px;border-bottom:1px solid var(--line);paddin
 .lab-tab-labels label{{cursor:pointer;border:1px solid var(--line);background:#0b0f14;color:var(--mut);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700}}
 #research-tab-performance:checked ~ .lab-tab-labels label[for="research-tab-performance"],
 #research-tab-compare:checked ~ .lab-tab-labels label[for="research-tab-compare"]{{color:var(--ink);border-color:var(--h);background:rgba(59,130,246,.14)}}
+#analyst-tab-upcoming:checked ~ .lab-tab-labels label[for="analyst-tab-upcoming"],
+#analyst-tab-history:checked ~ .lab-tab-labels label[for="analyst-tab-history"]{{color:var(--ink);border-color:var(--h);background:rgba(59,130,246,.14)}}
 .lab-panel{{display:none}}
 #research-tab-performance:checked ~ .lab-panel-performance,
-#research-tab-compare:checked ~ .lab-panel-compare{{display:block}}
+#research-tab-compare:checked ~ .lab-panel-compare,
+#analyst-tab-upcoming:checked ~ .analyst-panel-upcoming,
+#analyst-tab-history:checked ~ .analyst-panel-history{{display:block}}
 .model-compare{{margin-top:8px}}
 .edgepill{{display:inline-block;min-width:64px;text-align:center;border-radius:999px;padding:2px 8px;font-weight:800;font-variant-numeric:tabular-nums;background:#30363d}}
 .edgepill.pos{{color:var(--pos)}} .edgepill.neg{{color:var(--neg)}} .edgepill.zero{{color:var(--mut)}}
@@ -1155,8 +1331,7 @@ details.sec>summary:hover{{background:rgba(255,255,255,.02)}}
 
 <section class="bucket-shell needs-shell" id="needs-attention">
 <div class="bucket-head"><div><h2>Needs attention</h2>
-<div class="h2sub">Edges, watchlist rows, and analyst notes that deserve a closer look</div></div></div>
-<div id="sec-betting" class="live">{betting_section}</div>
+<div class="h2sub">Analyst forecasts, track record, and live agent calls that deserve a closer look</div></div></div>
 <div id="sec-analyst" class="live">{analyst_section}</div>
 </section>
 
@@ -1316,7 +1491,8 @@ _SCRIPT = r"""
   }
   function consensus(picks) {
     var v = Object.keys(picks).map(function (k) { return picks[k]; });
-    var n = v.length || 1, s = [0, 0, 0];
+    if (!v.length) return null;
+    var n = v.length, s = [0, 0, 0];
     v.forEach(function (p) { s[0] += p[0]; s[1] += p[1]; s[2] += p[2]; });
     return [s[0] / n, s[1] / n, s[2] / n];
   }
@@ -1411,6 +1587,7 @@ _SCRIPT = r"""
         '<td class="barcell">' + bar(p) + "</td>" +
         "<td>" + upsetCell(p) + "</td></tr>";
     });
+    if (!rows) return '<p class="muted">No model forecasts logged for this fixture yet.</p>';
     return '<table><thead><tr><th>model</th><th>H / D / A</th><th>upset risk</th></tr></thead><tbody>' +
       rows + "</tbody></table>";
   }
@@ -1438,7 +1615,7 @@ _SCRIPT = r"""
     list.forEach(function (m) {
       var p = displayProbs(m, model);
       var isOpen = open[m.id];
-      var barCell = p ? bar(p) : '<span class="muted">no forecast for this model</span>';
+      var barCell = p ? bar(p) : '<span class="muted">no forecast yet</span>';
       var upCell = p ? upsetCell(p) : "";
       var selectedPick = p ? pickKey(p) : null;
       var pickInfo = p ? pickBadge(p, m) + contrarianLine(m, selectedPick) : "";
