@@ -119,6 +119,24 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-05 — Claude — NEW LANE (Zach-directed): analyst timing (agent_late) + self-history packet
+Zach's direction from today's session: (A) a pre-kickoff "agent_late" second research pass
+per fixture — one-shot Windows scheduled tasks at kickoff−75min (confirmed XIs land ~T-75;
+the morning 7am pass only sees probable lineups), paired against the morning `agent` row as
+a timing experiment; (B) a `your_record` block in the dump-packet payload feeding the live
+agent its own resolved track record (n=5 so far: 4/5 picks, RPS 0.0899 vs market 0.0909)
+with hard-coded small-sample cautions. Plan (written with the writing-plans skill):
+`docs/superpowers/plans/2026-07-05-analyst-timing-and-self-history.md`.
+**Lane split: Codex owns Tasks 1–4 (Python + tests: kickoffs loader; --mode agent_late on
+record/list-fixtures; agent_record_summary + packet wiring; paired_mode_comparison),
+strictly in order, one task per `codex exec` session, SKIP all Commit steps (Claude
+commits after review). Claude owns Tasks 5–8 (kickoff_times.csv research/data, the two
+PowerShell one-shot-task scripts + daily-job phase 1.5, match-analyst.md prompt updates,
+review + integration).** Key invariants for Codex: ledger is append-only; allowed modes
+are exactly deterministic/agent/agent_late; `record_forecast` already dedupes on
+(fixture_id, mode) — do not change that; tests hermetic (no writes to the real ledger).
+The dormant local-model walkback lane (2026-07-03, blocked on LM Studio) is untouched.
+
 ### 2026-07-03 — Claude — NEW LANE (Zach-directed): local-model analyst walk-back — Claude executing, subagent-driven
 Zach's hypothesis: local LLMs (8–14B via LM Studio) can run the match-analyst task over
 prebaked, leak-free "news wells", turning the un-backtestable live agent into a powered
@@ -982,6 +1000,12 @@ _(Codex appends entries here. Template:)_
 - Result: ✅ done | ⛔ blocked
 - Open questions:
 ```
+
+### 2026-07-05 - Codex - Task 1 kickoff-times config loader
+- What I did: Added the Task 1 kickoff loader tests first in `worldcup_prediction_lab/tests/lab/test_kickoffs.py`, verified the expected missing-module RED failure, then added `worldcup_prediction_lab/src/wc_predictor/lab/kickoffs.py` with `load_kickoffs()` and `kickoffs_for_date()`. Checked Task 1 Steps 1-4 in `docs/superpowers/plans/2026-07-05-analyst-timing-and-self-history.md`. I skipped the Task 1 Commit step per instructions, did not run git, did not touch `runs/analyst/ledger.jsonl`, and did not start Task 2.
+- Evidence: From `worldcup_prediction_lab/`, RED command `uv run pytest tests/lab/test_kickoffs.py -v` exited 1 with `collected 0 items / 1 error` and `ModuleNotFoundError: No module named 'wc_predictor.lab.kickoffs'`. GREEN command `uv run pytest tests/lab/test_kickoffs.py -v` exited 0 with all four tests passing: `test_load_kickoffs_parses_rows`, `test_load_kickoffs_missing_file_returns_empty`, `test_load_kickoffs_bad_time_raises_with_fixture_id`, and `test_kickoffs_for_date_filters_and_sorts`; final summary `4 passed in 0.41s`.
+- Result: done for Codex-owned Task 1 implementation/testing; commit remains for Claude.
+- Open questions: None.
 
 ### 2026-07-03 - Codex - Task 6 forecast harness, three ablation conditions
 - What I did: Added `worldcup_prediction_lab/tests/lab/test_walkback_harness.py` first exactly from the plan, verified the expected missing-module failure, then added `worldcup_prediction_lab/src/wc_predictor/lab/walkback/harness.py` exactly from the plan. Checked Task 6 Steps 1-4 in the active plan. I skipped the Task 6 Commit step per the Execution status header, did not run git, did not touch `runs/analyst/ledger.jsonl`, and did not start Task 7.
