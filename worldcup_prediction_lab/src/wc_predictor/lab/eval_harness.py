@@ -171,12 +171,13 @@ def score_on_history(
 # ---------------------------------------------------------------------------
 # Sample 2: current played-WC leak-free walk-forward backtest
 # ---------------------------------------------------------------------------
-def score_on_wc60(build_model_fn: Callable[..., object]) -> dict:
+def score_on_wc60(build_model_fn: Callable[..., object], *, through: str | None = None) -> dict:
     """Score one model config on the played-WC matches via the lab backtest.
 
     ``build_model_fn`` is a registry-style factory
     ``build_model_fn(generated_at_utc=...) -> fresh model``. Returns the same
-    metric dict shape as the other samples.
+    metric dict shape as the other samples. ``through`` (YYYY-MM-DD) optionally
+    caps the sample at a match date so a bar stays pinned as new WC results land.
     """
 
     from datetime import timedelta
@@ -192,6 +193,8 @@ def score_on_wc60(build_model_fn: Callable[..., object]) -> dict:
     matches_df, fixtures_df, teams_df = load_silver_data()
     names = _team_names(teams_df)
     played = _played_world_cup_matches(matches_df, fixtures_df)
+    if through is not None:
+        played = played.loc[played["match_date"] <= pd.Timestamp(through)]
     if played.empty:
         raise RuntimeError("no played WC matches available for wc60 scoring")
 

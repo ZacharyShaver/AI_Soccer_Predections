@@ -8,6 +8,7 @@ silver data (skipped if it is absent).
 
 from __future__ import annotations
 
+import pandas as pd
 import pytest
 
 from wc_predictor.config import settings
@@ -23,10 +24,17 @@ needs_market = pytest.mark.skipif(
     not (_HAVE_MATCHES and _HAVE_MARKET), reason="silver market parquet absent"
 )
 
+# The bars were established on the data snapshot through this date (15889 history
+# matches, 72 played WC matches). Daily updates keep growing silver, so both
+# samples are pinned here to keep the regression guards stable.
+SNAPSHOT_THROUGH = "2026-06-27"
+
 
 @needs_matches
 def test_history_bar_recalibrated():
-    result = eh.score_on_history(eh.recalibrated_elo())
+    matches = eh.load_history_matches()
+    matches = matches.loc[matches["date"] <= pd.Timestamp(SNAPSHOT_THROUGH)]
+    result = eh.score_on_history(eh.recalibrated_elo(), matches=matches)
     assert result["n"] == 15889
     assert result["rps"] == pytest.approx(0.1744, abs=0.0005)
 
@@ -50,7 +58,9 @@ def test_market964_bar_recalibrated():
 
 @needs_matches
 def test_wc72_bar_recalibrated():
-    result = eh.score_on_wc60(lambda **kw: registry.build("elo_recalibrated", **kw))
+    result = eh.score_on_wc60(
+        lambda **kw: registry.build("elo_recalibrated", **kw), through=SNAPSHOT_THROUGH
+    )
     assert result["n"] == 72
     assert result["rps"] == pytest.approx(0.1606, abs=0.0005)
 
