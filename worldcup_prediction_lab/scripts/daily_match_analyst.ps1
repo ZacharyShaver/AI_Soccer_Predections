@@ -38,6 +38,31 @@ function Write-Log {
     $Line | Out-File -FilePath $logFile -Append -Encoding utf8
 }
 
+# Run a native command, folding stdout+stderr into the log, and return its exit
+# code. Under Windows PowerShell 5.1 with $ErrorActionPreference='Stop', a
+# PS-level `2>&1` on a native exe turns every stderr line into a terminating
+# NativeCommandError -- on 2026-07-05 that made a successful `git push` (which
+# reports "To https://..." on stderr) look like a failure. So stderr is merged
+# only while the preference is temporarily 'Continue', and success is judged
+# solely by the exit code.
+function Invoke-NativeLogged {
+    param(
+        [string]$Exe,
+        [string[]]$ArgumentList
+    )
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        $output = & $Exe @ArgumentList 2>&1
+        $exitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $prevEap
+    }
+    $output | ForEach-Object { $_.ToString() } |
+        Out-File -FilePath $logFile -Append -Encoding utf8
+    return $exitCode
+}
+
 Set-Location $RepoRoot
 $env:PYTHONUTF8 = "1"
 $env:PYTHONUNBUFFERED = "1"
@@ -89,12 +114,21 @@ try {
         -RedirectStandardOutput $researchOut `
         -RedirectStandardError  $researchErr
 
+    # In Windows PowerShell 5.1, Process.ExitCode is $null after WaitForExit()
+    # unless the handle was touched while the process was alive (the 2026-07-05
+    # log printed an empty phase-1 exit code because of this).
+    $null = $proc.Handle
+
     if (-not $proc.WaitForExit($ResearchTimeoutMinutes * 60 * 1000)) {
         Write-Log "[research] TIMED OUT after $ResearchTimeoutMinutes min -- killing and continuing to phase 2."
         Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
         $claudeExit = 1
     } else {
         $claudeExit = $proc.ExitCode
+        if ($null -eq $claudeExit) {
+            Write-Log "[research] exit code unavailable from process handle; recording as 1."
+            $claudeExit = 1
+        }
     }
 } catch {
     Write-Log "[research] FAILED to launch or crashed: $($_.Exception.Message)"
@@ -116,18 +150,16 @@ $pipelineOk = $true
 try {
     Set-Location $LabRoot
 
-    (& $Uv run python -m wc_predictor.lab.championship --as-of $today --n-sims 20000 *>&1) |
-        Out-File -FilePath $logFile -Append -Encoding utf8
-    if ($LASTEXITCODE -ne 0) {
+    $champExit = Invoke-NativeLogged $Uv @('run', 'python', '-m', 'wc_predictor.lab.championship', '--as-of', $today, '--n-sims', '20000')
+    if ($champExit -ne 0) {
         $pipelineOk = $false
-        Write-Log "[pipeline] championship step failed (exit $LASTEXITCODE)"
+        Write-Log "[pipeline] championship step failed (exit $champExit)"
     }
 
-    (& $Uv run python -m wc_predictor.lab.run_experiments --as-of $today *>&1) |
-        Out-File -FilePath $logFile -Append -Encoding utf8
-    if ($LASTEXITCODE -ne 0) {
+    $expExit = Invoke-NativeLogged $Uv @('run', 'python', '-m', 'wc_predictor.lab.run_experiments', '--as-of', $today)
+    if ($expExit -ne 0) {
         $pipelineOk = $false
-        Write-Log "[pipeline] run_experiments step failed (exit $LASTEXITCODE)"
+        Write-Log "[pipeline] run_experiments step failed (exit $expExit)"
     }
 } catch {
     $pipelineOk = $false
@@ -138,26 +170,41 @@ Set-Location $RepoRoot
 $pushOk = $false
 
 try {
-    git add `
-        worldcup_prediction_lab/runs/analyst/ledger.jsonl `
-        worldcup_prediction_lab/runs/standings/championship_odds.json `
-        docs/index.html `
-        docs/data/live.json `
-        worldcup_prediction_lab/research/dashboard.html `
-        worldcup_prediction_lab/research/data/live.json `
-        worldcup_prediction_lab/reports `
-        worldcup_prediction_lab/research `
-        2>&1 | Out-File -FilePath $logFile -Append -Encoding utf8
+    $addExit = Invoke-NativeLogged 'git' @('add',
+        'worldcup_prediction_lab/runs/analyst/ledger.jsonl',
+        'worldcup_prediction_lab/runs/standings/championship_odds.json',
+        'docs/index.html',
+        'docs/data/live.json',
+        'worldcup_prediction_lab/research/dashboard.html',
+        'worldcup_prediction_lab/research/data/live.json',
+        'worldcup_prediction_lab/reports',
+        'worldcup_prediction_lab/research')
+    if ($addExit -ne 0) {
+        Write-Log "[git] add exited $addExit; continuing to status check."
+    }
 
     $status = git status --porcelain
     if ($status) {
-        git commit -m "Daily match-analyst picks + standings $today" 2>&1 |
-            Out-File -FilePath $logFile -Append -Encoding utf8
-        git push 2>&1 | Out-File -FilePath $logFile -Append -Encoding utf8
-        if ($LASTEXITCODE -eq 0) {
-            $pushOk = $true
+        $commitExit = Invoke-NativeLogged 'git' @('commit', '-m', "Daily match-analyst picks + standings $today")
+        if ($commitExit -ne 0) {
+            Write-Log "[git] commit failed (exit $commitExit)"
         } else {
-            Write-Log "[git] push failed (exit $LASTEXITCODE)"
+            $pushExit = Invoke-NativeLogged 'git' @('push')
+            if ($pushExit -eq 0) {
+                $pushOk = $true
+            } else {
+                # Belt and braces: a push has been misreported as failed before
+                # (2026-07-05). git push updates the remote-tracking ref only on
+                # success, so if it now matches HEAD the push actually landed.
+                $head = git rev-parse HEAD
+                $remoteHead = git rev-parse '@{upstream}'
+                if ($head -and $remoteHead -and ($head -eq $remoteHead)) {
+                    Write-Log "[git] push exited $pushExit but upstream matches HEAD -- treating as pushed."
+                    $pushOk = $true
+                } else {
+                    Write-Log "[git] push failed (exit $pushExit)"
+                }
+            }
         }
     } else {
         Write-Log "[git] nothing to commit."
