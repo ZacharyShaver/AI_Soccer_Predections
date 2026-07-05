@@ -31,13 +31,26 @@ def _write_immutable(rows: list[dict], path: Path) -> None:
         ]
         if existing == serialized:
             return
-        # Allow extending only if the existing rows are a prefix; otherwise the
-        # variant's prior predictions for this as_of would change -> refuse.
-        if existing != serialized[: len(existing)]:
-            raise ValueError(
-                f"conflicting immutable predictions at {path} "
-                "(a prior row changed; predictions are not labels)"
-            )
+        # A same-as_of rerun may legitimately see fixtures the first run did not
+        # (e.g. a knockout pairing resolved mid-day), and those can sort anywhere
+        # relative to the frozen rows. Prior rows are immutable per prediction_id:
+        # they keep their file position and must regenerate byte-identical; only
+        # rows with new prediction_ids are appended.
+        fresh = {json.loads(s)["prediction_id"]: s for s in serialized}
+        for line in existing:
+            pid = json.loads(line)["prediction_id"]
+            if pid in fresh and fresh[pid] != line:
+                raise ValueError(
+                    f"conflicting immutable predictions at {path} "
+                    "(a prior row changed; predictions are not labels)"
+                )
+        frozen_ids = {json.loads(line)["prediction_id"] for line in existing}
+        appended = [
+            s for s in serialized if json.loads(s)["prediction_id"] not in frozen_ids
+        ]
+        if not appended:
+            return
+        serialized = existing + appended
     path.write_text("\n".join(serialized) + "\n", encoding="utf-8")
 
 

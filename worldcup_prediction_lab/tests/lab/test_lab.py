@@ -245,6 +245,44 @@ def test_generate_predictions_only_after_as_of_and_idempotent(tmp_path):
     assert path.read_bytes() == before  # byte-identical re-write is a no-op
 
 
+def test_generate_predictions_appends_new_fixture_without_touching_frozen_rows(tmp_path):
+    # A same-as_of rerun can see fixtures the first run did not (knockout pairing
+    # resolved mid-day). New fixtures may sort before the frozen ones; frozen rows
+    # must keep their content and file position, new rows append at the end.
+    out = tmp_path / "experiments"
+    path = generate_variant_predictions(
+        "elo_baseline",
+        matches_df=_matches(), fixtures_df=_fixtures(), teams_df=_teams(),
+        as_of="2026-06-21", training_cutoff="2026-06-20", out_root=out,
+    )
+    frozen = [r["match_id"] for r in read_variant_predictions(path)]
+
+    extra = pd.concat([
+        pd.DataFrame([{  # sorts before fx1/fx2 by date and dataframe position
+            "fixture_id": "fx0", "stage": "group", "group": "B",
+            "home_team_id": "CAN", "away_team_id": "MEX",
+            "match_date": pd.Timestamp("2026-06-21T23:00:00"), "venue": "Houston"}]),
+        _fixtures(),
+    ], ignore_index=True)
+    generate_variant_predictions(
+        "elo_baseline",
+        matches_df=_matches(), fixtures_df=extra, teams_df=_teams(),
+        as_of="2026-06-21", training_cutoff="2026-06-20", out_root=out,
+    )
+    rows = read_variant_predictions(path)
+    assert [r["match_id"] for r in rows] == frozen + ["fx0"]
+
+
+def test_write_immutable_refuses_changed_prior_row(tmp_path):
+    from wc_predictor.lab.experiment import _write_immutable
+
+    path = tmp_path / "v.jsonl"
+    row = {"prediction_id": "p1", "prob_home": 0.5}
+    _write_immutable([row], path)
+    with pytest.raises(ValueError, match="conflicting immutable predictions"):
+        _write_immutable([{"prediction_id": "p1", "prob_home": 0.6}], path)
+
+
 def test_fixture_keyed_results_crosswalks_and_orients_scores():
     # martj42 stores ARG vs CAN, but the openfootball fixture has CAN at home and
     # a different (string) match_id. The crosswalk must resolve it by (pair, date)
