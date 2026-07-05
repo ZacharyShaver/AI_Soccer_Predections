@@ -13,9 +13,9 @@ slots with null team ids until the bracket is known.
 ## Counts
 
 - Total fixtures: 104
-- Forecast: 1
-- Skipped already played (<= 2026-07-05): 81
-- Skipped knockout pending: 22
+- Forecast: 5
+- Skipped already played (<= 2026-07-05): 92
+- Skipped knockout pending: 7
 - Training matches through 2026-07-04: 49495
 - Ledger: `C:/Users/ztsha/OneDrive/Documents/AI_Soccer_Predections/worldcup_prediction_lab/runs/predictions/date=2026-07-05/predictions.jsonl`
 
@@ -45,4 +45,8 @@ All forecast venues were mapped to a host country.
 
 | Date | Venue | Match | Home | Draw | Away | Most likely score | O2.5 | BTTS |
 | --- | --- | --- | ---: | ---: | ---: | --- | ---: | ---: |
+| 2026-07-06 | Seattle | United States vs Belgium | 32.8% | 24.8% | 42.3% | 1-1 (11.8%) | 50.1% | 53.7% |
 | 2026-07-06 | Dallas (Arlington) | Portugal vs Spain | 25.9% | 21.2% | 52.9% | 0-1 (11.8%) | 51.8% | 52.3% |
+| 2026-07-07 | Atlanta | Argentina vs Egypt | 77.1% | 13.2% | 9.6% | 1-0 (14.8%) | 56.0% | 45.4% |
+| 2026-07-07 | Vancouver | Switzerland vs Colombia | 28.2% | 22.4% | 49.4% | 0-1 (11.3%) | 51.3% | 52.9% |
+| 2026-07-09 | Boston (Foxborough) | France vs Morocco | 56.0% | 20.2% | 23.8% | 1-0 (12.3%) | 52.3% | 51.8% |
