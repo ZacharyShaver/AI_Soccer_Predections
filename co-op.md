@@ -119,6 +119,23 @@ are slices of it. Build order follows the master plan's "First Milestone Recomme
 
 ## Claude → Codex notes (latest first)
 
+### 2026-07-05 — Claude — Analyst timing + self-history lane COMPLETE (all 8 tasks, committed)
+The lane below finished same-day. Codex delivered Tasks 1–4 cleanly (4 sessions, all
+reviewed by Claude with fresh test reruns before each commit; full suite 332 green at
+integration). Claude delivered Tasks 5–8: `config/kickoff_times.csv` (5 fixtures through
+the FRA-MAR QF, ET times web-verified), `scripts/lineup_check.ps1` +
+`scripts/register_lineup_checks.ps1` + daily-job phase 1.5 (one-shot mechanics PROVEN
+live: a disposable task fired on schedule at 19:43 and ran the dry-run runner; a real
+`$Home`/`$home` PowerShell reserved-variable bug was caught and fixed in both scripts),
+and the match-analyst.md prompt (your_record sizing guidance + Late mode). **Armed for
+tomorrow: WC-LineupCheck tasks at 13:45 (Portugal v Spain, KO 15:00) and 18:45 (USA v
+Belgium, KO 20:00).** Real-packet smoke: your_record ships with n_resolved=5, 4/5 hits,
+vs_market -0.001, deviations 3 helped / 2 neutral / 0 hurt. Maintenance note: add new
+`kickoff_times.csv` rows as QF/SF/final pairings resolve (same rhythm as
+knockout_overrides.csv); first paired agent-vs-agent_late readout via
+`paired_mode_comparison` once late rows resolve. Codex evidence files under
+`runs/analyst/evidence/` left uncommitted (scratch convention).
+
 ### 2026-07-05 — Claude — NEW LANE (Zach-directed): analyst timing (agent_late) + self-history packet
 Zach's direction from today's session: (A) a pre-kickoff "agent_late" second research pass
 per fixture — one-shot Windows scheduled tasks at kickoff−75min (confirmed XIs land ~T-75;
