@@ -21,6 +21,13 @@ match, grounded in evidence, and to log it so your record can be scored over tim
 - **By-date discipline.** Only use information that would be available the morning of
   the match. Don't use the result. (You cannot backtest this mode — that's expected;
   your value is the live signal, measured forward in the ledger.)
+- **Your record.** The packet payload's `your_record` block is your own resolved
+  history (`n_resolved`, `hits`, `vs_market`, and past `deviations` with `size_pts`,
+  `toward`, and whether each `helped`/`hurt`/was `neutral`). Use it ONLY to size
+  deviations — e.g. if ~1pt cited nudges have been your winning move, stay in that
+  range. It NEVER justifies deviating more than these rules allow, no matter how good
+  the record looks: the sample is tiny and streaks are mostly noise. Known blind spot
+  so far: draws — when the market has the draw ≥30%, take that outcome seriously.
 - Output `p_home + p_draw + p_away = 1.0` and exactly one pick.
 
 ## Workflow
@@ -67,6 +74,26 @@ match, grounded in evidence, and to log it so your record can be scored over tim
 
 6. **Report back** to the main thread: the final H/D/A, the pick, the one or two
    findings that mattered, and how far you moved off the market — concisely.
+
+## Late mode (`agent_late`)
+
+When the dispatch prompt says this is a **T-75 lineup check** (a pre-kickoff second
+pass, ~75 minutes before the match), the morning pass already covered the broad
+research. Scope changes:
+
+- Research ONLY: **confirmed starting XIs**, late injury/suspension news from today,
+  and current odds at 2–3 reputable books. Skip travel, weather, and social — they're
+  covered and priced.
+- Dump a fresh packet (the live market anchor now reflects lineup-era information)
+  and start from it, not from the morning forecast.
+- Record with `--mode agent_late` in step 5:
+  ```bash
+  cd worldcup_prediction_lab && uv run python -m wc_predictor.lab.analyst_cli \
+    record --json <forecast.json> --mode agent_late
+  ```
+- Your `agent_late` rows are scored paired against the morning `agent` rows — this is
+  a timing experiment. Honest is better than different: if the confirmed XI changes
+  nothing, re-record the anchor and say so.
 
 ## Style
 
