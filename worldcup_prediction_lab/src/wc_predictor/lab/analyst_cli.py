@@ -171,6 +171,41 @@ def _find_fixture(fixtures: pd.DataFrame, names: dict[str, str], fixture: str) -
     raise SystemExit(f"fixture not found: {fixture!r}")
 
 
+_AGENT_MODES = ("agent", "agent_late")
+
+
+def _researched_fixture_ids(ledger_rows: list[dict], mode: str) -> set[str]:
+    """fixture_ids already carrying a ledger row of `mode`."""
+
+    return {str(r["fixture_id"]) for r in ledger_rows if r.get("mode") == mode}
+
+
+def _forecast_from_json(data: dict, *, mode: str = "agent") -> AnalystForecast:
+    """Validate + normalize an agent-authored forecast payload into a ledger row."""
+
+    p = (float(data["p_home"]), float(data["p_draw"]), float(data["p_away"]))
+    total = sum(p)
+    if not (0.99 <= total <= 1.01):
+        raise SystemExit(f"probabilities must sum to 1.0 (got {total:.3f})")
+    p = tuple(v / total for v in p)
+    idx = max(range(3), key=lambda i: p[i])
+    pick = ("home", "draw", "away")[idx]
+    return AnalystForecast(
+        fixture_id=str(data["fixture_id"]),
+        as_of=str(data["as_of"]),
+        match_date=str(data.get("match_date", "")),
+        home_team_name=str(data.get("home_team_name", "")),
+        away_team_name=str(data.get("away_team_name", "")),
+        p_home=p[0], p_draw=p[1], p_away=p[2],
+        pick=str(data.get("pick", pick)),
+        pick_team=str(data.get("pick_team", "")),
+        confidence=max(p),
+        rationale=str(data.get("rationale", "")),
+        sources=list(data.get("sources", [])),
+        mode=mode,
+    )
+
+
 def cmd_dump_packet(args: argparse.Namespace) -> None:
     as_of = args.as_of
     (matches, fixtures, names, model, baselines, idx,
@@ -236,31 +271,11 @@ def cmd_record(args: argparse.Namespace) -> None:
     from wc_predictor.lab.analyst_ledger import record_forecast
 
     data = json.loads(Path(args.json).read_text(encoding="utf-8"))
-    p = (float(data["p_home"]), float(data["p_draw"]), float(data["p_away"]))
-    total = sum(p)
-    if not (0.99 <= total <= 1.01):
-        raise SystemExit(f"probabilities must sum to 1.0 (got {total:.3f})")
-    p = tuple(v / total for v in p)
-    idx = max(range(3), key=lambda i: p[i])
-    pick = ("home", "draw", "away")[idx]
-    forecast = AnalystForecast(
-        fixture_id=str(data["fixture_id"]),
-        as_of=str(data["as_of"]),
-        match_date=str(data.get("match_date", "")),
-        home_team_name=str(data.get("home_team_name", "")),
-        away_team_name=str(data.get("away_team_name", "")),
-        p_home=p[0], p_draw=p[1], p_away=p[2],
-        pick=str(data.get("pick", pick)),
-        pick_team=str(data.get("pick_team", "")),
-        confidence=max(p),
-        rationale=str(data.get("rationale", "")),
-        sources=list(data.get("sources", [])),
-        mode="agent",
-    )
+    forecast = _forecast_from_json(data, mode=args.mode)
     elo = {forecast.fixture_id: tuple(data["elo_probs"])} if data.get("elo_probs") else None
     mkt = {forecast.fixture_id: tuple(data["market_probs"])} if data.get("market_probs") else None
     added = record_forecast([forecast], as_of=forecast.as_of, elo_probs=elo, market_probs=mkt)
-    print(f"recorded {added} agent forecast(s) for fixture {forecast.fixture_id}")
+    print(f"recorded {added} {forecast.mode} forecast(s) for fixture {forecast.fixture_id}")
 
 
 def cmd_list_fixtures(args: argparse.Namespace) -> None:
@@ -283,7 +298,7 @@ def cmd_list_fixtures(args: argparse.Namespace) -> None:
         try:
             from wc_predictor.lab.analyst_ledger import load_ledger
 
-            done = {str(r["fixture_id"]) for r in load_ledger() if r.get("mode") == "agent"}
+            done = _researched_fixture_ids(load_ledger(), args.mode)
         except Exception:
             done = set()
 
@@ -320,10 +335,14 @@ def main(argv: list[str] | None = None) -> None:
     lf.add_argument("--as-of", required=True, help="YYYY-MM-DD (today)")
     lf.add_argument("--days", type=int, default=1, help="window size in days (default 1 = today)")
     lf.add_argument("--all", action="store_true", help="include already-researched fixtures")
+    lf.add_argument("--mode", choices=_AGENT_MODES, default="agent",
+                    help="skip fixtures already researched in this mode")
     lf.set_defaults(func=cmd_list_fixtures)
 
     rc = sub.add_parser("record", help="append an agent forecast JSON to the ledger")
     rc.add_argument("--json", required=True, help="path to the agent forecast JSON")
+    rc.add_argument("--mode", choices=_AGENT_MODES, default="agent",
+                    help="ledger mode to record under")
     rc.set_defaults(func=cmd_record)
 
     args = parser.parse_args(argv)

@@ -175,7 +175,7 @@ git commit -m "feat(analyst): kickoff-times config loader for T-75 lineup checks
 - Consumes: `AnalystForecast` dataclass (`wc_predictor.lab.analyst`), `load_ledger` (`wc_predictor.lab.analyst_ledger`).
 - Produces: `record --json <path> [--mode agent|agent_late]` (default `agent`); `list-fixtures --as-of D [--mode agent|agent_late]` (skip-set filters on that mode); pure helpers `_forecast_from_json(data: dict, *, mode: str = "agent") -> AnalystForecast` and `_researched_fixture_ids(ledger_rows: list[dict], mode: str) -> set[str]`. Task 6's scripts call `record --mode agent_late` and `list-fixtures --mode agent_late`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```python
 # worldcup_prediction_lab/tests/lab/test_analyst_cli.py
@@ -237,12 +237,12 @@ def test_researched_fixture_ids_filters_by_mode():
     assert _researched_fixture_ids(rows, "agent_late") == {"b"}
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/lab/test_analyst_cli.py -v`
 Expected: FAIL with `ImportError: cannot import name '_forecast_from_json'`
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 In `analyst_cli.py`:
 
@@ -321,17 +321,17 @@ def cmd_record(args: argparse.Namespace) -> None:
                     help="ledger mode to record under")
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/lab/test_analyst_cli.py -v`
 Expected: 5 PASS
 
-- [ ] **Step 5: Regression check**
+- [x] **Step 5: Regression check**
 
 Run: `uv run pytest tests/lab/test_analyst.py tests/lab/test_analyst_ledger.py -v`
 Expected: all PASS (no behavior change for default mode)
 
-- [ ] **Step 6: Commit — CLAUDE ONLY (Codex: skip, log evidence in co-op.md, STOP)**
+- [x] **Step 6: Commit — CLAUDE ONLY (Codex: skip, log evidence in co-op.md, STOP)**
 
 ```bash
 git add worldcup_prediction_lab/src/wc_predictor/lab/analyst_cli.py worldcup_prediction_lab/tests/lab/test_analyst_cli.py
