@@ -351,7 +351,7 @@ git commit -m "feat(analyst): agent_late ledger mode via --mode on record/list-f
 - Consumes: `resolve_forecasts` output rows (keys: `resolved`, `mode`, `p_*`, `market_probs`, `rps`, `market_rps`, `correct`, team names, `match_date`); `_mean`, `_OUTCOMES` (module-private, same file).
 - Produces: `agent_record_summary(resolved: list[dict], *, mode: str = "agent", max_rows: int = 10) -> dict` with keys `mode, n_resolved, hits, mean_rps, vs_market, deviations, caution`; each deviation: `{fixture, match_date, size_pts, toward, outcome, pick_correct}`. The dump-packet payload gains a top-level `"your_record"` key. Task 7's agent prompt references these exact key names.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `worldcup_prediction_lab/tests/lab/test_analyst_ledger.py`:
 
@@ -410,12 +410,12 @@ def test_agent_record_summary_ignores_other_modes_and_unresolved():
     assert rec["n_resolved"] == 0
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/lab/test_analyst_ledger.py -v -k agent_record`
 Expected: 3 FAIL with `ImportError: cannot import name 'agent_record_summary'`
 
-- [ ] **Step 3: Implement `agent_record_summary`**
+- [x] **Step 3: Implement `agent_record_summary`**
 
 Add to `analyst_ledger.py` after `track_record`:
 
@@ -470,12 +470,12 @@ def agent_record_summary(resolved: list[dict], *, mode: str = "agent", max_rows:
     }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `uv run pytest tests/lab/test_analyst_ledger.py -v`
 Expected: all PASS (new 3 + existing)
 
-- [ ] **Step 5: Wire into `cmd_dump_packet`**
+- [x] **Step 5: Wire into `cmd_dump_packet`**
 
 In `analyst_cli.py`'s `cmd_dump_packet`, immediately before `payload = {`:
 
@@ -511,12 +511,12 @@ and add to `payload` (after `"deterministic_baseline"`), plus extend the instruc
         ),
 ```
 
-- [ ] **Step 6: Verify the wiring end-to-end (no network needed beyond the model fit)**
+- [x] **Step 6: Verify the wiring end-to-end (no network needed beyond the model fit)**
 
 Run: `uv run python -m wc_predictor.lab.analyst_cli dump-packet --fixture "Argentina,Egypt" --as-of 2026-07-05 --out ../.tmp_packet_check.json` then inspect: `uv run python -c "import json; d=json.load(open('../.tmp_packet_check.json')); print(sorted(d)); print(d['your_record']['n_resolved'], len(d['your_record']['deviations']))"`
 Expected: keys include `your_record`; `n_resolved >= 5`; delete `.tmp_packet_check.json` afterwards.
 
-- [ ] **Step 7: Commit — CLAUDE ONLY (Codex: skip, log evidence in co-op.md, STOP)**
+- [x] **Step 7: Commit — CLAUDE ONLY (Codex: skip, log evidence in co-op.md, STOP)**
 
 ```bash
 git add worldcup_prediction_lab/src/wc_predictor/lab/analyst_ledger.py worldcup_prediction_lab/src/wc_predictor/lab/analyst_cli.py worldcup_prediction_lab/tests/lab/test_analyst_ledger.py

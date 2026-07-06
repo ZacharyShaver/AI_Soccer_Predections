@@ -72,3 +72,57 @@ def test_calibration_summary_needs_history():
                                 "p_home": 0.6, "p_draw": 0.25, "p_away": 0.15,
                                 "actual": "home"}])
     assert out["fitted"] is False and out["temp"] == 1.0
+
+
+def _agent_ledger_row(fid, home, probs, mkt, pick):
+    return {
+        "fixture_id": fid, "mode": "agent", "match_date": "2026-07-02",
+        "home_team_name": home, "away_team_name": "Opp",
+        "p_home": probs[0], "p_draw": probs[1], "p_away": probs[2],
+        "pick": pick, "pick_team": home, "market_probs": list(mkt),
+    }
+
+
+def test_agent_record_summary_classifies_deviations():
+    from wc_predictor.lab.analyst_ledger import agent_record_summary, resolve_forecasts
+
+    ledger = [
+        # deviated 5pts toward home; home happened -> helped
+        _agent_ledger_row("f1", "Alpha", (0.60, 0.25, 0.15), (0.55, 0.27, 0.18), "home"),
+        # no deviation -> neutral
+        _agent_ledger_row("f2", "Beta", (0.30, 0.30, 0.40), (0.30, 0.30, 0.40), "away"),
+    ]
+    resolved = resolve_forecasts(ledger, {"f1": (2, 0), "f2": (0, 1)})
+    rec = agent_record_summary(resolved)
+
+    assert rec["mode"] == "agent"
+    assert rec["n_resolved"] == 2
+    assert rec["hits"] == 2
+    assert rec["vs_market"] < 0  # beat the market on this pair
+    d1 = next(d for d in rec["deviations"] if d["fixture"].startswith("Alpha"))
+    d2 = next(d for d in rec["deviations"] if d["fixture"].startswith("Beta"))
+    assert d1["toward"] == "home" and d1["outcome"] == "helped"
+    assert abs(d1["size_pts"] - 5.0) < 0.01
+    assert d2["outcome"] == "neutral"
+
+
+def test_agent_record_summary_empty_history_has_caution():
+    from wc_predictor.lab.analyst_ledger import agent_record_summary
+
+    rec = agent_record_summary([])
+    assert rec["n_resolved"] == 0
+    assert rec["deviations"] == []
+    assert "anecdote" in rec["caution"]
+
+
+def test_agent_record_summary_ignores_other_modes_and_unresolved():
+    from wc_predictor.lab.analyst_ledger import agent_record_summary, resolve_forecasts
+
+    ledger = [
+        {**_agent_ledger_row("f1", "Alpha", (0.5, 0.3, 0.2), (0.5, 0.3, 0.2), "home"),
+         "mode": "deterministic"},
+        _agent_ledger_row("f2", "Beta", (0.5, 0.3, 0.2), (0.5, 0.3, 0.2), "home"),
+    ]
+    resolved = resolve_forecasts(ledger, {"f1": (1, 0)})  # f2 unresolved
+    rec = agent_record_summary(resolved)
+    assert rec["n_resolved"] == 0

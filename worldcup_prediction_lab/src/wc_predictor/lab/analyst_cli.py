@@ -247,6 +247,22 @@ def cmd_dump_packet(args: argparse.Namespace) -> None:
         market_probs=market_probs, offered_prices=offered,
     )
     baseline = deterministic_analyst(packet)
+    your_record: dict = {}
+    try:
+        from wc_predictor.lab.analyst_ledger import (
+            agent_record_summary, load_ledger, resolve_forecasts,
+        )
+        from wc_predictor.lab.leaderboard import load_results
+
+        results_df = load_results()
+        results = {
+            str(r["match_id"]): (int(r["home_score"]), int(r["away_score"]))
+            for _, r in results_df.iterrows()
+        } if not results_df.empty else {}
+        your_record = agent_record_summary(resolve_forecasts(load_ledger(), results))
+    except Exception:
+        your_record = {}  # packet must still ship if history/results are unavailable
+
     payload = {
         "packet": packet.to_dict(),
         "deterministic_baseline": {
@@ -254,11 +270,14 @@ def cmd_dump_packet(args: argparse.Namespace) -> None:
             "pick": baseline.pick, "pick_team": baseline.pick_team,
             "rationale": baseline.rationale,
         },
+        "your_record": your_record,
         "instructions": (
             "Anchor to the market probs. Deviate only on concrete, cited findings "
             "(confirmed lineups, injuries, suspensions, travel, weather, odds moves). "
-            "Output p_home+p_draw+p_away=1.0, a single pick, a short rationale, and a "
-            "sources list of URLs with dates. If you find nothing, return the baseline."
+            "your_record is your own resolved history: use it to SIZE deviations, "
+            "never to justify exceeding them. Output p_home+p_draw+p_away=1.0, a "
+            "single pick, a short rationale, and a sources list of URLs with dates. "
+            "If you find nothing, return the baseline."
         ),
     }
     out = Path(args.out) if args.out else (settings.REPORTS_DIR / "analyst" / f"packet_{packet.fixture_id}.json")

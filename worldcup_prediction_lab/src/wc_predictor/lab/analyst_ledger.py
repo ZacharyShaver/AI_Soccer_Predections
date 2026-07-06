@@ -142,6 +142,56 @@ def track_record(resolved: list[dict]) -> dict:
     return summary
 
 
+RECORD_CAUTION = (
+    "Small sample: treat this record as anecdote, not license. It informs how you SIZE "
+    "deviations; it never justifies deviating more than your rules allow."
+)
+
+
+def agent_record_summary(resolved: list[dict], *, mode: str = "agent", max_rows: int = 10) -> dict:
+    """The agent's own resolved record, packaged for the context packet.
+
+    Leak-free by construction (resolved rows only). Each past deviation from the
+    frozen market anchor is classified helped/hurt/neutral by paired RPS so the
+    live agent can see whether its news-based shifts have been earning their keep.
+    """
+
+    rows = [r for r in resolved if r["resolved"] and str(r.get("mode")) == mode]
+    deviations: list[dict] = []
+    for r in rows[-max_rows:]:
+        mkt = r.get("market_probs")
+        if not mkt or r.get("market_rps") is None:
+            continue
+        probs = (float(r["p_home"]), float(r["p_draw"]), float(r["p_away"]))
+        # Total-variation distance from the anchor, in percentage points.
+        size_pts = 50.0 * sum(abs(p - m) for p, m in zip(probs, mkt))
+        toward = _OUTCOMES[max(range(3), key=lambda i: probs[i] - mkt[i])]
+        edge = r["market_rps"] - r["rps"]  # positive = beat the market
+        outcome = (
+            "neutral" if size_pts < 0.25 or abs(edge) < 1e-4
+            else "helped" if edge > 0 else "hurt"
+        )
+        deviations.append({
+            "fixture": f"{r['home_team_name']} v {r['away_team_name']}",
+            "match_date": r.get("match_date"),
+            "size_pts": round(size_pts, 2),
+            "toward": toward,
+            "outcome": outcome,
+            "pick_correct": bool(r["correct"]),
+        })
+    return {
+        "mode": mode,
+        "n_resolved": len(rows),
+        "hits": sum(1 for r in rows if r["correct"]),
+        "mean_rps": _mean([r["rps"] for r in rows]),
+        "vs_market": _mean([
+            r["rps"] - r["market_rps"] for r in rows if r.get("market_rps") is not None
+        ]),  # negative = agent better than the frozen market anchor
+        "deviations": deviations,
+        "caution": RECORD_CAUTION,
+    }
+
+
 def calibration_summary(resolved: list[dict], *, mode: str | None = None) -> dict:
     """Leak-free temperature fit on the agent's OWN resolved forecasts.
 
