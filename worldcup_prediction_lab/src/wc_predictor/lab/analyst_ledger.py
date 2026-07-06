@@ -192,6 +192,40 @@ def agent_record_summary(resolved: list[dict], *, mode: str = "agent", max_rows:
     }
 
 
+def paired_mode_comparison(
+    resolved: list[dict], *, mode_a: str = "agent", mode_b: str = "agent_late"
+) -> dict:
+    """Paired RPS comparison of two modes on fixtures where BOTH resolved.
+
+    This is the timing experiment's readout: mode_a = morning research,
+    mode_b = T-75 lineup check. mean_diff = mean(rps_b - rps_a); negative
+    means the late pass was more accurate. ci95 stays None below n=10.
+    """
+
+    a = {str(r["fixture_id"]): r for r in resolved
+         if r["resolved"] and str(r.get("mode")) == mode_a}
+    b = {str(r["fixture_id"]): r for r in resolved
+         if r["resolved"] and str(r.get("mode")) == mode_b}
+    fids = sorted(set(a) & set(b))
+    diffs = [b[f]["rps"] - a[f]["rps"] for f in fids]
+    ci95 = None
+    if len(diffs) >= 10:
+        from wc_predictor.evaluation.metrics import bootstrap_ci
+
+        _, lo, hi, _ = bootstrap_ci(diffs, n_boot=2000, seed=11)
+        ci95 = [lo, hi]
+    return {
+        "mode_a": mode_a,
+        "mode_b": mode_b,
+        "n": len(fids),
+        "mean_rps_a": _mean([a[f]["rps"] for f in fids]),
+        "mean_rps_b": _mean([b[f]["rps"] for f in fids]),
+        "mean_diff": _mean(diffs),
+        "ci95": ci95,
+        "fixtures": fids,
+    }
+
+
 def calibration_summary(resolved: list[dict], *, mode: str | None = None) -> dict:
     """Leak-free temperature fit on the agent's OWN resolved forecasts.
 

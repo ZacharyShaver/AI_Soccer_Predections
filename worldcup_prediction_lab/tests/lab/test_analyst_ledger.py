@@ -126,3 +126,33 @@ def test_agent_record_summary_ignores_other_modes_and_unresolved():
     resolved = resolve_forecasts(ledger, {"f1": (1, 0)})  # f2 unresolved
     rec = agent_record_summary(resolved)
     assert rec["n_resolved"] == 0
+
+
+def test_paired_mode_comparison_joins_on_fixture():
+    from wc_predictor.lab.analyst_ledger import paired_mode_comparison, resolve_forecasts
+
+    ledger = [
+        _agent_ledger_row("f1", "Alpha", (0.60, 0.25, 0.15), (0.55, 0.27, 0.18), "home"),
+        {**_agent_ledger_row("f1", "Alpha", (0.70, 0.20, 0.10), (0.55, 0.27, 0.18), "home"),
+         "mode": "agent_late"},
+        # agent-only fixture: must be excluded from the pairing
+        _agent_ledger_row("f2", "Beta", (0.30, 0.30, 0.40), (0.30, 0.30, 0.40), "away"),
+    ]
+    resolved = resolve_forecasts(ledger, {"f1": (2, 0), "f2": (0, 1)})
+    cmp = paired_mode_comparison(resolved)
+
+    assert cmp["n"] == 1
+    assert cmp["fixtures"] == ["f1"]
+    # late pass was sharper toward the actual winner -> lower RPS -> negative diff
+    assert cmp["mean_diff"] < 0
+    assert cmp["ci95"] is None  # n < 10
+
+
+def test_paired_mode_comparison_empty_when_no_overlap():
+    from wc_predictor.lab.analyst_ledger import paired_mode_comparison, resolve_forecasts
+
+    ledger = [_agent_ledger_row("f1", "Alpha", (0.5, 0.3, 0.2), (0.5, 0.3, 0.2), "home")]
+    resolved = resolve_forecasts(ledger, {"f1": (1, 0)})
+    cmp = paired_mode_comparison(resolved)
+    assert cmp["n"] == 0
+    assert cmp["mean_diff"] is None

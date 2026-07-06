@@ -535,7 +535,7 @@ git commit -m "feat(analyst): your_record self-history block in the context pack
 - Consumes: `resolve_forecasts` output; `bootstrap_ci` from `wc_predictor.evaluation.metrics` (signature: `bootstrap_ci(diffs, n_boot=2000, seed=11)` returning a 4-tuple whose middle two values are the CI bounds).
 - Produces: `paired_mode_comparison(resolved: list[dict], *, mode_a: str = "agent", mode_b: str = "agent_late") -> dict` with keys `mode_a, mode_b, n, mean_rps_a, mean_rps_b, mean_diff, ci95, fixtures`. `mean_diff = mean(rps_b - rps_a)`; negative = late pass better. `ci95` is `None` below n=10.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 Append to `worldcup_prediction_lab/tests/lab/test_analyst_ledger.py`:
 
@@ -570,12 +570,12 @@ def test_paired_mode_comparison_empty_when_no_overlap():
     assert cmp["mean_diff"] is None
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `uv run pytest tests/lab/test_analyst_ledger.py -v -k paired_mode`
 Expected: 2 FAIL with `ImportError: cannot import name 'paired_mode_comparison'`
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 ```python
 def paired_mode_comparison(
@@ -612,12 +612,12 @@ def paired_mode_comparison(
     }
 ```
 
-- [ ] **Step 4: Run the full analyst test set**
+- [x] **Step 4: Run the full analyst test set**
 
 Run: `uv run pytest tests/lab/test_analyst_ledger.py tests/lab/test_analyst.py tests/lab/test_analyst_cli.py tests/lab/test_kickoffs.py -v`
 Expected: all PASS
 
-- [ ] **Step 5: Commit — CLAUDE ONLY (Codex: skip, log evidence in co-op.md, STOP)**
+- [x] **Step 5: Commit — CLAUDE ONLY (Codex: skip, log evidence in co-op.md, STOP)**
 
 ```bash
 git add worldcup_prediction_lab/src/wc_predictor/lab/analyst_ledger.py worldcup_prediction_lab/tests/lab/test_analyst_ledger.py
