@@ -140,6 +140,21 @@ if (Test-Path $researchOut) { Get-Content $researchOut | Out-File -FilePath $log
 if (Test-Path $researchErr) { Get-Content $researchErr | Out-File -FilePath $logFile -Append -Encoding utf8 }
 
 # ---------------------------------------------------------------------------
+# Phase 1.5: register today's T-75 lineup-check one-shot tasks (deterministic,
+# non-fatal). Kickoff times come from config/kickoff_times.csv; each task runs
+# lineup_check.ps1 for one fixture and deletes itself. Failure here must never
+# block phase 2.
+# ---------------------------------------------------------------------------
+try {
+    $regScript = Join-Path $LabRoot 'scripts\register_lineup_checks.ps1'
+    $regExit = Invoke-NativeLogged 'powershell.exe' @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $regScript)
+    Write-Log "[lineup] registration exited $regExit"
+} catch {
+    Write-Log "[lineup] registration FAILED (non-fatal): $($_.Exception.Message)"
+}
+Set-Location $RepoRoot
+
+# ---------------------------------------------------------------------------
 # Phase 2: deterministic pipeline refresh + commit + push. ALWAYS runs, even if
 # phase 1 failed or timed out, so a bad LLM session can never again silently skip
 # the push the way it did on 2026-06-30 and 2026-07-01.
