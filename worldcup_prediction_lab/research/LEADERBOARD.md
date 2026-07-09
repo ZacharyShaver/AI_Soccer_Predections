@@ -1,6 +1,6 @@
 # Daily Model-Research Leaderboard
 
-Generated: `2026-07-08T11:06:45Z`
+Generated: `2026-07-09T11:09:20Z`
 
 Each variant is scored on its most-informed pre-kickoff prediction per match (latest as_of). Lower RPS is better. `Edge` = baseline RPS - variant RPS (positive = beats the baseline). Every challenger must beat **elo_baseline**.
 
