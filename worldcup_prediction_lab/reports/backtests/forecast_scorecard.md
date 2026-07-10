@@ -6,9 +6,9 @@ on the paired subset and positive means our ledger forecasts scored better.
 
 ## Ledger Coverage
 
-- Ledger predictions: 163
-- Scored predictions: 153
-- Pending predictions: 10
+- Ledger predictions: 165
+- Scored predictions: 157
+- Pending predictions: 8
 
 ## Our Running Metrics
 
@@ -16,9 +16,9 @@ Bootstrap 95% CIs are reported once the metric has at least 30 finite observatio
 
 | Metric | n | Mean |
 | --- | ---: | --- |
-| RPS | 153 | 0.1519 [0.1315, 0.1736] |
-| H/D/A log loss | 153 | 0.8322 [0.7506, 0.9121] |
-| Brier | 153 | 0.4774 [0.4198, 0.5332] |
+| RPS | 157 | 0.1504 [0.1309, 0.1711] |
+| H/D/A log loss | 157 | 0.8334 [0.7516, 0.9167] |
+| Brier | 157 | 0.4781 [0.4209, 0.5369] |
 
 ## Market Comparison
 
