@@ -1,20 +1,20 @@
 # I3 martj42 international results data quality
 
 - Source: `https://raw.githubusercontent.com/martj42/international_results/master/results.csv`
-- Ingest UTC: `2026-07-09T13:00:04Z`
-- Raw SHA-256: `b58624fd0b746f8fb1542633c4a4914a3f396394eb2ab71424c263825f5cded6`
+- Ingest UTC: `2026-07-10T13:00:04Z`
+- Raw SHA-256: `5ddddc5ab73edb08bf65829d48f2a13b54b873b6abd29eea879086c12f977687`
 - Total source rows: 49,505
 - Exact-identical duplicate rows dropped: 0
 - Rows after exact dedupe: 49,505
-- Completed matches after dedupe: 49,501
-- Blank-score fixtures: 4
-- Completed match date range: 1872-11-30 to 2026-07-07
-- Fixture date range: 2026-07-09 to 2026-07-11
+- Completed matches after dedupe: 49,502
+- Blank-score fixtures: 3
+- Completed match date range: 1872-11-30 to 2026-07-09
+- Fixture date range: 2026-07-10 to 2026-07-11
 - All-row date range after dedupe: 1872-11-30 to 2026-07-11
 - Multi-match same-day natural-key groups: 1
 - Distinct canonical teams: 336
 - Auto-registered martj42 teams: 129
-- Completed matches in 2025-2026: 1,409
+- Completed matches in 2025-2026: 1,410
 - Match ID unique across silver matches: True
 - Contains 2025 completed matches: True
 - Contains 2026 completed matches: True
