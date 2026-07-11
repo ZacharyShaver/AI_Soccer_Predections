@@ -1,0 +1,3 @@
+{
+  "tests/lab/test_analyst_cli.py::test_record_rejects_unknown_mode": true
+}

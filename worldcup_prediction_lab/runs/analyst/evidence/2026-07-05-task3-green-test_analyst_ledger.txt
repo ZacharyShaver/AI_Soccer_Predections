@@ -1,0 +1,20 @@
+Command:
+uv run pytest tests/lab/test_analyst_ledger.py -v
+
+Working directory:
+worldcup_prediction_lab/
+
+Exit code:
+0
+
+Result:
+7 passed in 0.39s
+
+Passing tests:
+- tests/lab/test_analyst_ledger.py::test_record_is_idempotent PASSED
+- tests/lab/test_analyst_ledger.py::test_record_freezes_baselines PASSED
+- tests/lab/test_analyst_ledger.py::test_resolve_and_track PASSED
+- tests/lab/test_analyst_ledger.py::test_calibration_summary_needs_history PASSED
+- tests/lab/test_analyst_ledger.py::test_agent_record_summary_classifies_deviations PASSED
+- tests/lab/test_analyst_ledger.py::test_agent_record_summary_empty_history_has_caution PASSED
+- tests/lab/test_analyst_ledger.py::test_agent_record_summary_ignores_other_modes_and_unresolved PASSED

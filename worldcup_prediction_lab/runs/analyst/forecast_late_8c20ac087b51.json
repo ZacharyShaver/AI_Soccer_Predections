@@ -1,0 +1,21 @@
+{
+  "fixture_id": "8c20ac087b51",
+  "as_of": "2026-07-11",
+  "match_date": "2026-07-11",
+  "home_team_name": "Norway",
+  "away_team_name": "England",
+  "p_home": 0.238,
+  "p_draw": 0.250,
+  "p_away": 0.512,
+  "pick": "away",
+  "pick_team": "England",
+  "rationale": "Both XIs confirmed. Norway at full strength (Haaland/Odegaard/Sorloth/Berge/Berg). England near-best available: the feared defensive crisis eased (Guehi passed fit, Rice recovered from illness), but Quansah is suspended and Reece James + Livramento are out, with Madueke deputizing at RB. Live three-book consensus (bet365/BetMGM/DraftKings) de-vigs to roughly Norway 24% / Draw 25% / England 50-51%, marginally softer on England than the packet's 52.3%; shaved England ~1pt toward Norway/draw. England stays the pick.",
+  "sources": [
+    "https://www.espn.com/soccer/odds/_/gameId/760512 (2026-07-11)",
+    "https://sports.yahoo.com/articles/england-xi-vs-norway-confirmed-192458874.html (2026-07-11)",
+    "https://www.sportsgambler.com/betting-tips/football/norway-vs-england-prediction-lineups-odds-2026-07-11/ (2026-07-11)",
+    "https://www.sportsmole.co.uk/football/england/world-cup-2026/team-news/norway-vs-england-injury-suspension-list-predicted-xis_600930.html (2026-07-11)"
+  ],
+  "elo_probs": [0.23846056939690657, 0.28709708065725426, 0.4744423499458391],
+  "market_probs": [0.22961104140526978, 0.24717691342534504, 0.5232120451693852]
+}

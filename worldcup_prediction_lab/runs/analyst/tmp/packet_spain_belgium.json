@@ -1,0 +1,128 @@
+{
+  "packet": {
+    "fixture_id": "2d7a5045caef",
+    "as_of": "2026-07-10",
+    "match_date": "2026-07-10",
+    "home_team_id": "ESP",
+    "away_team_id": "BEL",
+    "home_team_name": "Spain",
+    "away_team_name": "Belgium",
+    "venue": "Los Angeles (Inglewood)",
+    "elo_probs": [
+      0.5840869749822806,
+      0.25421292409491664,
+      0.1617001009228028
+    ],
+    "elo_ratings": [
+      2111.6755782922796,
+      1955.1233054318423,
+      0.0
+    ],
+    "market_probs": [
+      0.5984943538268507,
+      0.24215809284818068,
+      0.15934755332496864
+    ],
+    "offered_prices": [
+      0.59625,
+      0.24125,
+      0.15875
+    ],
+    "form_home": 0.9,
+    "form_away": 0.8,
+    "altitude_delta_elo": 0.0,
+    "calib": {},
+    "live_notes": null
+  },
+  "deterministic_baseline": {
+    "p_home": 0.6013726517157022,
+    "p_draw": 0.24215809284818068,
+    "p_away": 0.15646925543611712,
+    "pick": "home",
+    "pick_team": "Spain",
+    "rationale": "anchored to market (60%/24%/16%); form/altitude push +4 Elo \u2192 home"
+  },
+  "your_record": {
+    "mode": "agent",
+    "n_resolved": 9,
+    "hits": 6,
+    "mean_rps": 0.16973261111111113,
+    "vs_market": -0.0030769571420123936,
+    "deviations": [
+      {
+        "fixture": "Ivory Coast v Norway",
+        "match_date": "2026-06-30",
+        "size_pts": 0.7,
+        "toward": "draw",
+        "outcome": "helped",
+        "pick_correct": true
+      },
+      {
+        "fixture": "Portugal v Croatia",
+        "match_date": "2026-07-02",
+        "size_pts": 0.04,
+        "toward": "away",
+        "outcome": "neutral",
+        "pick_correct": true
+      },
+      {
+        "fixture": "Spain v Austria",
+        "match_date": "2026-07-02",
+        "size_pts": 0.05,
+        "toward": "home",
+        "outcome": "neutral",
+        "pick_correct": true
+      },
+      {
+        "fixture": "Argentina v Cape Verde",
+        "match_date": "2026-07-03",
+        "size_pts": 0.56,
+        "toward": "home",
+        "outcome": "helped",
+        "pick_correct": true
+      },
+      {
+        "fixture": "Australia v Egypt",
+        "match_date": "2026-07-03",
+        "size_pts": 0.81,
+        "toward": "home",
+        "outcome": "helped",
+        "pick_correct": false
+      },
+      {
+        "fixture": "Brazil v Norway",
+        "match_date": "2026-07-05",
+        "size_pts": 1.39,
+        "toward": "away",
+        "outcome": "helped",
+        "pick_correct": false
+      },
+      {
+        "fixture": "Portugal v Spain",
+        "match_date": "2026-07-06",
+        "size_pts": 0.76,
+        "toward": "away",
+        "outcome": "helped",
+        "pick_correct": true
+      },
+      {
+        "fixture": "Mexico v England",
+        "match_date": "2026-07-05",
+        "size_pts": 1.3,
+        "toward": "home",
+        "outcome": "hurt",
+        "pick_correct": true
+      },
+      {
+        "fixture": "United States v Belgium",
+        "match_date": "2026-07-06",
+        "size_pts": 1.31,
+        "toward": "away",
+        "outcome": "helped",
+        "pick_correct": false
+      }
+    ],
+    "caution": "Small sample: treat this record as anecdote, not license. It informs how you SIZE deviations; it never justifies deviating more than your rules allow."
+  },
+  "instructions": "Anchor to the market probs. Deviate only on concrete, cited findings (confirmed lineups, injuries, suspensions, travel, weather, odds moves). your_record is your own resolved history: use it to SIZE deviations, never to justify exceeding them. Output p_home+p_draw+p_away=1.0, a single pick, a short rationale, and a sources list of URLs with dates. If you find nothing, return the baseline."
+}

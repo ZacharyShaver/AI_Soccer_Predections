@@ -1,0 +1,7 @@
+[
+  "tests/lab/test_analyst_cli.py::test_forecast_from_json_agent_late_mode",
+  "tests/lab/test_analyst_cli.py::test_forecast_from_json_default_mode_agent",
+  "tests/lab/test_analyst_cli.py::test_forecast_from_json_rejects_bad_probability_sum",
+  "tests/lab/test_analyst_cli.py::test_record_rejects_unknown_mode",
+  "tests/lab/test_analyst_cli.py::test_researched_fixture_ids_filters_by_mode"
+]

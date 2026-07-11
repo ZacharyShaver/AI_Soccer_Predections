@@ -1,0 +1,28 @@
+{
+  "fixture_id": "2d7a5045caef",
+  "as_of": "2026-07-10",
+  "match_date": "2026-07-10",
+  "home_team_name": "Spain",
+  "away_team_name": "Belgium",
+  "p_home": 0.605,
+  "p_draw": 0.241,
+  "p_away": 0.154,
+  "pick": "home",
+  "pick_team": "Spain",
+  "rationale": "Anchored to market (59.8/24.2/15.9). Small +0.6pt nudge to Spain: Belgium's Onana confirmed out (ACL) while Spain report a fully available squad with five straight clean sheets; both items are days old and mostly priced, and books today (~-165 3-way, ~59-60% de-vigged) match the anchor, so the deviation stays minimal.",
+  "sources": [
+    "https://www.sportsmole.co.uk/football/spain/world-cup-2026/preview/spain-vs-belgium-prediction-team-news-lineups_600878.html (2026-07-10)",
+    "https://www.covers.com/world-cup/spain-vs-belgium-prediction-picks-odds-friday-7-10-2026 (2026-07-10)",
+    "https://www.racingpost.com/sport/football-tips/world-cup-2026/spain-vs-belgium-predictions-team-news-odds-betting-tips-bet-builder-aAgAv3x2tZKM/ (2026-07-09)"
+  ],
+  "elo_probs": [
+    0.5840869749822806,
+    0.25421292409491664,
+    0.1617001009228028
+  ],
+  "market_probs": [
+    0.5984943538268507,
+    0.24215809284818068,
+    0.15934755332496864
+  ]
+}

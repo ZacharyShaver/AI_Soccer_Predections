@@ -1,0 +1,39 @@
+Command run from worldcup_prediction_lab/:
+uv run pytest tests/lab/test_analyst_ledger.py tests/lab/test_analyst.py tests/lab/test_analyst_cli.py tests/lab/test_kickoffs.py -v
+
+Result: GREEN, exit code 0.
+
+Key output:
+collected 25 items
+tests/lab/test_analyst_ledger.py::test_record_is_idempotent PASSED
+tests/lab/test_analyst_ledger.py::test_record_freezes_baselines PASSED
+tests/lab/test_analyst_ledger.py::test_resolve_and_track PASSED
+tests/lab/test_analyst_ledger.py::test_calibration_summary_needs_history PASSED
+tests/lab/test_analyst_ledger.py::test_agent_record_summary_classifies_deviations PASSED
+tests/lab/test_analyst_ledger.py::test_agent_record_summary_empty_history_has_caution PASSED
+tests/lab/test_analyst_ledger.py::test_agent_record_summary_ignores_other_modes_and_unresolved PASSED
+tests/lab/test_analyst_ledger.py::test_paired_mode_comparison_joins_on_fixture PASSED
+tests/lab/test_analyst_ledger.py::test_paired_mode_comparison_empty_when_no_overlap PASSED
+tests/lab/test_analyst.py::test_market_only_returns_market PASSED
+tests/lab/test_analyst.py::test_form_shifts_toward_in_form_side_and_keeps_draw PASSED
+tests/lab/test_analyst.py::test_shift_is_capped PASSED
+tests/lab/test_analyst.py::test_no_market_falls_back_to_elo PASSED
+tests/lab/test_analyst.py::test_probs_sum_to_one_and_pick_is_argmax PASSED
+tests/lab/test_analyst.py::test_recent_form_is_as_of_bounded PASSED
+tests/lab/test_analyst.py::test_build_packet_reads_market_columns PASSED
+tests/lab/test_analyst_cli.py::test_forecast_from_json_default_mode_agent PASSED
+tests/lab/test_analyst_cli.py::test_forecast_from_json_agent_late_mode PASSED
+tests/lab/test_analyst_cli.py::test_forecast_from_json_rejects_bad_probability_sum PASSED
+tests/lab/test_analyst_cli.py::test_record_rejects_unknown_mode PASSED
+tests/lab/test_analyst_cli.py::test_researched_fixture_ids_filters_by_mode PASSED
+tests/lab/test_kickoffs.py::test_load_kickoffs_parses_rows PASSED
+tests/lab/test_kickoffs.py::test_load_kickoffs_missing_file_returns_empty PASSED
+tests/lab/test_kickoffs.py::test_load_kickoffs_bad_time_raises_with_fixture_id PASSED
+tests/lab/test_kickoffs.py::test_kickoffs_for_date_filters_and_sorts PASSED
+
+Short summary:
+25 passed in 0.44s
+
+Final fresh verification rerun after plan/co-op bookkeeping:
+uv run pytest tests/lab/test_analyst_ledger.py tests/lab/test_analyst.py tests/lab/test_analyst_cli.py tests/lab/test_kickoffs.py -v
+25 passed in 0.45s

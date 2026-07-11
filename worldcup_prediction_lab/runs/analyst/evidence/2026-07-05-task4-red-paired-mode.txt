@@ -1,0 +1,15 @@
+Command run from worldcup_prediction_lab/:
+uv run pytest tests/lab/test_analyst_ledger.py -v -k paired_mode
+
+Result: expected RED failure, exit code 1.
+
+Key output:
+collected 9 items / 7 deselected / 2 selected
+tests/lab/test_analyst_ledger.py::test_paired_mode_comparison_joins_on_fixture FAILED
+tests/lab/test_analyst_ledger.py::test_paired_mode_comparison_empty_when_no_overlap FAILED
+
+Failure reason:
+ImportError: cannot import name 'paired_mode_comparison' from 'wc_predictor.lab.analyst_ledger'
+
+Short summary:
+2 failed, 7 deselected in 0.52s

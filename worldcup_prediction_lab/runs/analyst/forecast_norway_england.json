@@ -1,0 +1,20 @@
+{
+  "fixture_id": "8c20ac087b51",
+  "as_of": "2026-07-11",
+  "match_date": "2026-07-11",
+  "home_team_name": "Norway",
+  "away_team_name": "England",
+  "p_home": 0.25,
+  "p_draw": 0.27,
+  "p_away": 0.48,
+  "pick": "away",
+  "pick_team": "England",
+  "rationale": "Anchored to market (24.5/25.5/50.1); Kalshi de-vig confirms it. England still clear favorites but shaved ~2pts toward the draw on a stacking defensive disruption (Quansah suspended, Guehi hamstring the 'biggest worry', sixth straight different back line) plus a Rice illness doubt (missed Thursday training), all landing against in-form Haaland (7 goals). Doubts not confirmed absences, so deviation kept modest.",
+  "sources": [
+    "https://www.sportsmole.co.uk/football/england/world-cup-2026/preview/norway-vs-england-prediction-team-news-lineups_600924.html (2026-07-11)",
+    "https://www.covers.com/world-cup/england-vs-norway-prediction-picks-odds-saturday-7-11-2026 (2026-07-11)",
+    "https://www.si.com/soccer/norway-predicted-lineup-vs-england-world-cup-quarterfinal-7-11-26 (2026-07-11)"
+  ],
+  "elo_probs": [0.23846056939690657, 0.28709708065725426, 0.4744423499458391],
+  "market_probs": [0.24472049689440992, 0.2546583850931677, 0.5006211180124224]
+}

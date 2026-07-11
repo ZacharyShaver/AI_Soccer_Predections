@@ -1,0 +1,20 @@
+Command:
+uv run pytest tests/lab/test_analyst_ledger.py -v -k agent_record
+
+Working directory:
+worldcup_prediction_lab/
+
+Exit code:
+1
+
+Result:
+3 selected tests failed as expected before implementation.
+
+Key failure:
+ImportError: cannot import name 'agent_record_summary' from 'wc_predictor.lab.analyst_ledger'
+
+Selected test summary:
+- FAILED tests/lab/test_analyst_ledger.py::test_agent_record_summary_classifies_deviations
+- FAILED tests/lab/test_analyst_ledger.py::test_agent_record_summary_empty_history_has_caution
+- FAILED tests/lab/test_analyst_ledger.py::test_agent_record_summary_ignores_other_modes_and_unresolved
+- 3 failed, 4 deselected

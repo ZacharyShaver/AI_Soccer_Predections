@@ -1387,3 +1387,36 @@ _(Codex adds anything that needs a planning decision. Claude clears these.)_
 - Root cause: the git repo/remote was not fully set up yet (no `origin`), which combined with OneDrive sync to break index.lock creation.
 - Resolution (Zach, 2026-06-22): repo initialized + `origin` set to `https://github.com/ZacharyShaver/AI_Soccer_Predections.git`; baseline committed (`719423b Init commit`, on top of `f3b8bc3` D0). Working tree clean. Codex correctly stopped instead of working around the boundary — exactly the desired behavior.
 - Standing note: the repo lives under OneDrive. If `index.lock: Permission denied` recurs, it is OneDrive briefly holding `.git`. Retry the git step; if it persists, pause OneDrive sync for the session.
+
+### 2026-07-10 -- Claude (daily 7am phase-1 session) -- Found + fixed the launcher bug that lobotomized phase 1 all week
+
+**Root cause:** `Start-Process -ArgumentList` in Windows PowerShell 5.1 joins arguments
+with spaces WITHOUT quoting, so the multi-line research prompt reached `claude.exe` as
+loose tokens. Since at least 2026-07-06 every 7am phase-1 session (and every T-75
+lineup-check session) received ONLY the word "DAILY" (first token after `-p`) as its
+prompt and lost every flag after it -- no `--permission-mode bypassPermissions`, no
+`--model claude-opus-4-8`. Evidence: `runs/analyst/logs/research_2026-07-0{6,7,9}_*.out.log`
+show sessions improvising off "DAILY" (the 07-07 one waited on "the 7am job" -- itself;
+07-09 planned a research-lab day instead), and today's session (this one) received the
+literal prompt "DAILY" while the on-disk script contains the full prompt.
+
+**Fix (uncommitted, needs review + commit):** `scripts/daily_match_analyst.ps1` +
+`scripts/lineup_check.ps1` now write the prompt to a log-dir file and launch
+`claude -p` with `-RedirectStandardInput <promptfile>`; remaining flags are all
+single-word so the unquoted join is harmless. Both scripts parse clean
+(Parser::ParseFile 0 errors) and the stdin path is smoke-tested (`claude -p` +
+redirected multi-line stdin file returned the expected reply, exit 0).
+
+**Today's phase-1 work still got done (by this session, improvising from the script
+source):** Spain v Belgium QF researched via match-analyst subagent and recorded
+(agent mode, 60.5/24.1/15.4, pick Spain, +0.6pt deviation on Onana ACL); kickoff rows
+appended to `config/kickoff_times.csv` for 2d7a5045caef (Spain v Belgium 07-10 15:00 ET)
+and 8c20ac087b51 (Norway v England 07-11 17:00 ET, Miami) so phase 1.5 registers the
+T-75 lineup checks. Phase 2 (championship, run_experiments, commit, push) runs
+deterministically after this session exits.
+
+**Needs Zach/next session:** review + commit the 3 uncommitted files
+(`scripts/daily_match_analyst.ps1`, `scripts/lineup_check.ps1`,
+`config/kickoff_times.csv`) -- phase 2's git-add list does not include them.
+Also note yesterday's 07-09 phase-1 out.log shows the mangled session may have armed
+monitors/plans that never ran; no cleanup found necessary beyond the fix.

@@ -1,4 +1,4 @@
-# Daily Match-Analyst job - launched by Windows Task Scheduler each morning.
+﻿# Daily Match-Analyst job - launched by Windows Task Scheduler each morning.
 #
 # HARDENED 2026-07-02: previously a single one-shot Claude session (-p mode) did
 # everything -- research, dashboard rebuild, commit, push -- and was trusted to run
@@ -108,9 +108,19 @@ $researchErr = Join-Path $LogDir "research_$stamp.err.log"
 $claudeExit = 1
 
 try {
+    # Prompt goes via stdin: Start-Process -ArgumentList joins elements with
+    # spaces WITHOUT quoting them, so a multi-line prompt reached claude.exe as
+    # loose tokens -- from 2026-07-06 through 2026-07-10 the session received
+    # only "DAILY" as its prompt and lost every flag after it (no
+    # bypassPermissions, wrong model). claude -p reads the prompt from stdin
+    # when no prompt argument is given, and the remaining single-word flags
+    # survive the unquoted join.
+    $promptFile = Join-Path $LogDir "research_prompt_$stamp.txt"
+    [IO.File]::WriteAllText($promptFile, $researchPrompt, (New-Object System.Text.UTF8Encoding($false)))
     $proc = Start-Process -FilePath $ClaudeExe `
-        -ArgumentList @('-p', $researchPrompt, '--permission-mode', 'bypassPermissions', '--model', 'claude-opus-4-8') `
+        -ArgumentList @('-p', '--permission-mode', 'bypassPermissions', '--model', 'claude-opus-4-8') `
         -NoNewWindow -PassThru `
+        -RedirectStandardInput  $promptFile `
         -RedirectStandardOutput $researchOut `
         -RedirectStandardError  $researchErr
 

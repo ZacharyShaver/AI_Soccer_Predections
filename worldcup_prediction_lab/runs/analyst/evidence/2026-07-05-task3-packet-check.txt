@@ -1,0 +1,21 @@
+Command:
+uv run python -m wc_predictor.lab.analyst_cli dump-packet --fixture "Argentina,Egypt" --as-of 2026-07-05 --out ../.tmp_packet_check.json
+
+Working directory:
+worldcup_prediction_lab/
+
+Exit code:
+0
+
+Output:
+..\.tmp_packet_check.json
+
+Inspect command:
+uv run python -c "import json; d=json.load(open('../.tmp_packet_check.json')); print(sorted(d)); print(d['your_record']['n_resolved'], len(d['your_record']['deviations']))"
+
+Inspect output:
+['deterministic_baseline', 'instructions', 'packet', 'your_record']
+5 5
+
+Temp cleanup:
+.tmp_packet_check.json was deleted after inspection. Verification command `Test-Path -LiteralPath '..\.tmp_packet_check.json'` returned `False`.
